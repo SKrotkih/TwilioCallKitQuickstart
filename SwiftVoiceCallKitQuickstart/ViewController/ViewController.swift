@@ -84,7 +84,22 @@ class ViewController: UIViewController {
         self.stopSpin()
     }
     
-    // MARK: Icon spinning
+    private func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
+        placeCallButton.isEnabled = isEnabled
+        if (showCallControl) {
+            callControlView.isHidden = false
+            muteSwitch.isOn = false
+            speakerSwitch.isOn = true
+        } else {
+            callControlView.isHidden = true
+        }
+    }
+}
+
+// MARK: Spinner
+
+extension ViewController {
+    
     private func startSpin() {
         if !isSpinning {
             isSpinning = true
@@ -117,18 +132,8 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    private func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
-        placeCallButton.isEnabled = isEnabled
-        if (showCallControl) {
-            callControlView.isHidden = false
-            muteSwitch.isOn = false
-            speakerSwitch.isOn = true
-        } else {
-            callControlView.isHidden = true
-        }
-    }
 }
+
 
 // MARK: - UITextFieldDelegate
 

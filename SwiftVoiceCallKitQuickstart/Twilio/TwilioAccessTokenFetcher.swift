@@ -7,7 +7,8 @@ import Foundation
 
 class TwilioAccessTokenFetcher: NSObject {
     
-    private let baseURLString = "https://staging.knowmeiq.com"
+    // TODO: Replace this url by your
+    private let baseURLString = "https://accesstoken.com"
     // If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
     private let accessTokenEndpoint = "/accessToken"
     private let identity = "alice"
@@ -18,7 +19,11 @@ class TwilioAccessTokenFetcher: NSObject {
             completion(nil)
             return
         }
-        let accessToken = try? String.init(contentsOf: accessTokenURL, encoding: .utf8)
+        var accessToken = try? String.init(contentsOf: accessTokenURL, encoding: .utf8)
+        
+        // !!!Fake access token:
+        accessToken = "N3BF5Gqg90is9yBCZBIHnMg1pyPvV0J0ANZkz2rjZOU"
+        
         completion(accessToken)
     }
 }

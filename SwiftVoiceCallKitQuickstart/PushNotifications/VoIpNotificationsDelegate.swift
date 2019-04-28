@@ -29,6 +29,7 @@ class VoIpNotificationsDelegate: NSObject, PKPushRegistryDelegate {
         }
         let deviceToken = (credentials.token as NSData).description
         self.deviceToken = deviceToken
+        print("Device token=\(deviceToken)")
         self.voIpNotifications.onNext(.deviceTokenUpdated(deviceToken))
     }
     
@@ -40,6 +41,7 @@ class VoIpNotificationsDelegate: NSObject, PKPushRegistryDelegate {
         guard let deviceToken = self.deviceToken else {
             return
         }
+        print("Invalidated device token=\(deviceToken)")
         self.voIpNotifications.onNext(.deviceTokenInvalidated(deviceToken))
         self.deviceToken = nil
     }
@@ -67,6 +69,7 @@ class VoIpNotificationsDelegate: NSObject, PKPushRegistryDelegate {
         }
         // Save for later when the notification is properly handled.
         self.incomingPushCompletionCallback = completion
+        print("Incoming push with payload: \(payload.dictionaryPayload)")
         self.voIpNotifications.onNext(.incomingCallReceived(payload.dictionaryPayload))
     }
     
