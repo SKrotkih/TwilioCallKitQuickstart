@@ -1,6 +1,6 @@
 //
 //  VoIpNotificationsDelegate.swift
-//  SwiftVoiceCallKitQuickstart
+//  TwilioCallKitQuickstart
 //
 
 import Foundation

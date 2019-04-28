@@ -1,6 +1,6 @@
 //
 //  Configurator.swift
-//  SwiftVoiceCallKitQuickstart
+//  TwilioCallKitQuickstart
 //
 
 import Foundation
@@ -20,8 +20,9 @@ struct Configurator {
         let voIpNotificationsDelegate = VoIpNotificationsDelegate()
 
         let twilioInteractor = TwilioInteractor(notificationsDelegate: voIpNotificationsDelegate, callKitProviderDelegate: callKitProviderDelegate)
-
-        viewController.twilioInteractor = twilioInteractor
+        
+        let viewModel = ViewModel(interactor: twilioInteractor)
+        viewController.viewModel = viewModel
         
         coolKitInteractor = CallKitInteractor(twilioInteractor: twilioInteractor, providerDelegate: callKitProviderDelegate)
         

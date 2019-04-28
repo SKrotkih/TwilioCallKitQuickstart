@@ -1,6 +1,6 @@
 //
 //  TwilioAudioController.swift
-//  SwiftVoiceCallKitQuickstart
+//  TwilioCallKitQuickstart
 //
 
 import Foundation

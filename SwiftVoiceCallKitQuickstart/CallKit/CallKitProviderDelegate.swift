@@ -1,6 +1,6 @@
 //
 //  CallKitProviderDelegate.swift
-//  SwiftVoiceCallKitQuickstart
+//  TwilioCallKitQuickstart
 //
 
 import Foundation

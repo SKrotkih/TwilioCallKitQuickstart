@@ -1,0 +1,57 @@
+//
+//  ViewModel.swift
+//  TwilioCallKitQuickstart
+//
+
+import Foundation
+import RxSwift
+import AVFoundation
+
+class ViewModel: NSObject {
+
+    var twilioInteractor: TwilioInteractor
+    public let state = PublishSubject<PhoneCallState>()
+    
+    private let disposeBag = DisposeBag()
+    
+    required init(interactor: TwilioInteractor) {
+        self.twilioInteractor = interactor
+        super.init()
+        self.startListeners()
+    }
+    
+    private func startListeners() {
+        twilioInteractor.state.bind(to: self.state).disposed(by: disposeBag)
+    }
+    
+    func switchSpeaker(on isOn: Bool) {
+        toggleAudioRoute(toSpeaker: isOn)
+    }
+    
+    func muteSwith(on isOn: Bool) {
+        twilioInteractor.muteSwitchToggled(on: isOn)
+    }
+    
+    func makeCall() {
+        twilioInteractor.placeCall()
+    }
+}
+
+// MARK: - AVAudioSession
+
+extension ViewModel {
+    
+    func toggleAudioRoute(toSpeaker: Bool) {
+        // The mode set by the Voice SDK is "VoiceChat" so the default audio
+        // route is the built-in receiver. Use port override to switch the route.
+        do {
+            if (toSpeaker) {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+            } else {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            }
+        } catch {
+            NSLog(error.localizedDescription)
+        }
+    }
+}

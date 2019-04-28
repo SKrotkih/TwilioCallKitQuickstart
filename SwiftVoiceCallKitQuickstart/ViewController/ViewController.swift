@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import AVFoundation
 import RxSwift
+import RxCocoa
 
 class ViewController: UIViewController {
     
@@ -18,23 +18,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
     
+    public var viewModel: ViewModel!
+    
     private var configurator = Configurator()
-    var twilioInteractor: TwilioInteractor!
-    
     private let disposeBag = DisposeBag()
-    
     private var isSpinning = false
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.configurator.configure(for: self)
-        self.startCallKitEventsListening()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configureView()
+        startListeners()
     }
     
     private func configureView() {
@@ -42,24 +40,24 @@ class ViewController: UIViewController {
         didFinishCall()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    @IBAction func placeCall(_ sender: UIButton) {
-        twilioInteractor.placeCall()
-    }
-    
-    @IBAction func muteSwitchToggled(_ sender: UISwitch) {
-        twilioInteractor.muteSwitchToggled(on: sender.isOn)
-    }
-    
-    @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
-        toggleAudioRoute(toSpeaker: sender.isOn)
-    }
-    
-    private func startCallKitEventsListening() {
-        twilioInteractor.state.subscribe() { value in
+    private func startListeners() {
+        
+        speakerSwitch.rx.isOn.asObservable()
+            .subscribe(onNext:{ isOn in
+                self.viewModel.switchSpeaker(on: isOn)
+            })
+            .disposed(by:disposeBag)
+        muteSwitch.rx.isOn.asObservable()
+            .subscribe(onNext:{ isOn in
+                self.viewModel.muteSwith(on: isOn)
+            })
+            .disposed(by:disposeBag)
+        placeCallButton.rx.tap.asObservable()
+            .subscribe(onNext:{ _ in
+                self.viewModel.makeCall()
+            })
+            .disposed(by:disposeBag)
+        viewModel.state.subscribe() { value in
             if let state = value.element {
                 switch state {
                 case .startCall:
@@ -77,7 +75,7 @@ class ViewController: UIViewController {
         self.placeCallButton.setTitle("Hang Up", for: .normal)
         self.toggleUIState(isEnabled: true, showCallControl: true)
         self.stopSpin()
-        self.toggleAudioRoute(toSpeaker: true)
+        self.viewModel.switchSpeaker(on: true)
     }
 
     private func didFinishCall() {
@@ -139,24 +137,5 @@ extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         outgoingValue.resignFirstResponder()
         return true
-    }
-}
-
-// MARK: - AVAudioSession
-
-extension ViewController {
-    
-    func toggleAudioRoute(toSpeaker: Bool) {
-        // The mode set by the Voice SDK is "VoiceChat" so the default audio
-        // route is the built-in receiver. Use port override to switch the route.
-        do {
-            if (toSpeaker) {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            } else {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-            }
-        } catch {
-            NSLog(error.localizedDescription)
-        }
     }
 }

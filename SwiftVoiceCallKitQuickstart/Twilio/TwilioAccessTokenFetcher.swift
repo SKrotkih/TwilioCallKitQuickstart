@@ -1,6 +1,6 @@
 //
 //  TwilioAccessTokenFetcher.swift
-//  SwiftVoiceCallKitQuickstart
+//  TwilioCallKitQuickstart
 //
 
 import Foundation
