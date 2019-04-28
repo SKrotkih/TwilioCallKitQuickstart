@@ -32,8 +32,13 @@ class ViewModel: NSObject {
         twilioInteractor.muteSwitchToggled(on: isOn)
     }
     
-    func makeCall() {
-        twilioInteractor.placeCall()
+    func makeCall(to handle: String?, phoneNumber: String?) {
+        guard let handle = handle, let phoneNumber = phoneNumber else {
+            return
+        }
+        twilioInteractor.outgoingPhoneNumber = phoneNumber
+        // 'To' uses for CallKit to show on screen
+        twilioInteractor.placeCall(to: handle)
     }
 }
 

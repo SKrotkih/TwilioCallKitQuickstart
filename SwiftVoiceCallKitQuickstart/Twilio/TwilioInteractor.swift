@@ -22,6 +22,8 @@ class TwilioInteractor: NSObject {
     private var userInitiatedDisconnect: Bool = false
     
     private var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
+
+    var outgoingPhoneNumber: String!
     
     required init(notificationsDelegate: VoIpNotificationsDelegate,
                   callKitProviderDelegate: CallKitProviderDelegate) {
@@ -61,10 +63,7 @@ class TwilioInteractor: NSObject {
                             completionHandler(false)
                             return
                         }
-
-                        let to = "+1234555555" // self.outgoingValue.text!
-                        
-                        self.call = TwilioVoice.call(accessToken, params: ["To": to], uuid: uuid, delegate: self)
+                        self.call = TwilioVoice.call(accessToken, params: ["To": self.outgoingPhoneNumber], uuid: uuid, delegate: self)
                         self.callKitCompletionCallback = completionHandler
                     }
                 case .heldCall(let isOnHold, let completionHandler):
@@ -134,14 +133,13 @@ class TwilioInteractor: NSObject {
 extension TwilioInteractor {
 
     // Make a call action
-    func placeCall() {
+    func placeCall(to handle: String) {
         if (self.call != nil && self.call?.state == .connected) {
             self.userInitiatedDisconnect = true
             self.state.onNext(.endCallAction(self.call!.uuid))
             self.state.onNext(.endCall)
         } else {
             let uuid = UUID()
-            let handle = "Voice Bot"
             self.state.onNext(.makeCallAction(uuid, handle))
         }
     }

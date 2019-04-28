@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var outgoingValue: UITextField!
+    
+    @IBOutlet weak var outgoingPhoneNumberTextField: UITextField!
     @IBOutlet weak var callControlView: UIView!
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
@@ -35,6 +37,13 @@ class ViewController: UIViewController {
         startListeners()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.outgoingValue.text = "Test"
+        self.outgoingPhoneNumberTextField.text = "+123456789"
+    }
+    
     private func configureView() {
         outgoingValue.delegate = self
         didFinishCall()
@@ -54,7 +63,7 @@ class ViewController: UIViewController {
             .disposed(by:disposeBag)
         placeCallButton.rx.tap.asObservable()
             .subscribe(onNext:{ _ in
-                self.viewModel.makeCall()
+                self.viewModel.makeCall(to: self.outgoingValue.text, phoneNumber: self.outgoingPhoneNumberTextField.text)
             })
             .disposed(by:disposeBag)
         viewModel.state.subscribe() { value in
