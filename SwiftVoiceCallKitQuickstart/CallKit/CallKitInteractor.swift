@@ -24,9 +24,9 @@ class CallKitInteractor: NSObject {
                     case .twilioReceivedCallInvite(let uuid, let handle):
                         // Incoming call
                         self.reportIncomingCall(from: handle, uuid: uuid)
-                    case .makeCallAction(let uuid, let handle):
+                    case .makeCallAction(let uuid, let handle, let video):
                         // Outbound call
-                        self.performStartCallAction(uuid: uuid, handle: handle)
+                        self.performStartCallAction(uuid: uuid, handle: handle, video: video)
                     case .endCallAction(let uuid):
                         // Close CallKit screen
                         self.performEndCallAction(uuid: uuid)
@@ -78,6 +78,7 @@ class CallKitInteractor: NSObject {
     }
     
     // MARK: Incoming call action
+    /// Report the incoming call to the system
     private func reportIncomingCall(from: String, uuid: UUID) {
         let callHandle = CXHandle(type: .generic, value: from)
         
@@ -109,9 +110,10 @@ class CallKitInteractor: NSObject {
     }
     
     // MARK: Outbound Call Kit Actions
-    private func performStartCallAction(uuid: UUID, handle: String) {
+    private func performStartCallAction(uuid: UUID, handle: String, video: Bool = false) {
         let callHandle = CXHandle(type: .generic, value: handle)
         let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
+        startCallAction.isVideo = video
         let transaction = CXTransaction(action: startCallAction)
         
         callKitCallController.request(transaction)  { error in

@@ -50,6 +50,7 @@ class CallKitProviderDelegate: NSObject, CXProviderDelegate {
                 action.fail()
             }
         }
+        // Make call by the TwilioVoice
         state.onNext(.outboundCall(uuid, completionHandler))
     }
     

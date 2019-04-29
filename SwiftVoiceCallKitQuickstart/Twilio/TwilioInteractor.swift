@@ -247,14 +247,14 @@ extension TwilioInteractor {
     }
 
     // Make a call action
-    func placeCall(to handle: String) {
+    func placeCall(to handle: String, video: Bool = false) {
         if (self.call != nil && self.call?.state == .connected) {
             self.userInitiatedDisconnect = true
             self.state.onNext(.endCallAction(self.call!.uuid))
             self.state.onNext(.endTwilioCall)
         } else {
             let uuid = UUID()
-            self.state.onNext(.makeCallAction(uuid, handle))
+            self.state.onNext(.makeCallAction(uuid, handle, video))
         }
     }
     

@@ -16,7 +16,7 @@ enum PhoneCallState {
     case endTwilioCall
     case startTwilioCall
     case heldCall(Bool, (Bool) -> Void)
-    case makeCallAction(UUID, String)
+    case makeCallAction(UUID, String, Bool)
     case endCallAction(UUID)
     case cancelledCallAction(UUID, Error?)
     case twilioReceivedCallInvite(UUID, String)

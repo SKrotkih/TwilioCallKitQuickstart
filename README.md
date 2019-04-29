@@ -1,4 +1,4 @@
-# TwilioCallKitQuickstart
+# TwilioCallKitQuickstart (SwiftVoiceCallKitQuickstart refactoring)
 
 Here is a code refactoring of the [Twilio Voice Swift Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift)
 

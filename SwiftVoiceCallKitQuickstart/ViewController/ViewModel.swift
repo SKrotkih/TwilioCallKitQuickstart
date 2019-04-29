@@ -33,12 +33,12 @@ class ViewModel: NSObject {
         twilioInteractor.outgoingPhoneNumber = phoneNumber
         // 'To' uses for CallKit to show on screen
         
-        // TODO: Remove after test!!!
-        //twilioInteractor.placeCall(to: handle)
+        twilioInteractor.placeCall(to: handle)
         
-            print("Test incoming call")
-            self.twilioInteractor.testIncomingCall()
-        
+        // Remove comment to test incoming call. Search TODO: then
+        // print("Test incoming call")
+        // self.twilioInteractor.testIncomingCall()
+
     }
 }
 
