@@ -14,19 +14,28 @@ struct Configurator {
     mutating func configure(for viewController: ViewController) {
 
         let callKitProviderDelegate = CallKitProviderDelegate()
-
-        self.twilioAudioController = TwilioAudioController(providerDelegate: callKitProviderDelegate)
-
         let voIpNotificationsDelegate = VoIpNotificationsDelegate()
+        let twilioNotificationDelegate = TwilioNotificationDelegate()
+        let twilioInteractor = TwilioInteractor()
+        let viewModel = ViewModel()
+        self.coolKitInteractor = CallKitInteractor()
+        self.notificationsInteractor = VoIpNotificationsInteractor()
 
-        let twilioInteractor = TwilioInteractor(notificationsDelegate: voIpNotificationsDelegate, callKitProviderDelegate: callKitProviderDelegate)
+        twilioInteractor.callKitProviderDelegate = callKitProviderDelegate
+        twilioInteractor.voIpNotificationsDelegate = voIpNotificationsDelegate
+        twilioInteractor.twilioNotificationDelegate = twilioNotificationDelegate
         
-        let viewModel = ViewModel(interactor: twilioInteractor)
+        self.twilioAudioController = TwilioAudioController()
+        self.twilioAudioController.providerDelegate = callKitProviderDelegate
+        
+        viewModel.twilioInteractor = twilioInteractor
+
         viewController.viewModel = viewModel
         
-        coolKitInteractor = CallKitInteractor(twilioInteractor: twilioInteractor, providerDelegate: callKitProviderDelegate)
+        self.coolKitInteractor.twilioInteractor = twilioInteractor
+        self.coolKitInteractor.callKitProviderDelegate = callKitProviderDelegate
         
-        notificationsInteractor = VoIpNotificationsInteractor(notificationsDelegate: voIpNotificationsDelegate)
+        self.notificationsInteractor.notificationsDelegate = voIpNotificationsDelegate
         
     }
 }

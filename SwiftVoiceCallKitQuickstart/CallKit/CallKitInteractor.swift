@@ -12,21 +12,22 @@ import TwilioVoice
 
 class CallKitInteractor: NSObject {
     
-    private var twilioInteractor: TwilioInteractor!
-    private var callKitProviderDelegate: CallKitProviderDelegate!
+    var twilioInteractor: TwilioInteractor!
+    var callKitProviderDelegate: CallKitProviderDelegate! {
+        didSet {
+            callKitProvider.setDelegate(callKitProviderDelegate, queue: nil)
+        }
+    }
     
     private let callKitProvider: CXProvider
     private let callKitCallController: CXCallController
     
     private let disposeBag = DisposeBag()
     
-    required init(twilioInteractor: TwilioInteractor, providerDelegate: CallKitProviderDelegate) {
-        self.twilioInteractor = twilioInteractor
-        self.callKitProviderDelegate = providerDelegate
+    override init() {
         callKitCallController = CXCallController()
         callKitProvider = CXProvider(configuration: type(of: self).providerConfiguration)
         super.init()
-        callKitProvider.setDelegate(providerDelegate, queue: nil)
         self.addObservers()
     }
     

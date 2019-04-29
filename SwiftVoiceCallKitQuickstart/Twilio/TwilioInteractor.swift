@@ -12,8 +12,9 @@ class TwilioInteractor: NSObject {
     public let state = PublishSubject<PhoneCallState>()
     
     var callKitProviderDelegate: CallKitProviderDelegate!
+    var voIpNotificationsDelegate: VoIpNotificationsDelegate!
+    var twilioNotificationDelegate: TwilioNotificationDelegate!
     
-    private let notificationsDelegate: VoIpNotificationsDelegate
     private let disposeBag = DisposeBag()
     private let accessTokenFetcher = TwilioAccessTokenFetcher()
     
@@ -25,21 +26,18 @@ class TwilioInteractor: NSObject {
 
     var outgoingPhoneNumber: String!
     
-    required init(notificationsDelegate: VoIpNotificationsDelegate,
-                  callKitProviderDelegate: CallKitProviderDelegate) {
-        self.notificationsDelegate = notificationsDelegate
-        self.callKitProviderDelegate = callKitProviderDelegate
+    override init() {
         super.init()
         self.twilioConfigure()
-        self.addObservers()
+        self.listenDelegates()
     }
     
     private func twilioConfigure() {
         TwilioVoice.logLevel = .verbose
     }
     
-    private func addObservers() {
-        notificationsDelegate.voIpNotifications.subscribe() { value in
+    private func listenDelegates() {
+        voIpNotificationsDelegate.voIpNotifications.subscribe() { value in
             if let notification = value.element {
                 switch notification {
                 case .deviceTokenUpdated(let deviceToken):
@@ -58,39 +56,60 @@ class TwilioInteractor: NSObject {
                 case .answerCall(let uuid, let completionHandler):
                     self.performAnswerVoiceCall(uuid: uuid, completionHandler: completionHandler)
                 case .outboundCall(let uuid, let completionHandler):
-                    self.accessTokenFetcher.fetchAccessToken() { accessToken in
-                        guard let accessToken = accessToken else {
-                            completionHandler(false)
-                            return
-                        }
-                        self.call = TwilioVoice.call(accessToken, params: ["To": self.outgoingPhoneNumber], uuid: uuid, delegate: self)
-                        self.callKitCompletionCallback = completionHandler
-                    }
+                    self.performOutboundCall(uuid, completionHandler)
                 case .heldCall(let isOnHold, let completionHandler):
-                    if (self.call?.state == .connected) {
-                        self.call?.isOnHold = isOnHold
-                        completionHandler(true)
-                    } else {
-                        completionHandler(false)
-                    }
+                    self.performHeldCall(isOnHold, completionHandler)
                 default:
                     break
                 }
             }
             }.disposed(by: disposeBag)
+        twilioNotificationDelegate.state.subscribe() { value in
+            if let state = value.element {
+                switch state {
+                case .pending(let callInvite):
+                    self.handleCallInviteReceived(callInvite)
+                case .canceled(let callInvite):
+                    self.handleCallInviteCanceled(callInvite)
+                case .error(let error):
+                    print("\(#function): \(error.localizedDescription)")
+                }
+            }
+        }.disposed(by: disposeBag)
     }
+}
 
-    func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
+// MARK: - Twilio Call Invite Handler
 
-        self.didAnswerCall()
-        
-        call = self.callInvite?.accept(with: self)
+extension TwilioInteractor {
+    private func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
+        print("\(#function)")
+        if (self.callInvite != nil && self.callInvite?.state == .pending) {
+            print("Already a pending incoming call invite.");
+            print("  >> Ignoring call from %@", callInvite.from);
+            self.voIpNotificationsDelegate.incomingPushHandled()
+            return
+        } else if (self.call != nil) {
+            print("Already an active call.");
+            print("  >> Ignoring call from %@", callInvite.from);
+            self.voIpNotificationsDelegate.incomingPushHandled()
+            return
+        }
+        self.callInvite = callInvite
+        self.state.onNext(.callInviteReceived(callInvite.uuid, "Voice Bot"))
+    }
+    private func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
+        print("\(#function)")
+        self.state.onNext(.endCallAction(callInvite.uuid))
         self.callInvite = nil
-        self.callKitCompletionCallback = completionHandler
-        self.notificationsDelegate.incomingPushHandled()
+        self.voIpNotificationsDelegate.incomingPushHandled()
     }
-    
-    
+}
+
+// MARK: - From VoIpNotifuicationsDelegate notiofications handle
+
+extension TwilioInteractor {
+
     private func registerDeviceToken(_ deviceToken: String) {
         self.accessTokenFetcher.fetchAccessToken() { accessToken in
             guard let accessToken = accessToken else {
@@ -106,7 +125,6 @@ class TwilioInteractor: NSObject {
             }
         }
     }
-    
     private func unRegisterDeviceToken(_ deviceToken: String) {
         self.accessTokenFetcher.fetchAccessToken() { accessToken in
             guard let accessToken = accessToken else {
@@ -122,9 +140,46 @@ class TwilioInteractor: NSObject {
             }
         }
     }
-    
     private func incomingCallReceived(with userInfo: [AnyHashable: Any]) {
-        TwilioVoice.handleNotification(userInfo, delegate: self)
+        TwilioVoice.handleNotification(userInfo, delegate: twilioNotificationDelegate)
+    }
+}
+
+// MARK: - From CallKitProviderDelegate notiofications handle
+
+extension TwilioInteractor {
+    
+    private func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
+        if let callInvite = self.callInvite {
+            if callInvite.state == .pending {
+                callInvite.reject()
+            } else {
+                call = callInvite.accept(with: self)
+            }
+            self.callInvite = nil
+        } else if let call = self.call {
+            call.disconnect()
+        }
+        self.callKitCompletionCallback = completionHandler
+        self.voIpNotificationsDelegate.incomingPushHandled()
+    }
+    private func performOutboundCall(_ uuid: UUID, _ completionHandler: @escaping (Bool) -> Void) {
+        self.accessTokenFetcher.fetchAccessToken() { accessToken in
+            guard let accessToken = accessToken else {
+                completionHandler(false)
+                return
+            }
+            self.call = TwilioVoice.call(accessToken, params: ["To": self.outgoingPhoneNumber], uuid: uuid, delegate: self)
+            self.callKitCompletionCallback = completionHandler
+        }
+    }
+    private func performHeldCall(_ isOnHold: Bool, _ completionHandler: @escaping (Bool) -> Void) {
+        if (self.call?.state == .connected) {
+            self.call?.isOnHold = isOnHold
+            completionHandler(true)
+        } else {
+            completionHandler(false)
+        }
     }
 }
 
@@ -153,55 +208,6 @@ extension TwilioInteractor {
     }
 }
 
-// MARK: - TVONotificaitonDelegate
-
-extension TwilioInteractor: TVONotificationDelegate {
-
-    func callInviteReceived(_ callInvite: TVOCallInvite) {
-        if (callInvite.state == .pending) {
-            handleCallInviteReceived(callInvite)
-        } else if (callInvite.state == .canceled) {
-            handleCallInviteCanceled(callInvite)
-        }
-    }
-    
-    func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
-        print("\(#function)")
-        if (self.callInvite != nil && self.callInvite?.state == .pending) {
-            print("Already a pending incoming call invite.");
-            print("  >> Ignoring call from %@", callInvite.from);
-            self.notificationsDelegate.incomingPushHandled()
-            return
-        } else if (self.call != nil) {
-            print("Already an active call.");
-            print("  >> Ignoring call from %@", callInvite.from);
-            self.notificationsDelegate.incomingPushHandled()
-            return
-        }
-        self.callInvite = callInvite
-        self.state.onNext(.callInviteReceived(callInvite.uuid, "Voice Bot"))
-    }
-    
-    func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
-        print("\(#function)")
-        self.state.onNext(.endCallAction(callInvite.uuid))
-        self.callInvite = nil
-        self.notificationsDelegate.incomingPushHandled()
-    }
-    
-    func notificationError(_ error: Error) {
-        print("\(#function): \(error.localizedDescription)")
-    }
-    
-    private func didAnswerCall() {
-        if (self.callInvite != nil && self.callInvite?.state == .pending) {
-            self.callInvite?.reject()
-            self.callInvite = nil
-        } else if (self.call != nil) {
-            self.call?.disconnect()
-        }
-    }
-}
 
 // MARK: - TVOCallDelegate
 

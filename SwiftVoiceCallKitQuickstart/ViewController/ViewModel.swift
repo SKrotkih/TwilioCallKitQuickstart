@@ -9,13 +9,12 @@ import AVFoundation
 
 class ViewModel: NSObject {
 
-    var twilioInteractor: TwilioInteractor
+    var twilioInteractor: TwilioInteractor!
     public let state = PublishSubject<PhoneCallState>()
     
     private let disposeBag = DisposeBag()
     
-    required init(interactor: TwilioInteractor) {
-        self.twilioInteractor = interactor
+    override init() {
         super.init()
         self.startListeners()
     }
