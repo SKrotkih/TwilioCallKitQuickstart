@@ -33,7 +33,7 @@ class CallKitInteractor: NSObject {
     
     /// The app's provider configuration, representing its CallKit capabilities
     static var providerConfiguration: CXProviderConfiguration {
-        let localizedName = NSLocalizedString("CallKit Quickstart", comment: "Name of application")
+        let localizedName = NSLocalizedString("TwilioCallKitQuickstart", comment: "Name of application")
         let configuration = CXProviderConfiguration(localizedName: localizedName)
         configuration.supportsVideo = false
         configuration.maximumCallsPerCallGroup = 1
@@ -90,6 +90,8 @@ class CallKitInteractor: NSObject {
         callUpdate.supportsUngrouping = false
         callUpdate.hasVideo = false
         
+        // display incoming call UI when receiving incoming voip notification
+        let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
         callKitProvider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
             if let error = error {
                 print("Failed to report incoming call successfully: \(error.localizedDescription).")
@@ -98,6 +100,7 @@ class CallKitInteractor: NSObject {
                 // RCP: Workaround per https://forums.developer.apple.com/message/169511
                 TwilioVoice.configureAudioSession()
             }
+            UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
         }
     }
     
