@@ -10,85 +10,89 @@ import RxSwift
 class TwilioInteractor: NSObject {
 
     public let state = PublishSubject<PhoneCallState>()
-    
-    var callKitProviderDelegate: CallKitProviderDelegate!
-    var voIpNotificationsDelegate: VoIpNotificationsDelegate!
-    var twilioNotificationDelegate: TwilioNotificationDelegate!
-    var twilioCallsDelegate: TwilioCallsDelegate!
-    
-    private let disposeBag = DisposeBag()
     private let accessTokenFetcher = TwilioAccessTokenFetcher()
-    
     private var callInvite: TVOCallInvite?
     private var call: TVOCall?
     private var userInitiatedDisconnect: Bool = false
-    
     private var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
+    private let disposeBag = DisposeBag()
 
     var outgoingPhoneNumber: String!
+    
+    var callKitProviderDelegate: CallKitProviderDelegate! {
+        didSet {
+            callKitProviderDelegate.state.subscribe() { value in
+                if let state = value.element {
+                    switch state {
+                    case .answerCall(let uuid, let completionHandler):
+                        self.performAnswerVoiceCall(uuid: uuid, completionHandler: completionHandler)
+                    case .outboundCall(let uuid, let completionHandler):
+                        self.performOutboundCall(uuid, completionHandler)
+                    case .heldCall(let isOnHold, let completionHandler):
+                        self.performHeldCall(isOnHold, completionHandler)
+                    default:
+                        break
+                    }
+                }
+                }.disposed(by: disposeBag)
+        }
+    }
+    var voIpNotificationsDelegate: VoIpNotificationsDelegate! {
+        didSet {
+            voIpNotificationsDelegate.voIpNotifications.subscribe() { value in
+                if let notification = value.element {
+                    switch notification {
+                    case .deviceTokenUpdated(let deviceToken):
+                        self.registerDeviceToken(deviceToken)
+                    case .deviceTokenInvalidated(let deviceToken):
+                        self.unRegisterDeviceToken(deviceToken)
+                    case .incomingCallReceived(let userInfo):
+                        self.incomingCallReceived(with: userInfo)
+                    }
+                }
+                }.disposed(by: disposeBag)
+        }
+    }
+    var twilioNotificationDelegate: TwilioNotificationDelegate! {
+        didSet {
+            twilioNotificationDelegate.state.subscribe() { value in
+                if let state = value.element {
+                    switch state {
+                    case .pending(let callInvite):
+                        self.didReceiveTwilioCallInvite(callInvite)
+                    case .canceled(let callInvite):
+                        self.didCancelTwilioCallInvite(callInvite)
+                    case .error(let error):
+                        self.didGetErrorTwilioCallInvite(error)
+                    }
+                }
+                }.disposed(by: disposeBag)
+        }
+    }
+    var twilioCallsDelegate: TwilioCallsDelegate! {
+        didSet {
+            twilioCallsDelegate.state.subscribe() { value in
+                if let state = value.element {
+                    switch state {
+                    case .startTVOCall(let call):
+                        self.startTwilioCall(call)
+                    case .finishTVOCall(let call, let error):
+                        self.finishTwilioCasll(call, error)
+                    case .failToConnevtTVOCall(let call, let error):
+                        self.failedTwillioCall(call, error)
+                    }
+                }
+                }.disposed(by: disposeBag)
+        }
+    }
     
     override init() {
         super.init()
         self.twilioConfigure()
-        self.listenDelegates()
     }
     
     private func twilioConfigure() {
         TwilioVoice.logLevel = .verbose
-    }
-    
-    private func listenDelegates() {
-        voIpNotificationsDelegate.voIpNotifications.subscribe() { value in
-            if let notification = value.element {
-                switch notification {
-                case .deviceTokenUpdated(let deviceToken):
-                    self.registerDeviceToken(deviceToken)
-                case .deviceTokenInvalidated(let deviceToken):
-                    self.unRegisterDeviceToken(deviceToken)
-                case .incomingCallReceived(let userInfo):
-                    self.incomingCallReceived(with: userInfo)
-                }
-            }
-        }.disposed(by: disposeBag)
-        
-        callKitProviderDelegate.state.subscribe() { value in
-            if let state = value.element {
-                switch state {
-                case .answerCall(let uuid, let completionHandler):
-                    self.performAnswerVoiceCall(uuid: uuid, completionHandler: completionHandler)
-                case .outboundCall(let uuid, let completionHandler):
-                    self.performOutboundCall(uuid, completionHandler)
-                case .heldCall(let isOnHold, let completionHandler):
-                    self.performHeldCall(isOnHold, completionHandler)
-                default:
-                    break
-                }
-            }
-            }.disposed(by: disposeBag)
-        twilioNotificationDelegate.state.subscribe() { value in
-            if let state = value.element {
-                switch state {
-                case .pending(let callInvite):
-                    self.didReceiveTwilioCallInvite(callInvite)
-                case .canceled(let callInvite):
-                    self.didCancelTwilioCallInvite(callInvite)
-                case .error(let error):
-                    self.didGetErrorTwilioCallInvite(error)
-                }
-            }
-        }.disposed(by: disposeBag)
-        twilioCallsDelegate.state.subscribe() { value in
-            if let state = value.element {
-                switch state {
-                case .startTVOCall(let call):
-                    self.startTwilioCall(call)
-                case .finishTVOCall(let call, let error):
-                    self.finishTwilioCasll(call, error)
-                case .failToConnevtTVOCall(let call, let error):
-                    self.failedTwillioCall(call, error)
-                }
-            }
-            }.disposed(by: disposeBag)
     }
 }
 

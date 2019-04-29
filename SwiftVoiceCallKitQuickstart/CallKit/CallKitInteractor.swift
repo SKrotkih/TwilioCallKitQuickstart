@@ -12,7 +12,11 @@ import TwilioVoice
 
 class CallKitInteractor: NSObject {
     
-    var twilioInteractor: TwilioInteractor!
+    var twilioInteractor: TwilioInteractor! {
+        didSet {
+            self.addObservers()
+        }
+    }
     var callKitProviderDelegate: CallKitProviderDelegate! {
         didSet {
             callKitProvider.setDelegate(callKitProviderDelegate, queue: nil)
@@ -28,7 +32,6 @@ class CallKitInteractor: NSObject {
         callKitCallController = CXCallController()
         callKitProvider = CXProvider(configuration: type(of: self).providerConfiguration)
         super.init()
-        self.addObservers()
     }
     
     /// The app's provider configuration, representing its CallKit capabilities

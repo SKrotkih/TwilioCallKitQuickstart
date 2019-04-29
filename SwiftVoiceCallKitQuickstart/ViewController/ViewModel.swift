@@ -9,18 +9,17 @@ import AVFoundation
 
 class ViewModel: NSObject {
 
-    var twilioInteractor: TwilioInteractor!
+    var twilioInteractor: TwilioInteractor! {
+        didSet {
+            twilioInteractor.state.bind(to: self.state).disposed(by: disposeBag)
+        }
+    }
     public let state = PublishSubject<PhoneCallState>()
     
     private let disposeBag = DisposeBag()
     
     override init() {
         super.init()
-        self.startListeners()
-    }
-    
-    private func startListeners() {
-        twilioInteractor.state.bind(to: self.state).disposed(by: disposeBag)
     }
     
     func switchSpeaker(on isOn: Bool) {

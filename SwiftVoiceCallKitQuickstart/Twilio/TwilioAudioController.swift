@@ -10,13 +10,16 @@ import RxSwift
 
 class TwilioAudioController: NSObject {
     
-    var providerDelegate: CallKitProviderDelegate!
+    var providerDelegate: CallKitProviderDelegate! {
+        didSet {
+            addObservers()
+        }
+    }
     
     private let disposeBag = DisposeBag()
     
     override init() {
         super.init()
-        addObservers()
     }
 
     private func addObservers() {
