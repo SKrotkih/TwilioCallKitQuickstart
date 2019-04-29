@@ -92,6 +92,7 @@ class CallKitInteractor: NSObject {
         // display incoming call UI when receiving incoming voip notification
         let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
         
+        // TODO: Remove after test. It's delay for have ability to test in background mode
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.callKitProvider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
                 if let error = error {

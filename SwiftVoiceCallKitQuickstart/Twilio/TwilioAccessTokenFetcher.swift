@@ -7,7 +7,7 @@ import Foundation
 
 class TwilioAccessTokenFetcher: NSObject {
     
-    // TODO: Replace this url by your
+    // TODO: Implement this class for your Twilio app server
     private let baseURLString = "https://accesstoken.com"
     // If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
     private let accessTokenEndpoint = "/accessToken"
