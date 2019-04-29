@@ -91,16 +91,20 @@ class CallKitInteractor: NSObject {
         
         // display incoming call UI when receiving incoming voip notification
         let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
-        callKitProvider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
-            if let error = error {
-                print("Failed to report incoming call successfully: \(error.localizedDescription).")
-            } else {
-                print("Incoming call successfully reported.")
-                // RCP: Workaround per https://forums.developer.apple.com/message/169511
-                TwilioVoice.configureAudioSession()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.callKitProvider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
+                if let error = error {
+                    print("Failed to report incoming call successfully: \(error.localizedDescription).")
+                } else {
+                    print("Incoming call successfully reported.")
+                    // RCP: Workaround per https://forums.developer.apple.com/message/169511
+                    TwilioVoice.configureAudioSession()
+                }
+                UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
             }
-            UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
         }
+        
     }
     
     // MARK: Outbound Call Kit Actions

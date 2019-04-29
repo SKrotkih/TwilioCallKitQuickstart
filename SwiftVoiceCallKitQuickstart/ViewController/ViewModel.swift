@@ -36,9 +36,8 @@ class ViewModel: NSObject {
         // TODO: Remove after test!!!
         //twilioInteractor.placeCall(to: handle)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            print("Test incoming call")
             self.twilioInteractor.testIncomingCall()
-        }
         
     }
 }
