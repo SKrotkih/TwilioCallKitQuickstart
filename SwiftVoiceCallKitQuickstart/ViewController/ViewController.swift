@@ -69,9 +69,9 @@ class ViewController: UIViewController {
         viewModel.state.subscribe() { value in
             if let state = value.element {
                 switch state {
-                case .startCall:
+                case .startTwilioCall:
                     self.didStartCall()
-                case .endCall:
+                case .endTwilioCall:
                     self.didFinishCall()
                 default:
                     break

@@ -52,7 +52,7 @@ class CallKitInteractor: NSObject {
         twilioInteractor.state.subscribe() { value in
             if let state = value.element {
                 switch state {
-                case .callInviteReceived(let uuid, let handle):
+                case .twilioReceivedCallInvite(let uuid, let handle):
                     // Incoming call
                     self.reportIncomingCall(from: handle, uuid: uuid)
                 case .makeCallAction(let uuid, let handle):

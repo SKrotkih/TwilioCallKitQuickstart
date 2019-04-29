@@ -17,14 +17,14 @@ enum PhoneCallState {
     case activateSession
     case deactivateSession
     case timeout
-    case startCall
     case answerCall(UUID, (Bool) -> Void)
-    case endCall
+    case endTwilioCall
+    case startTwilioCall
     case heldCall(Bool, (Bool) -> Void)
     case makeCallAction(UUID, String)
     case endCallAction(UUID)
     case cancelledCallAction(UUID, Error?)
-    case callInviteReceived(UUID, String)
+    case twilioReceivedCallInvite(UUID, String)
     case outboundCall(UUID, (Bool) -> Void)
 }
 
@@ -59,7 +59,7 @@ class CallKitProviderDelegate: NSObject, CXProviderDelegate {
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         print("\(#function) CXStartCallAction")
-        state.onNext(.startCall)
+        state.onNext(.startTwilioCall)
         let uuid = action.callUUID
         provider.reportOutgoingCall(with: uuid, startedConnectingAt: Date())
         let completionHandler: (Bool) -> Void = { (success) in
@@ -95,7 +95,7 @@ class CallKitProviderDelegate: NSObject, CXProviderDelegate {
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         print("\(#function) CXEndCallAction")
-        state.onNext(.endCall)
+        state.onNext(.endTwilioCall)
         action.fulfill()
     }
     

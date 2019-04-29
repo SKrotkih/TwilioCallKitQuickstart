@@ -20,12 +20,14 @@ struct Dependencies {
         let callKitProviderDelegate = CallKitProviderDelegate()
         let voIpNotificationsDelegate = VoIpNotificationsDelegate()
         let twilioNotificationDelegate = TwilioNotificationDelegate()
+        let twilioCallsDelegate = TwilioCallsDelegate()
         let twilioInteractor = TwilioInteractor()
         let viewModel = ViewModel()
         
         twilioInteractor.callKitProviderDelegate = callKitProviderDelegate
         twilioInteractor.voIpNotificationsDelegate = voIpNotificationsDelegate
         twilioInteractor.twilioNotificationDelegate = twilioNotificationDelegate
+        twilioInteractor.twilioCallsDelegate = twilioCallsDelegate
         
         viewModel.twilioInteractor = twilioInteractor
 

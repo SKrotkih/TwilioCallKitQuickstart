@@ -29,7 +29,7 @@ class TwilioAudioController: NSObject {
                     TwilioVoice.isAudioEnabled = true
                 case .deactivateSession:
                     TwilioVoice.isAudioEnabled = false
-                case .startCall:
+                case .startTwilioCall:
                     TwilioVoice.configureAudioSession()
                     TwilioVoice.isAudioEnabled = false
                 case .answerCall:
