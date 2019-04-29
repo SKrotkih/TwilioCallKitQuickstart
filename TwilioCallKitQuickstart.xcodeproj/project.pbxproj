@@ -19,7 +19,7 @@
 		7F13A1DA22749A330080CD3A /* Ringtone.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7F13A1D922749A320080CD3A /* Ringtone.caf */; };
 		7F13A1DC22749E1F0080CD3A /* VoIpNotificationsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13A1DB22749E1F0080CD3A /* VoIpNotificationsInteractor.swift */; };
 		7F13D7AE2273E21B00F7DFAD /* TwilioAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7AD2273E21B00F7DFAD /* TwilioAudioController.swift */; };
-		7F13D7B02273EE0500F7DFAD /* Configurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7AF2273EE0500F7DFAD /* Configurator.swift */; };
+		7F13D7B02273EE0500F7DFAD /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7AF2273EE0500F7DFAD /* Dependencies.swift */; };
 		7F13D7B222740A0B00F7DFAD /* VoIpNotificationsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7B122740A0B00F7DFAD /* VoIpNotificationsDelegate.swift */; };
 		7F13D7B4227410D300F7DFAD /* TwilioInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7B3227410D300F7DFAD /* TwilioInteractor.swift */; };
 		7F13D7B6227414A300F7DFAD /* TwilioAccessTokenFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7B5227414A300F7DFAD /* TwilioAccessTokenFetcher.swift */; };
@@ -46,7 +46,7 @@
 		7F13A1D922749A320080CD3A /* Ringtone.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ringtone.caf; sourceTree = "<group>"; };
 		7F13A1DB22749E1F0080CD3A /* VoIpNotificationsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoIpNotificationsInteractor.swift; sourceTree = "<group>"; };
 		7F13D7AD2273E21B00F7DFAD /* TwilioAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioAudioController.swift; sourceTree = "<group>"; };
-		7F13D7AF2273EE0500F7DFAD /* Configurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurator.swift; sourceTree = "<group>"; };
+		7F13D7AF2273EE0500F7DFAD /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		7F13D7B122740A0B00F7DFAD /* VoIpNotificationsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoIpNotificationsDelegate.swift; sourceTree = "<group>"; };
 		7F13D7B3227410D300F7DFAD /* TwilioInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioInteractor.swift; sourceTree = "<group>"; };
 		7F13D7B5227414A300F7DFAD /* TwilioAccessTokenFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioAccessTokenFetcher.swift; sourceTree = "<group>"; };
@@ -89,7 +89,7 @@
 			children = (
 				24BA34421D874AC800B0B4F7 /* Info.plist */,
 				24BA344A1D874D2B00B0B4F7 /* SwiftVoiceCallKitQuickstart.entitlements */,
-				7F13D7AF2273EE0500F7DFAD /* Configurator.swift */,
+				7F13D7AF2273EE0500F7DFAD /* Dependencies.swift */,
 				7F13A1E02274A0990080CD3A /* ViewController */,
 				7F13A1DD2274A0670080CD3A /* PushNotifications */,
 				7F13A1DE2274A0780080CD3A /* Twilio */,
@@ -325,7 +325,7 @@
 				7F13D7B222740A0B00F7DFAD /* VoIpNotificationsDelegate.swift in Sources */,
 				7F13D7B4227410D300F7DFAD /* TwilioInteractor.swift in Sources */,
 				7F13D7B6227414A300F7DFAD /* TwilioAccessTokenFetcher.swift in Sources */,
-				7F13D7B02273EE0500F7DFAD /* Configurator.swift in Sources */,
+				7F13D7B02273EE0500F7DFAD /* Dependencies.swift in Sources */,
 				24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */,
 				7F13A1DC22749E1F0080CD3A /* VoIpNotificationsInteractor.swift in Sources */,
 			);

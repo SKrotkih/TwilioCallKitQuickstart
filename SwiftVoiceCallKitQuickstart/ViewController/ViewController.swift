@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     
     public var viewModel: ViewModel!
     
-    private var configurator = Configurator()
+    private var configurator = Dependencies()
     private let disposeBag = DisposeBag()
     private var isSpinning = false
     

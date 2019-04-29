@@ -68,11 +68,11 @@ class TwilioInteractor: NSObject {
             if let state = value.element {
                 switch state {
                 case .pending(let callInvite):
-                    self.handleCallInviteReceived(callInvite)
+                    self.didReceiveTwilioCallInvite(callInvite)
                 case .canceled(let callInvite):
-                    self.handleCallInviteCanceled(callInvite)
+                    self.didCancelTwilioCallInvite(callInvite)
                 case .error(let error):
-                    print("\(#function): \(error.localizedDescription)")
+                    self.didGetErrorTwilioCallInvite(error)
                 }
             }
         }.disposed(by: disposeBag)
@@ -82,7 +82,7 @@ class TwilioInteractor: NSObject {
 // MARK: - Twilio Call Invite Handler
 
 extension TwilioInteractor {
-    private func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
+    private func didReceiveTwilioCallInvite(_ callInvite: TVOCallInvite) {
         print("\(#function)")
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             print("Already a pending incoming call invite.");
@@ -98,11 +98,14 @@ extension TwilioInteractor {
         self.callInvite = callInvite
         self.state.onNext(.callInviteReceived(callInvite.uuid, "Voice Bot"))
     }
-    private func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
+    private func didCancelTwilioCallInvite(_ callInvite: TVOCallInvite) {
         print("\(#function)")
         self.state.onNext(.endCallAction(callInvite.uuid))
         self.callInvite = nil
         self.voIpNotificationsDelegate.incomingPushHandled()
+    }
+    private func didGetErrorTwilioCallInvite(_ error: Error) {
+        print("\(#function): \(error.localizedDescription)")
     }
 }
 

@@ -1,11 +1,11 @@
 //
-//  Configurator.swift
+//  Dependencies.swift
 //  TwilioCallKitQuickstart
 //
 
 import Foundation
 
-struct Configurator {
+struct Dependencies {
     
     private var twilioAudioController: TwilioAudioController!
     private var coolKitInteractor: CallKitInteractor!
@@ -13,20 +13,19 @@ struct Configurator {
     
     mutating func configure(for viewController: ViewController) {
 
+        self.coolKitInteractor = CallKitInteractor()
+        self.notificationsInteractor = VoIpNotificationsInteractor()
+        self.twilioAudioController = TwilioAudioController()
+
         let callKitProviderDelegate = CallKitProviderDelegate()
         let voIpNotificationsDelegate = VoIpNotificationsDelegate()
         let twilioNotificationDelegate = TwilioNotificationDelegate()
         let twilioInteractor = TwilioInteractor()
         let viewModel = ViewModel()
-        self.coolKitInteractor = CallKitInteractor()
-        self.notificationsInteractor = VoIpNotificationsInteractor()
-
+        
         twilioInteractor.callKitProviderDelegate = callKitProviderDelegate
         twilioInteractor.voIpNotificationsDelegate = voIpNotificationsDelegate
         twilioInteractor.twilioNotificationDelegate = twilioNotificationDelegate
-        
-        self.twilioAudioController = TwilioAudioController()
-        self.twilioAudioController.providerDelegate = callKitProviderDelegate
         
         viewModel.twilioInteractor = twilioInteractor
 
@@ -36,6 +35,8 @@ struct Configurator {
         self.coolKitInteractor.callKitProviderDelegate = callKitProviderDelegate
         
         self.notificationsInteractor.notificationsDelegate = voIpNotificationsDelegate
+
+        self.twilioAudioController.providerDelegate = callKitProviderDelegate
         
     }
 }

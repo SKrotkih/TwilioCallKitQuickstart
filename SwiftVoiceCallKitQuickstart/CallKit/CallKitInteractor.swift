@@ -52,12 +52,15 @@ class CallKitInteractor: NSObject {
         twilioInteractor.state.subscribe() { value in
             if let state = value.element {
                 switch state {
+                case .callInviteReceived(let uuid, let handle):
+                    // Incoming call
+                    self.reportIncomingCall(from: handle, uuid: uuid)
                 case .makeCallAction(let uuid, let handle):
+                    // Outbound call
                     self.performStartCallAction(uuid: uuid, handle: handle)
                 case .endCallAction(let uuid):
+                    // Close CallKit screen
                     self.performEndCallAction(uuid: uuid)
-                case .callInviteReceived(let uuid, let handle):
-                    self.reportIncomingCall(from: handle, uuid: uuid)
                 case .cancelledCallAction(let uuid, let error):
                     self.failedCall(uuid: uuid, error: error)
                 default:
