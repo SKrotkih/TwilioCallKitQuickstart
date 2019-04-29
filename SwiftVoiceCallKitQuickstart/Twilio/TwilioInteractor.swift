@@ -6,6 +6,8 @@
 import Foundation
 import TwilioVoice
 import RxSwift
+import CallKit
+import PushKit
 
 class TwilioInteractor: NSObject {
 
@@ -19,9 +21,9 @@ class TwilioInteractor: NSObject {
 
     var outgoingPhoneNumber: String!
     
-    var callKitProviderDelegate: CallKitProviderDelegate! {
+    var callKitProviderDelegate: CXProviderDelegate! {
         didSet {
-            callKitProviderDelegate.state.subscribe() { value in
+            (callKitProviderDelegate as! CallKitProviderDelegate).state.subscribe() { value in
                 if let state = value.element {
                     switch state {
                     case .answerCall(let uuid, let completionHandler):
@@ -37,9 +39,9 @@ class TwilioInteractor: NSObject {
                 }.disposed(by: disposeBag)
         }
     }
-    var voIpNotificationsDelegate: VoIpNotificationsDelegate! {
+    var voIpNotificationsDelegate: PKPushRegistryDelegate! {
         didSet {
-            voIpNotificationsDelegate.voIpNotifications.subscribe() { value in
+            (voIpNotificationsDelegate as! VoIpNotificationsDelegate).voIpNotifications.subscribe() { value in
                 if let notification = value.element {
                     switch notification {
                     case .deviceTokenUpdated(let deviceToken):
@@ -53,9 +55,9 @@ class TwilioInteractor: NSObject {
                 }.disposed(by: disposeBag)
         }
     }
-    var twilioNotificationDelegate: TwilioNotificationDelegate! {
+    var twilioNotificationDelegate: TVONotificationDelegate! {
         didSet {
-            twilioNotificationDelegate.state.subscribe() { value in
+            (twilioNotificationDelegate as! TwilioNotificationDelegate).state.subscribe() { value in
                 if let state = value.element {
                     switch state {
                     case .pending(let callInvite):
@@ -69,9 +71,9 @@ class TwilioInteractor: NSObject {
                 }.disposed(by: disposeBag)
         }
     }
-    var twilioCallsDelegate: TwilioCallsDelegate! {
+    var twilioCallsDelegate: TVOCallDelegate! {
         didSet {
-            twilioCallsDelegate.state.subscribe() { value in
+            (twilioCallsDelegate as! TwilioCallsDelegate).state.subscribe() { value in
                 if let state = value.element {
                     switch state {
                     case .startTVOCall(let call):
@@ -144,12 +146,12 @@ extension TwilioInteractor {
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             print("Already a pending incoming call invite.");
             print("  >> Ignoring call from %@", callInvite.from);
-            self.voIpNotificationsDelegate.incomingPushHandled()
+            (self.voIpNotificationsDelegate as! VoIpNotificationsDelegate).incomingPushHandled()
             return
         } else if (self.call != nil) {
             print("Already an active call.");
             print("  >> Ignoring call from %@", callInvite.from);
-            self.voIpNotificationsDelegate.incomingPushHandled()
+            (self.voIpNotificationsDelegate as! VoIpNotificationsDelegate).incomingPushHandled()
             return
         }
         self.callInvite = callInvite
@@ -159,7 +161,7 @@ extension TwilioInteractor {
         print("\(#function)")
         self.state.onNext(.endCallAction(callInvite.uuid))
         self.callInvite = nil
-        self.voIpNotificationsDelegate.incomingPushHandled()
+        (self.voIpNotificationsDelegate as! VoIpNotificationsDelegate).incomingPushHandled()
     }
     private func didGetErrorTwilioCallInvite(_ error: Error) {
         print("\(#function): \(error.localizedDescription)")
@@ -214,7 +216,7 @@ extension TwilioInteractor {
             call.disconnect()
         }
         self.callKitCompletionCallback = completionHandler
-        self.voIpNotificationsDelegate.incomingPushHandled()
+        (self.voIpNotificationsDelegate as! VoIpNotificationsDelegate).incomingPushHandled()
     }
     private func performOutboundCall(_ uuid: UUID, _ completionHandler: @escaping (Bool) -> Void) {
         self.accessTokenFetcher.fetchAccessToken() { accessToken in
@@ -239,6 +241,10 @@ extension TwilioInteractor {
 // MARK: - Public
 
 extension TwilioInteractor {
+    
+    func testIncomingCall() {
+        self.state.onNext(.twilioReceivedCallInvite(UUID(), "Voice Bot"))
+    }
 
     // Make a call action
     func placeCall(to handle: String) {

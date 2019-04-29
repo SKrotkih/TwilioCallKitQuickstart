@@ -12,25 +12,43 @@ import TwilioVoice
 
 class CallKitInteractor: NSObject {
     
+    private var callKitProvider: CXProvider!
+    private let callKitCallController: CXCallController
+    private let disposeBag = DisposeBag()
+
     var twilioInteractor: TwilioInteractor! {
         didSet {
-            self.addObservers()
+            twilioInteractor.state.subscribe() { value in
+                if let state = value.element {
+                    switch state {
+                    case .twilioReceivedCallInvite(let uuid, let handle):
+                        // Incoming call
+                        self.reportIncomingCall(from: handle, uuid: uuid)
+                    case .makeCallAction(let uuid, let handle):
+                        // Outbound call
+                        self.performStartCallAction(uuid: uuid, handle: handle)
+                    case .endCallAction(let uuid):
+                        // Close CallKit screen
+                        self.performEndCallAction(uuid: uuid)
+                    case .cancelledCallAction(let uuid, let error):
+                        self.failedCall(uuid: uuid, error: error)
+                    default:
+                        break
+                    }
+                }
+                }.disposed(by: disposeBag)
         }
     }
-    var callKitProviderDelegate: CallKitProviderDelegate! {
+    var callKitProviderDelegate: CXProviderDelegate! {
         didSet {
+            callKitProvider = CXProvider(configuration: type(of: self).providerConfiguration)
             callKitProvider.setDelegate(callKitProviderDelegate, queue: nil)
         }
     }
     
-    private let callKitProvider: CXProvider
-    private let callKitCallController: CXCallController
-    
-    private let disposeBag = DisposeBag()
-    
     override init() {
         callKitCallController = CXCallController()
-        callKitProvider = CXProvider(configuration: type(of: self).providerConfiguration)
+
         super.init()
     }
     
@@ -49,28 +67,6 @@ class CallKitInteractor: NSObject {
     deinit {
         // CallKit has an odd API contract where the developer must call invalidate or the CXProvider is leaked.
         callKitProvider.invalidate()
-    }
-    
-    private func addObservers() {
-        twilioInteractor.state.subscribe() { value in
-            if let state = value.element {
-                switch state {
-                case .twilioReceivedCallInvite(let uuid, let handle):
-                    // Incoming call
-                    self.reportIncomingCall(from: handle, uuid: uuid)
-                case .makeCallAction(let uuid, let handle):
-                    // Outbound call
-                    self.performStartCallAction(uuid: uuid, handle: handle)
-                case .endCallAction(let uuid):
-                    // Close CallKit screen
-                    self.performEndCallAction(uuid: uuid)
-                case .cancelledCallAction(let uuid, let error):
-                    self.failedCall(uuid: uuid, error: error)
-                default:
-                    break
-                }
-            }
-            }.disposed(by: disposeBag)
     }
     
     private func failedCall(uuid: UUID, error: Error?) {

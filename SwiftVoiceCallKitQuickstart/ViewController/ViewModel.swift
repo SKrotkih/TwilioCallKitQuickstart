@@ -9,19 +9,15 @@ import AVFoundation
 
 class ViewModel: NSObject {
 
+    public let state = PublishSubject<PhoneCallState>()
+    private let disposeBag = DisposeBag()
+    
     var twilioInteractor: TwilioInteractor! {
         didSet {
             twilioInteractor.state.bind(to: self.state).disposed(by: disposeBag)
         }
     }
-    public let state = PublishSubject<PhoneCallState>()
-    
-    private let disposeBag = DisposeBag()
-    
-    override init() {
-        super.init()
-    }
-    
+
     func switchSpeaker(on isOn: Bool) {
         toggleAudioRoute(toSpeaker: isOn)
     }
@@ -36,7 +32,14 @@ class ViewModel: NSObject {
         }
         twilioInteractor.outgoingPhoneNumber = phoneNumber
         // 'To' uses for CallKit to show on screen
-        twilioInteractor.placeCall(to: handle)
+        
+        // TODO: Remove after test!!!
+        //twilioInteractor.placeCall(to: handle)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.twilioInteractor.testIncomingCall()
+        }
+        
     }
 }
 

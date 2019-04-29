@@ -8,13 +8,16 @@ import PushKit
 
 class VoIpNotificationsInteractor: NSObject {
 
-    var notificationsDelegate: VoIpNotificationsDelegate!
+    var notificationsDelegate: VoIpNotificationsDelegate! {
+        didSet {
+            voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
+            voipRegistry.desiredPushTypes = Set([.voIP])
+            voipRegistry.delegate = notificationsDelegate
+        }
+    }
     private var voipRegistry: PKPushRegistry!
     
     override init() {
-        voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
         super.init()
-        voipRegistry.delegate = notificationsDelegate
-        voipRegistry.desiredPushTypes = Set([.voIP])
     }
 }

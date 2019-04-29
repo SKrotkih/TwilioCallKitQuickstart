@@ -5,6 +5,24 @@
 
 import Foundation
 
+enum PhoneCallState {
+    case undefined
+    case reset
+    case begin
+    case activateSession
+    case deactivateSession
+    case timeout
+    case answerCall(UUID, (Bool) -> Void)
+    case endTwilioCall
+    case startTwilioCall
+    case heldCall(Bool, (Bool) -> Void)
+    case makeCallAction(UUID, String)
+    case endCallAction(UUID)
+    case cancelledCallAction(UUID, Error?)
+    case twilioReceivedCallInvite(UUID, String)
+    case outboundCall(UUID, (Bool) -> Void)
+}
+
 struct Dependencies {
     
     private var twilioAudioController: TwilioAudioController!
