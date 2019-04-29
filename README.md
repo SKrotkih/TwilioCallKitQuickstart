@@ -1,5 +1,3 @@
-# TwilioCallKitQuickstart (SwiftVoiceCallKitQuickstart refactoring)
-
 Here is a code refactoring of the [Twilio Voice Swift Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift)
 
 To start using this code you should replace request to Twilio access token in TwilioAccessTokenFetcher on yours. 
