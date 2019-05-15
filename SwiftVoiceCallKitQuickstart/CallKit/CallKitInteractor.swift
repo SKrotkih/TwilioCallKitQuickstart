@@ -7,7 +7,7 @@ import Foundation
 import CallKit
 import RxSwift
 
-// TODO: Remove
+// TODO: Remove dependency
 import TwilioVoice
 
 class CallKitInteractor: NSObject {
