@@ -13,9 +13,9 @@ abstract_target 'TwilioVoice' do
         project 'SwiftVoiceQuickstart.xcproject'
     end
     
-    target 'SwiftVoiceCallKitQuickstart' do
+    target 'TwilioCallKitQuickstart' do
         platform :ios, '10.0'
-        project 'SwiftVoiceCallKitQuickstart.xcproject'
+        project 'TwilioCallKitQuickstart.xcproject'
         
         pod 'RxSwift'
         pod 'RxCocoa'
