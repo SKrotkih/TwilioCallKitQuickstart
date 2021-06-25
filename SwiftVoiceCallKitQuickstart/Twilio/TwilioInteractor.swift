@@ -87,15 +87,6 @@ class TwilioInteractor: NSObject {
                 }.disposed(by: disposeBag)
         }
     }
-    
-    override init() {
-        super.init()
-        self.twilioConfigure()
-    }
-    
-    private func twilioConfigure() {
-        TwilioVoice.logLevel = .verbose
-    }
 }
 
 // MARK: - Handle notifications from the  VoIpNotifuicationsDelegate

@@ -1,8 +1,8 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-target 'TwilioCallKitQuickstart' do
-    platform :ios, '10.0'
-    project 'TwilioCallKitQuickstart.xcproject'
+target 'TwilioVoiceQuickstart' do
+    platform :ios, '12.0'
+    project 'TwilioVoiceQuickstart.xcproject'
         
     pod 'RxSwift'
     pod 'RxCocoa'
