@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var muteIsOn: Bool = false
-    @State var speackerIsOn: Bool = false
-    @State var outgoingNumber: String = ""
+    @State var muteIsOn: Bool
+    @State var speackerIsOn: Bool
+    @State var outgoingNumber: String
+    var call: () -> Void
     
     var body: some View {
         VStack{
@@ -35,11 +36,14 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .frame(width: 240.0, height: 28.0)
-            Text("Call")
-                .font(Font.system(size: 12).weight(.light))
-                .foregroundColor(.red)
-                .offset(CGSize(width: 0, height: 0.0))
-                .padding()
+            Button(
+                action: call,
+                label: {
+                Text("Call")
+                    .font(Font.system(size: 12).weight(.light))
+                    .foregroundColor(.red)
+                }
+            )
             HStack {
                 Spacer(minLength: 25.0)
                 VStack(alignment: .center) {
@@ -67,6 +71,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(muteIsOn: false, speackerIsOn: true, outgoingNumber: "")
+        ContentView(muteIsOn: false, speackerIsOn: true, outgoingNumber: "", call: {})
     }
 }

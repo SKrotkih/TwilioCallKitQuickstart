@@ -11,7 +11,7 @@ import SwiftUI
 struct TwilioVoiceQuickstartApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(muteIsOn: false, speackerIsOn: true, outgoingNumber: "", call: {})
         }
     }
 }
