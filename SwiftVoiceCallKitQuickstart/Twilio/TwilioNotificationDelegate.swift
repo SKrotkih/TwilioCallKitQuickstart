@@ -10,8 +10,8 @@ import RxSwift
 // MARK: - TVONotificaitonDelegate
 
 enum TwilioNotifications {
-    case pending(TVOCallInvite)
-    case canceled(TVOCallInvite)
+    case pending(CallInvite)
+    case canceled(CallInvite)
     case error(Error)
 }
 
@@ -19,7 +19,7 @@ class TwilioNotificationDelegate: NSObject, TVONotificationDelegate {
     
     var state = PublishSubject<TwilioNotifications>()
     
-    func callInviteReceived(_ callInvite: TVOCallInvite) {
+    func callInviteReceived(_ callInvite: CallInvite) {
         if (callInvite.state == .pending) {
             self.state.onNext(.pending(callInvite))
         } else if (callInvite.state == .canceled) {
