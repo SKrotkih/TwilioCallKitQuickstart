@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		505EED4E659956EE324E3593 /* libPods-TwilioVoiceQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC15CA6B6858F75EFE47397D /* libPods-TwilioVoiceQuickstart.a */; };
+		7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62B807268D8D7200674B57 /* AppDelegate.swift */; };
+		7F6C3B1E268C92830095E14C /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1D268C92830095E14C /* ContentViewModel.swift */; };
+		7F6C3B20268CA37B0095E14C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1F268CA37B0095E14C /* Extensions.swift */; };
 		7FBA335C2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */; };
 		7FBA335E2685DCDA003E33E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBA335D2685DCDA003E33E8 /* ContentView.swift */; };
 		7FBA33602685DCDC003E33E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FBA335F2685DCDC003E33E8 /* Assets.xcassets */; };
@@ -36,9 +39,12 @@
 
 /* Begin PBXFileReference section */
 		5797924265B04D67CE40005A /* Pods-TwilioVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceQuickstart.release.xcconfig"; path = "Target Support Files/Pods-TwilioVoiceQuickstart/Pods-TwilioVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+		7F62B807268D8D7200674B57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F6A843D26884B34005AC352 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7F6A843F26884C27005AC352 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		7F6A844126886928005AC352 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		7F6C3B1D268C92830095E14C /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		7F6C3B1F268CA37B0095E14C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		7FBA33582685DCDA003E33E8 /* TwilioVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwilioVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioVoiceQuickstartApp.swift; sourceTree = "<group>"; };
 		7FBA335D2685DCDA003E33E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -117,7 +123,10 @@
 			isa = PBXGroup;
 			children = (
 				7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */,
+				7F62B807268D8D7200674B57 /* AppDelegate.swift */,
 				7FBA335D2685DCDA003E33E8 /* ContentView.swift */,
+				7F6C3B1D268C92830095E14C /* ContentViewModel.swift */,
+				7F6C3B1F268CA37B0095E14C /* Extensions.swift */,
 				7FBA3384268646D0003E33E8 /* CircleImage.swift */,
 				7FBA335F2685DCDC003E33E8 /* Assets.xcassets */,
 				7FBA33612685DCDC003E33E8 /* Preview Content */,
@@ -316,6 +325,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */,
+				7F6C3B20268CA37B0095E14C /* Extensions.swift in Sources */,
+				7F6C3B1E268C92830095E14C /* ContentViewModel.swift in Sources */,
 				7FBA335E2685DCDA003E33E8 /* ContentView.swift in Sources */,
 				7FBA335C2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift in Sources */,
 				7FBA3385268646D0003E33E8 /* CircleImage.swift in Sources */,
