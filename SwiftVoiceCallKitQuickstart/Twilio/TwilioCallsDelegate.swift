@@ -7,30 +7,30 @@ import Foundation
 import TwilioVoice
 import RxSwift
 
-// MARK: - CallDelegate - Twilio lifecycle events listener
+// MARK: - TVOCallDelegate - Twilio lifecycle events listener
 
 enum TwilioCallLifeCycle {
-    case startCall(Call)
-    case finishCall(Call, Error?)
-    case failToConnevtCall(Call, Error)
+    case startTVOCall(TVOCall)
+    case finishTVOCall(TVOCall, Error?)
+    case failToConnevtTVOCall(TVOCall, Error)
 }
 
-class TwilioCallsDelegate: NSObject, CallDelegate {
+class TwilioCallsDelegate: NSObject, TVOCallDelegate {
     
     var state = PublishSubject<TwilioCallLifeCycle>()
     
-    func callDidConnect(_ call: Call) {
+    func callDidConnect(_ call: TVOCall) {
         print("\(#function)")
-        state.onNext(.startCall(call))
+        state.onNext(.startTVOCall(call))
     }
     
-    func call(_ call: Call, didFailToConnectWithError error: Error) {
+    func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
         print("\(#function): \(error.localizedDescription)")
-        state.onNext(.failToConnevtCall(call, error))
+        state.onNext(.failToConnevtTVOCall(call, error))
     }
     
-    func call(_ call: Call, didDisconnectWithError error: Error?) {
+    func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
         print("\(#function): \(error?.localizedDescription ?? "Call disconnected")")
-        state.onNext(.finishCall(call, error))
+        state.onNext(.finishTVOCall(call, error))
     }
 }

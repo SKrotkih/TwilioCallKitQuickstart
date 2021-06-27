@@ -13,8 +13,8 @@ class TwilioInteractor: NSObject {
 
     public let state = PublishSubject<PhoneCallState>()
     private let accessTokenFetcher = TwilioAccessTokenFetcher()
-    private var callInvite: CallInvite?
-    private var call: Call?
+    private var callInvite: TVOCallInvite?
+    private var call: TVOCall?
     private var userInitiatedDisconnect: Bool = false
     private var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
     private let disposeBag = DisposeBag()
@@ -55,7 +55,7 @@ class TwilioInteractor: NSObject {
                 }.disposed(by: disposeBag)
         }
     }
-    var twilioNotificationDelegate: NotificationDelegate! {
+    var twilioNotificationDelegate: TVONotificationDelegate! {
         didSet {
             (twilioNotificationDelegate as! TwilioNotificationDelegate).state.subscribe() { value in
                 if let state = value.element {
@@ -71,21 +71,30 @@ class TwilioInteractor: NSObject {
                 }.disposed(by: disposeBag)
         }
     }
-    var twilioCallsDelegate: CallDelegate! {
+    var twilioCallsDelegate: TVOCallDelegate! {
         didSet {
             (twilioCallsDelegate as! TwilioCallsDelegate).state.subscribe() { value in
                 if let state = value.element {
                     switch state {
-                    case .startCall(let call):
+                    case .startTVOCall(let call):
                         self.startTwilioCall(call)
-                    case .finishCall(let call, let error):
+                    case .finishTVOCall(let call, let error):
                         self.finishTwilioCasll(call, error)
-                    case .failToConnevtCall(let call, let error):
+                    case .failToConnevtTVOCall(let call, let error):
                         self.failedTwillioCall(call, error)
                     }
                 }
                 }.disposed(by: disposeBag)
         }
+    }
+    
+    override init() {
+        super.init()
+        self.twilioConfigure()
+    }
+    
+    private func twilioConfigure() {
+        TwilioVoice.logLevel = .verbose
     }
 }
 
@@ -132,7 +141,7 @@ extension TwilioInteractor {
 // Handle notifications from the Twilio Call Invite delegate
 
 extension TwilioInteractor {
-    private func didReceiveTwilioCallInvite(_ callInvite: CallInvite) {
+    private func didReceiveTwilioCallInvite(_ callInvite: TVOCallInvite) {
         print("\(#function)")
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             print("Already a pending incoming call invite.");
@@ -148,7 +157,7 @@ extension TwilioInteractor {
         self.callInvite = callInvite
         self.state.onNext(.twilioReceivedCallInvite(callInvite.uuid, "Voice Bot"))
     }
-    private func didCancelTwilioCallInvite(_ callInvite: CallInvite) {
+    private func didCancelTwilioCallInvite(_ callInvite: TVOCallInvite) {
         print("\(#function)")
         self.state.onNext(.endCallAction(callInvite.uuid))
         self.callInvite = nil
@@ -163,7 +172,7 @@ extension TwilioInteractor {
 // Handle notifications from the Twilio Call Life Cycle delegate (after callInvite)
 
 extension TwilioInteractor {
-    private func startTwilioCall(_ call: Call) {
+    private func startTwilioCall(_ call: TVOCall) {
         self.call = call
         if let callKitCompletionCallback = self.callKitCompletionCallback {
             callKitCompletionCallback(true)
@@ -171,7 +180,7 @@ extension TwilioInteractor {
         }
         self.state.onNext(.startTwilioCall)
     }
-    private func finishTwilioCasll(_ call: Call, _ error: Error?) {
+    private func finishTwilioCasll(_ call: TVOCall, _ error: Error?) {
         if !self.userInitiatedDisconnect {
             self.userInitiatedDisconnect = false
             self.state.onNext(.cancelledCallAction(call.uuid, error))
@@ -179,7 +188,7 @@ extension TwilioInteractor {
         self.call = nil
         self.state.onNext(.endTwilioCall)
     }
-    private func failedTwillioCall(_ call: Call, _ error: Error) {
+    private func failedTwillioCall(_ call: TVOCall, _ error: Error) {
         if let callKitCompletionCallback = self.callKitCompletionCallback {
             callKitCompletionCallback(false)
             self.callKitCompletionCallback = nil
