@@ -1,4 +1,6 @@
-Here is a code refactoring of the [Twilio Voice Swift Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift)
+This branch contains refactored code of the [Twilio Voice Swift Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift)
+
+This version uses CallKit Framework
 
 To start using this code you should implement TwilioAccessTokenFetcher. 
 
