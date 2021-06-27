@@ -2,6 +2,8 @@ This repository contains refactored version of the
 
 # [Twilio Programmable Voice for iOS](https://github.com/twilio/twilio-voice-ios)
 
-It adapted for using [SwiftUI](https://developer.apple.com/documentation/swiftui/) Framework for the user interface.  
+It adapted for using [SwiftUI](https://developer.apple.com/documentation/swiftui/) Framework for user interface.  
 
 26-06-2021
+
+In progress
