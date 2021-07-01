@@ -9,21 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @EnvironmentObject var model: ContentViewModel
+    @EnvironmentObject var viewModel: ContentViewModel
     
     var body: some View {
         VStack{
-            Text(model.qualityWarningsToaster.text)
+            Text(viewModel.qualityWarningsToaster.text)
                 .font(Font.system(size: 12).weight(.light))
                 .foregroundColor(.gray)
-                .opacity(model.qualityWarningsToaster.opacity)
+                .opacity(viewModel.qualityWarningsToaster.opacity)
                 .padding(.top, 0.0)
             Image("TwilioLogo")
                 .resizable(resizingMode: .stretch)
                 .frame(width: 240.0, height: 240.0)
                 .padding()
             TextField("Phone Number",
-                      text: $model.outgoingValue,
+                      text: $viewModel.outgoingValue,
                       onEditingChanged: { _ in
                        }, onCommit: {
                            hideKeyboard()
@@ -40,36 +40,38 @@ struct ContentView: View {
                 .lineLimit(2)
                 .frame(width: 240.0, height: 28.0)
             Button(
-                action: model.placeCallButton.actionOnPressButton,
+                action: {
+                viewModel.mainButtonPressed()
+            },
                 label: {
-                Text(model.placeCallButton.title)
+                Text(viewModel.placeCallButton.title)
                     .font(Font.system(size: 12).weight(.light))
                     .foregroundColor(.red)
                 }
             )
-                .disabled(!model.placeCallButton.isEnabled)
+                .disabled(!viewModel.placeCallButton.isEnabled)
                 .padding()
             HStack {
                 Spacer(minLength: 25.0)
                 VStack(alignment: .center) {
-                    Toggle(isOn: $model.muteSwitchOn) {
+                    Toggle(isOn: $viewModel.muteSwitchOn) {
                         Text("Mute")
                             .font(Font.system(size: 12).weight(.light))
                             .foregroundColor(.black)
-                    }.hidden(model.callControlViewisHidden)
+                    }.hidden(viewModel.callControlViewisHidden)
                 }
                 Spacer(minLength: 25.0)
                 VStack(alignment: .center) {
-                    Toggle(isOn: $model.speackerSwitchOn) {
+                    Toggle(isOn: $viewModel.speackerSwitchOn) {
                         Text("Speacker")
                             .font(Font.system(size: 12).weight(.light))
                             .foregroundColor(.black)
-                    }.hidden(model.callControlViewisHidden)
+                    }.hidden(viewModel.callControlViewisHidden)
                 }
                 Spacer(minLength: 25.0)
             }
         }.onAppear {
-            model.viewDidAppear()
+            viewModel.viewDidAppear()
         }
     }
 }
