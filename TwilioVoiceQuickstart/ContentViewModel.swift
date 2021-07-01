@@ -11,6 +11,7 @@ import AVFoundation
 import PushKit
 import CallKit
 import TwilioVoice
+import RxSwift
 
 struct QualityWarningsToaster {
     var text: String
@@ -25,6 +26,22 @@ struct PlaceCallButton {
     var title: String
     var isEnabled: Bool
     var actionOnPressButton: () -> Void
+}
+
+@propertyWrapper
+struct Published<Value> {
+    var projectedValue: Observable<Value> { subject }
+    var wrappedValue: Value { didSet { valueDidChange() } }
+
+    private let subject = PublishSubject<Value>()
+
+    init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+
+    private func valueDidChange() {
+        subject.on(.next(wrappedValue))
+    }
 }
 
 let accessToken = "FAKE TOKEN" // <#PASTE YOUR ACCESS TOKEN HERE#>
@@ -49,6 +66,8 @@ class ContentViewModel: NSObject, ObservableObject  {
     @Published var muteSwitchOn: Bool = false
     @Published var speackerSwitchOn: Bool = true
     @Published var callControlViewisHidden = false
+    
+    private var disposeBag = DisposeBag()
     
     var incomingPushCompletionCallback: (() -> Void)?
 
@@ -104,6 +123,18 @@ class ContentViewModel: NSObject, ObservableObject  {
          * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
          */
         TwilioVoiceSDK.audioDevice = audioDevice
+
+        $muteSwitchOn
+                .subscribe(onNext: { [weak self] state in
+                    self?.muteSwitchToggled(to: state)
+                })
+                .disposed(by: disposeBag)
+
+        $speackerSwitchOn
+                .subscribe(onNext: { [weak self] state in
+                    self?.speakerSwitchToggled(to: state)
+                })
+                .disposed(by: disposeBag)
     }
 
     func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {
@@ -186,16 +217,14 @@ class ContentViewModel: NSObject, ObservableObject  {
         }
     }
 
-    // TODO: Subscribe on muteSwitchOn
-    func muteSwitchToggled() {
+    func muteSwitchToggled(to isMuted: Bool) {
         // The sample app supports toggling mute from app UI only on the last connected call.
         guard let activeCall = activeCall else { return }
         
-        activeCall.isMuted = muteSwitchOn
+        activeCall.isMuted = isMuted
     }
     
-    // TODO: Subscribe on speackerSwitchOn
-    func speakerSwitchToggled() {
+    func speakerSwitchToggled(to speackerSwitchOn: Bool) {
         toggleAudioRoute(toSpeaker: speackerSwitchOn)
     }
     
