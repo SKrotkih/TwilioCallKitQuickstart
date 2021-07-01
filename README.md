@@ -1,8 +1,27 @@
-This repository contains refactored code of the [Twilio Voice Swift Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) application
+# Twilio Voice Quickstart for iOS
 
-There are 3 branches: 
-- "CallKit" contains version whish uses MVVM architecture + CallKit framework
-- "SwiftUI" (in progress) contains version which uses SwiftUI for UI 
-- "RIBs" (in progress) contains version which uses RIBs architecture framework + SwiftUI
+Refactoring of the actual original project [SwiftVoiceQuickstart](https://github.com/twilio/voice-quickstart-swift).
 
-26-06-2021
+## Requirements
+
+- Xcode 13+
+- Swift 5
+
+## Introduction
+
+To start using this code you should to get an access token. Implement TwilioAccessTokenFetcher for that. 
+
+## Package Dependencies
+
+TwilioVoice 6.5.0
+
+## Combine
+ Were used [Combine](https://developer.apple.com/documentation/Combine) frameworks and newest [Concurrency Swift](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) approach.  
+
+## The Redux pattern
+
+The app uses Redux pattern.
+
+## Changes history:
+
+04-01-2022 - redesigned for the current Twilio code base 
