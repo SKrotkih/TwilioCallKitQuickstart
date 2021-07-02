@@ -12,12 +12,10 @@ import SwiftUI
 struct TwilioVoiceQuickstartApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    @StateObject var viewModel = ContentViewModel()
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(viewModel)
+                .environmentObject(ContentViewModel())
         }
     }
 }

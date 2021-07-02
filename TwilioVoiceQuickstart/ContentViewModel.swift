@@ -25,7 +25,6 @@ struct QualityWarningsToaster {
 struct PlaceCallButton {
     var title: String
     var isEnabled: Bool
-    var actionOnPressButton: () -> Void
 }
 
 @propertyWrapper
@@ -53,19 +52,17 @@ let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
 class ContentViewModel: NSObject, ObservableObject  {
-
-    @EnvironmentObject var appDelegate: AppDelegate
     
     @Published var qualityWarningsToaster = QualityWarningsToaster(text: "Warnings Raised", isHidden: false, alpha: 1.0)
-    @Published var placeCallButton = PlaceCallButton(title: "Call", isEnabled: false, actionOnPressButton: {})
+    @Published var placeCallButton = PlaceCallButton(title: "Call", isEnabled: false)
     
     @Published var outgoingValue: String = ""
     
-    @Published var isSpinning = false
-
     @Published var muteSwitchOn: Bool = false
     @Published var speackerSwitchOn: Bool = true
     @Published var callControlViewisHidden = false
+    
+    var spinner: Spinner?
     
     private var disposeBag = DisposeBag()
     
@@ -102,10 +99,6 @@ class ContentViewModel: NSObject, ObservableObject  {
     }
     
     func viewDidAppear() {
-        isSpinning = false
-
-        appDelegate.pushKitEventDelegate = self
-        
         toggleUIState(isEnabled: true, showCallControl: false)
         
         /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
@@ -154,7 +147,7 @@ class ContentViewModel: NSObject, ObservableObject  {
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
             self?.toggleUIState(isEnabled: true, showCallControl: false)
-            self?.isSpinning = false
+            self?.spinner?.state = .stop
         }
         
         [continueWithoutMic, goToSettings, cancel].forEach { alertController.addAction($0) }
@@ -283,7 +276,7 @@ extension ContentViewModel: CallDelegate {
         placeCallButton.title = "Hang Up"
         
         toggleUIState(isEnabled: true, showCallControl: true)
-        isSpinning = false
+        spinner?.state = .stop
         toggleAudioRoute(toSpeaker: true)
     }
     
@@ -352,7 +345,7 @@ extension ContentViewModel: CallDelegate {
             stopRingback()
         }
         
-        isSpinning = false
+        spinner?.state = .stop
         toggleUIState(isEnabled: true, showCallControl: false)
         placeCallButton.title = "Call"
     }
@@ -479,7 +472,7 @@ extension ContentViewModel: CXProviderDelegate {
         NSLog("provider:performStartCallAction:")
         
         toggleUIState(isEnabled: false, showCallControl: false)
-        isSpinning = true
+        spinner?.state = .start
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
