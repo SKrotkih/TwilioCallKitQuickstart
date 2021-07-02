@@ -13,20 +13,6 @@ import CallKit
 import TwilioVoice
 import RxSwift
 
-struct QualityWarningsToaster {
-    var text: String
-    var isHidden: Bool
-    var alpha: Double
-    var opacity: Double {
-        return isHidden ? 0.0 : alpha
-    }
-}
-
-struct PlaceCallButton {
-    var title: String
-    var isEnabled: Bool
-}
-
 @propertyWrapper
 struct Published<Value> {
     var projectedValue: Observable<Value> { subject }
@@ -51,18 +37,17 @@ let kRegistrationTTLInDays = 365
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
-class ContentViewModel: NSObject, ObservableObject  {
-    
-    @Published var qualityWarningsToaster = QualityWarningsToaster(text: "Warnings Raised", isHidden: false, alpha: 1.0)
-    @Published var placeCallButton = PlaceCallButton(title: "Call", isEnabled: false)
-    
+class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     @Published var outgoingValue: String = ""
     
     @Published var muteSwitchOn: Bool = false
     @Published var speackerSwitchOn: Bool = true
-    @Published var callControlViewisHidden = false
     
     var spinner: Spinner?
+    var placeCallButton: PlaceCallButton?
+    var toaster: QualityWarningsToaster?
+    var callControls: CallControls?
+    
     
     private var disposeBag = DisposeBag()
     
@@ -197,14 +182,14 @@ class ContentViewModel: NSObject, ObservableObject  {
     }
     
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
-        placeCallButton.isEnabled = isEnabled
+        placeCallButton?.isEnabled = isEnabled
         
         if showCallControl {
-            callControlViewisHidden = false
+            callControls?.isHidden = false
             muteSwitchOn = false
             speackerSwitchOn = true
         } else {
-            callControlViewisHidden = true
+            callControls?.isHidden = true
         }
     }
 
@@ -247,7 +232,7 @@ extension ContentViewModel: CallDelegate {
     func callDidStartRinging(call: Call) {
         NSLog("callDidStartRinging:")
         
-        placeCallButton.title = "Ringing"
+        placeCallButton?.title = "Ringing"
         
         /*
          When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
@@ -271,7 +256,7 @@ extension ContentViewModel: CallDelegate {
             callKitCompletionCallback(true)
         }
         
-        placeCallButton.title = "Hang Up"
+        placeCallButton?.title = "Hang Up"
         
         toggleUIState(isEnabled: true, showCallControl: true)
         spinner?.state = .stop
@@ -281,7 +266,7 @@ extension ContentViewModel: CallDelegate {
     func call(call: Call, isReconnectingWithError error: Error) {
         NSLog("call:isReconnectingWithError:")
         
-        placeCallButton.title = "Reconnecting"
+        placeCallButton?.title = "Reconnecting"
         
         toggleUIState(isEnabled: false, showCallControl: false)
     }
@@ -289,7 +274,7 @@ extension ContentViewModel: CallDelegate {
     func callDidReconnect(call: Call) {
         NSLog("callDidReconnect:")
         
-        placeCallButton.title = "Hang Up"
+        placeCallButton?.title = "Hang Up"
         
         toggleUIState(isEnabled: true, showCallControl: true)
     }
@@ -345,7 +330,7 @@ extension ContentViewModel: CallDelegate {
         
         spinner?.state = .stop
         toggleUIState(isEnabled: true, showCallControl: false)
-        placeCallButton.title = "Call"
+        placeCallButton?.title = "Call"
     }
     
     func call(call: Call, didReceiveQualityWarnings currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
@@ -386,19 +371,18 @@ extension ContentViewModel: CallDelegate {
         let mappedWarnings: [String] = warnings.map { number in warningString(Call.QualityWarning(rawValue: number.uintValue)!)}
         popupMessage += mappedWarnings.joined(separator: ", ")
         
-        qualityWarningsToaster.alpha = 0.0
-        qualityWarningsToaster.text = popupMessage
+        toaster?.isHidden = true
+        toaster?.text = popupMessage
         UIView.animate(withDuration: 1.0, animations: {
-            self.qualityWarningsToaster.isHidden = false
-            self.qualityWarningsToaster.alpha = 1.0
+            self.toaster?.isHidden = false
         }) { [weak self] finish in
             guard let strongSelf = self else { return }
             let deadlineTime = DispatchTime.now() + .seconds(5)
             DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
                 UIView.animate(withDuration: 1.0, animations: {
-                    strongSelf.qualityWarningsToaster.alpha = 0.0
+                    strongSelf.toaster?.isHidden = true
                 }) { (finished) in
-                    strongSelf.qualityWarningsToaster.isHidden = true
+                    strongSelf.toaster?.isHidden = true
                 }
             })
         }

@@ -7,12 +7,39 @@
 
 import SwiftUI
 
+protocol ContentPresentable: ObservableObject {
+    var spinner: Spinner? { set get }
+    var placeCallButton: PlaceCallButton? { set get }
+    var toaster: QualityWarningsToaster? { set get }
+    var callControls: CallControls? { set get }
+
+    var muteSwitchOn: Bool { set get }
+    var speackerSwitchOn: Bool { set get }
+    var outgoingValue: String { set get }
+
+    func viewDidAppear()
+    func mainButtonPressed()
+}
+
 struct ContentView: View {
     
+    // TODO: Use protocol ContentPresentable for the viewModel
     @EnvironmentObject var viewModel: ContentViewModel
     @EnvironmentObject var appDelegate: AppDelegate
     
     @State private var isSpinning = false
+    @State private var callButtonTitle = "Call"
+    @State private var isCallButtonEnabled = false
+    @State private var toasterTitle = ""
+    @State private var toasterHidden = true
+    @State private var muteSwitchOn = false
+    @State private var speackerSwitchOn = true
+    @State private var callControlViewisHidden = true
+    
+    @ObservedObject private var keyboardObserver = KeyboardObserver.shared
+    
+    init() {
+    }
     
     var body: some View {
         ZStack {
@@ -24,10 +51,10 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Group {
-                    Text(viewModel.qualityWarningsToaster.text)
+                    Text(toasterTitle)
                         .font(Font.system(size: 12).weight(.light))
                         .foregroundColor(.gray)
-                        .opacity(viewModel.qualityWarningsToaster.opacity)
+                        .hidden(toasterHidden)
                         .padding(.top, 0.0)
                     Spacer()
                     Image("TwilioLogo")
@@ -62,38 +89,48 @@ struct ContentView: View {
                         viewModel.mainButtonPressed()
                     },
                         label: {
-                        Text(viewModel.placeCallButton.title)
+                        Text(callButtonTitle)
                             .font(Font.system(size: 12).weight(.light))
                             .foregroundColor(.red)
                     }
                     )
-                        .disabled(!viewModel.placeCallButton.isEnabled)
+                        .disabled(!isCallButtonEnabled)
                         .padding()
                     Spacer()
                     HStack {
                         Spacer(minLength: 25.0)
                         VStack(alignment: .center) {
-                            Toggle(isOn: $viewModel.muteSwitchOn) {
+                            Toggle(isOn: $muteSwitchOn) {
                                 Text("Mute")
                                     .font(Font.system(size: 12).weight(.light))
                                     .foregroundColor(.black)
-                            }.hidden(viewModel.callControlViewisHidden)
+                            }.hidden(callControlViewisHidden)
+                                .onChange(of: muteSwitchOn) { _muteSwitchOn in
+                                    viewModel.muteSwitchOn = _muteSwitchOn
+                               }
                         }
                         Spacer(minLength: 25.0)
                         VStack(alignment: .center) {
-                            Toggle(isOn: $viewModel.speackerSwitchOn) {
+                            Toggle(isOn: $speackerSwitchOn) {
                                 Text("Speacker")
                                     .font(Font.system(size: 12).weight(.light))
                                     .foregroundColor(.black)
-                            }.hidden(viewModel.callControlViewisHidden)
+                            }.hidden(callControlViewisHidden)
+                                .onChange(of: speackerSwitchOn) { _speackerSwitchOn in
+                                    viewModel.speackerSwitchOn = _speackerSwitchOn
+                                }
                         }
                         Spacer(minLength: 25.0)
                     }
                 }
-                Spacer()
+                    .padding(.bottom, keyboardObserver.height)
             }.onAppear {
+                // TODO: Move this code to the init 
                 appDelegate.pushKitEventDelegate = viewModel
                 viewModel.spinner = Spinner(isSpinning: $isSpinning)
+                viewModel.placeCallButton = PlaceCallButton(title: $callButtonTitle, isEnabled: $isCallButtonEnabled)
+                viewModel.toaster = QualityWarningsToaster(text: $toasterTitle, isHidden: $toasterHidden)
+                viewModel.callControls = CallControls(isHidden: $callControlViewisHidden)
                 viewModel.viewDidAppear()
             }
         }
