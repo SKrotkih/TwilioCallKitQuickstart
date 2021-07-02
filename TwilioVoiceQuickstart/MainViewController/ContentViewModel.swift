@@ -151,12 +151,10 @@ class ContentViewModel: NSObject, ObservableObject  {
         }
         
         [continueWithoutMic, goToSettings, cancel].forEach { alertController.addAction($0) }
-        
-        // TODO: !!!
-        // present(alertController, animated: true, completion: nil)
+        let viewController = UIApplication.shared.windows.first!.rootViewController!
+        viewController.present(alertController, animated: true, completion: nil)
     }
 
-    
     func mainButtonPressed() {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
