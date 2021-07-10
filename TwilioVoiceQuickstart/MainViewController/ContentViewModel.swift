@@ -48,8 +48,9 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     var toaster: QualityWarningsToaster?
     var callControls: CallControls?
     
+    private let ringtoneManager = RingtoneWorker()
+
     let microphoneManager = MicrophoneManager()
-    let ringtoneManager = RingtoneWorker()
     let audioManager = AudioWorker()
     
     private var disposeBag = DisposeBag()

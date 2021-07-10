@@ -24,7 +24,15 @@ protocol ContentPresentable: ObservableObject {
 struct ContentView: View {
     
     // TODO: Use protocol ContentPresentable for the viewModel
-    @EnvironmentObject var viewModel: ContentViewModel
+    @EnvironmentObject var viewModel: ContentViewModel {
+        didSet {
+            appDelegate.pushKitEventDelegate = viewModel
+            viewModel.spinner = Spinner(isSpinning: $isSpinning)
+            viewModel.placeCallButton = PlaceCallButton(title: $callButtonTitle, isEnabled: $isCallButtonEnabled)
+            viewModel.toaster = QualityWarningsToaster(text: $toasterTitle, isHidden: $toasterHidden)
+            viewModel.callControls = CallControls(isHidden: $callControlViewisHidden)
+        }
+    }
     @EnvironmentObject var appDelegate: AppDelegate
     
     @State private var isSpinning = false
@@ -125,12 +133,6 @@ struct ContentView: View {
                 }
                     .padding(.bottom, keyboardObserver.height)
             }.onAppear {
-                // TODO: Move this code to the init 
-                appDelegate.pushKitEventDelegate = viewModel
-                viewModel.spinner = Spinner(isSpinning: $isSpinning)
-                viewModel.placeCallButton = PlaceCallButton(title: $callButtonTitle, isEnabled: $isCallButtonEnabled)
-                viewModel.toaster = QualityWarningsToaster(text: $toasterTitle, isHidden: $toasterHidden)
-                viewModel.callControls = CallControls(isHidden: $callControlViewisHidden)
                 viewModel.viewDidAppear()
             }
         }
