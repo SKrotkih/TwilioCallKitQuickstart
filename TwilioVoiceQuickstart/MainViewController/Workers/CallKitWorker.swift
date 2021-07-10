@@ -14,14 +14,12 @@ protocol CallKitPresentable {
     func toggleUIState(isEnabled: Bool, showCallControl: Bool)
 }
 
-class CallKitWorker: NSObject, CXProviderDelegate {
-
+class CallKitWorker: NSObject {
     // MARK: - Public
-    var callKitProvider: CXProvider?
     var callKitCompletionCallback: ((Bool) -> Void)? = nil
     var incomingPushCompletionCallback: (() -> Void)?
     var outgoingValue: String = ""
-    var callMaker: CallMaker!
+    var callDelegate: CallWorker!
     var presenter: CallKitPresentable!
     
     var activeCallInvites: [String: CallInvite]! = [:]
@@ -31,10 +29,32 @@ class CallKitWorker: NSObject, CXProviderDelegate {
     var activeCall: Call? = nil
 
     // MARK: - Private
+    private var callKitProvider: CXProvider?
     private var audioDevice = DefaultAudioDevice()
     private let callKitCallController = CXCallController()
+
+    func configure() {
+        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
+        let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
+        configuration.maximumCallGroups = 1
+        configuration.maximumCallsPerCallGroup = 1
+        callKitProvider = CXProvider(configuration: configuration)
+        if let provider = callKitProvider {
+            provider.setDelegate(self, queue: nil)
+        }
+    }
     
-    // MARK: - CXProviderDelegate protocol implementation
+    deinit {
+        // CallKit has an odd API contract where the developer must call invalidate or the CXProvider is leaked.
+        if let provider = callKitProvider {
+            provider.invalidate()
+        }
+    }
+}
+
+// MARK: - CXProviderDelegate protocol implementation
+
+extension CallKitWorker: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
         audioDevice.isEnabled = false
@@ -207,7 +227,7 @@ class CallKitWorker: NSObject, CXProviderDelegate {
             builder.uuid = uuid
         }
         
-        let call = TwilioVoiceSDK.connect(options: connectOptions, delegate: callMaker)
+        let call = TwilioVoiceSDK.connect(options: connectOptions, delegate: callDelegate)
         activeCall = call
         activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler
@@ -223,7 +243,7 @@ class CallKitWorker: NSObject, CXProviderDelegate {
             builder.uuid = callInvite.uuid
         }
         
-        let call = callInvite.accept(options: acceptOptions, delegate: callMaker)
+        let call = callInvite.accept(options: acceptOptions, delegate: callDelegate)
         activeCall = call
         activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler

@@ -9,6 +9,21 @@ import UIKit
 import PushKit
 import TwilioVoice
 
+let accessToken = "FAKE TOKEN" // <#PASTE YOUR ACCESS TOKEN HERE#>
+let twimlParamTo = "to"
+
+let kRegistrationTTLInDays = 365
+
+let kCachedDeviceToken = "CachedDeviceToken"
+let kCachedBindingDate = "CachedBindingDate"
+
+protocol PushKitEventDelegate: AnyObject {
+    func credentialsUpdated(credentials: PKPushCredentials) -> Void
+    func credentialsInvalidated() -> Void
+    func incomingPushReceived(payload: PKPushPayload) -> Void
+    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) -> Void
+}
+
 class PushKitWorker: PushKitEventDelegate {
 
     var incomingPushCompletionCallback: (() -> Void)?

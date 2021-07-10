@@ -9,17 +9,10 @@ import UIKit
 import TwilioVoice
 import PushKit
 
-protocol PushKitEventDelegate: AnyObject {
-    func credentialsUpdated(credentials: PKPushCredentials) -> Void
-    func credentialsInvalidated() -> Void
-    func incomingPushReceived(payload: PKPushPayload) -> Void
-    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) -> Void
-}
-
 class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, ObservableObject {
 
     var window: UIWindow?
-    var pushKitEventDelegate: PushKitEventDelegate?
+    let pushKitEventDelegate: PushKitEventDelegate = PushKitWorker()
     var voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -69,17 +62,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, O
     func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         NSLog("pushRegistry:didUpdatePushCredentials:forType:")
         
-        if let delegate = self.pushKitEventDelegate {
-            delegate.credentialsUpdated(credentials: credentials)
-        }
+        pushKitEventDelegate.credentialsUpdated(credentials: credentials)
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
         
-        if let delegate = self.pushKitEventDelegate {
-            delegate.credentialsInvalidated()
-        }
+        pushKitEventDelegate.credentialsInvalidated()
     }
 
     /**
@@ -89,9 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, O
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
         
-        if let delegate = self.pushKitEventDelegate {
-            delegate.incomingPushReceived(payload: payload)
-        }
+        pushKitEventDelegate.incomingPushReceived(payload: payload)
     }
 
     /**
@@ -101,9 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, O
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
 
-        if let delegate = self.pushKitEventDelegate {
-            delegate.incomingPushReceived(payload: payload, completion: completion)
-        }
+        pushKitEventDelegate.incomingPushReceived(payload: payload, completion: completion)
         
         if let version = Float(UIDevice.current.systemVersion), version >= 13.0 {
             /**

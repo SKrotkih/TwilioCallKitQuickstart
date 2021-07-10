@@ -26,7 +26,6 @@ struct ContentView: View {
     // TODO: Use protocol ContentPresentable for the viewModel
     @EnvironmentObject var viewModel: ContentViewModel {
         didSet {
-            appDelegate.pushKitEventDelegate = viewModel
             viewModel.spinner = Spinner(isSpinning: $isSpinning)
             viewModel.placeCallButton = PlaceCallButton(title: $callButtonTitle, isEnabled: $isCallButtonEnabled)
             viewModel.toaster = QualityWarningsToaster(text: $toasterTitle, isHidden: $toasterHidden)

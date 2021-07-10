@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		505EED4E659956EE324E3593 /* libPods-TwilioVoiceQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC15CA6B6858F75EFE47397D /* libPods-TwilioVoiceQuickstart.a */; };
-		7F0635FE2698185E00453F63 /* CallMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0635FD2698185E00453F63 /* CallMaker.swift */; };
 		7F0636002698254D00453F63 /* CallKitWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0635FF2698254D00453F63 /* CallKitWorker.swift */; };
 		7F0636042698283A00453F63 /* CallNotificationsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0636032698283A00453F63 /* CallNotificationsHandler.swift */; };
 		7F0636062698293700453F63 /* PushKitWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0636052698293700453F63 /* PushKitWorker.swift */; };
@@ -53,7 +52,6 @@
 
 /* Begin PBXFileReference section */
 		5797924265B04D67CE40005A /* Pods-TwilioVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceQuickstart.release.xcconfig"; path = "Target Support Files/Pods-TwilioVoiceQuickstart/Pods-TwilioVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
-		7F0635FD2698185E00453F63 /* CallMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMaker.swift; sourceTree = "<group>"; };
 		7F0635FF2698254D00453F63 /* CallKitWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallKitWorker.swift; sourceTree = "<group>"; };
 		7F0636032698283A00453F63 /* CallNotificationsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallNotificationsHandler.swift; sourceTree = "<group>"; };
 		7F0636052698293700453F63 /* PushKitWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushKitWorker.swift; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 				7F06360B2698550E00453F63 /* RingtoneWorker.swift */,
 				7F06360D2698A55000453F63 /* AudioWorker.swift */,
 				7F06360926983C9B00453F63 /* MicrophoneManager.swift */,
-				7F0635FD2698185E00453F63 /* CallMaker.swift */,
 				7F06360726982ACC00453F63 /* CallWorker.swift */,
 				7F0635FF2698254D00453F63 /* CallKitWorker.swift */,
 				7F0636032698283A00453F63 /* CallNotificationsHandler.swift */,
@@ -421,7 +418,6 @@
 				7FBA335E2685DCDA003E33E8 /* ContentView.swift in Sources */,
 				7F0636002698254D00453F63 /* CallKitWorker.swift in Sources */,
 				7F06360A26983C9B00453F63 /* MicrophoneManager.swift in Sources */,
-				7F0635FE2698185E00453F63 /* CallMaker.swift in Sources */,
 				7F6ACFFD268F16D100F02897 /* PlaceCallButton.swift in Sources */,
 				7F6ACFFF268F1A1000F02897 /* QualityWarningToaster.swift in Sources */,
 				7FBA335C2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift in Sources */,
