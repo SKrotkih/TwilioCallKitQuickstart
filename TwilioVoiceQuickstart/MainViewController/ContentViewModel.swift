@@ -48,6 +48,9 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     var toaster: QualityWarningsToaster?
     var callControls: CallControls?
     
+    let microphoneManager = MicrophoneManager()
+    let ringtoneManager = RingtoneWorker()
+    let audioManager = AudioWorker()
     
     private var disposeBag = DisposeBag()
     
@@ -56,7 +59,6 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     var incomingAlertController: UIAlertController?
 
     var callKitCompletionCallback: ((Bool) -> Void)? = nil
-    var audioDevice = DefaultAudioDevice()
     var activeCallInvites: [String: CallInvite]! = [:]
     var activeCalls: [String: Call]! = [:]
     
@@ -67,15 +69,6 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     let callKitCallController = CXCallController()
     var userInitiatedDisconnect: Bool = false
     
-    /*
-     Custom ringback will be played when this flag is enabled.
-     When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in
-     the <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting
-     to be accepted on the callee's side. Configure this flag based on the TwiML application.
-    */
-    var playCustomRingback = false
-    var ringtonePlayer: AVAudioPlayer? = nil
-
     deinit {
         // CallKit has an odd API contract where the developer must call invalidate or the CXProvider is leaked.
         if let provider = callKitProvider {
@@ -95,12 +88,7 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
             provider.setDelegate(self, queue: nil)
         }
         
-        /*
-         * The important thing to remember when providing a TVOAudioDevice is that the device must be set
-         * before performing any other actions with the SDK (such as connecting a Call, or accepting an incoming Call).
-         * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
-         */
-        TwilioVoiceSDK.audioDevice = audioDevice
+        audioManager.configureTwilioVoiceSDK()
 
         $muteSwitchOn
                 .subscribe(onNext: { [weak self] state in
@@ -115,31 +103,6 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
                 .disposed(by: disposeBag)
     }
 
-    func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {
-        let alertController = UIAlertController(title: "Voice Quick Start",
-                                                message: "Microphone permission not granted",
-                                                preferredStyle: .alert)
-        
-        let continueWithoutMic = UIAlertAction(title: "Continue without microphone", style: .default) { [weak self] _ in
-            self?.performStartCallAction(uuid: uuid, handle: handle)
-        }
-        
-        let goToSettings = UIAlertAction(title: "Settings", style: .default) { _ in
-            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
-                                      options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false],
-                                      completionHandler: nil)
-        }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
-            self?.toggleUIState(isEnabled: true, showCallControl: false)
-            self?.spinner?.state = .stop
-        }
-        
-        [continueWithoutMic, goToSettings, cancel].forEach { alertController.addAction($0) }
-        let viewController = UIApplication.shared.windows.first!.rootViewController!
-        viewController.present(alertController, animated: true, completion: nil)
-    }
-
     func mainButtonPressed() {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
@@ -149,48 +112,18 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
             return
         }
         
-        checkRecordPermission { [weak self] permissionGranted in
-            let uuid = UUID()
-            let handle = "Voice Bot"
-            
-            guard !permissionGranted else {
-                self?.performStartCallAction(uuid: uuid, handle: handle)
-                return
-            }
-        
-            self?.showMicrophoneAccessRequest(uuid, handle)
-        }
-    }
-    
-    func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
-        let permissionStatus = AVAudioSession.sharedInstance().recordPermission
-        
-        switch permissionStatus {
-        case .granted:
-            // Record permission already granted.
-            completion(true)
-        case .denied:
-            // Record permission denied.
-            completion(false)
-        case .undetermined:
-            // Requesting record permission.
-            // Optional: pop up app dialog to let the users know if they want to request.
-            AVAudioSession.sharedInstance().requestRecordPermission { granted in completion(granted) }
-        default:
-            completion(false)
-        }
-    }
-    
-    func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
-        placeCallButton?.isEnabled = isEnabled
-        
-        if showCallControl {
-            callControls?.isHidden = false
-            muteSwitchOn = false
-            speackerSwitchOn = true
-        } else {
-            callControls?.isHidden = true
-        }
+        microphoneManager.checkMicrophonePermissions(completion: {
+            [weak self] idPermissionGranted in
+                let uuid = UUID()
+                let handle = "Voice Bot"
+                
+                if !idPermissionGranted {
+                    self?.performStartCallAction(uuid: uuid, handle: handle)
+                }
+            }, cancelled: { [weak self] in
+                self?.toggleUIState(isEnabled: true, showCallControl: false)
+                self?.spinner?.state = .stop
+            })
     }
 
     func muteSwitchToggled(to isMuted: Bool) {
@@ -201,28 +134,7 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     }
     
     func speakerSwitchToggled(to speackerSwitchOn: Bool) {
-        toggleAudioRoute(toSpeaker: speackerSwitchOn)
-    }
-    
-    // MARK: AVAudioSession
-    
-    func toggleAudioRoute(toSpeaker: Bool) {
-        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        audioDevice.block = {
-            DefaultAudioDevice.DefaultAVAudioSessionConfigurationBlock()
-            
-            do {
-                if toSpeaker {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                } else {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-                }
-            } catch {
-                NSLog(error.localizedDescription)
-            }
-        }
-        
-        audioDevice.block()
+        audioManager.toggleAudioRoute(toSpeaker: speackerSwitchOn)
     }
 }
 
@@ -234,23 +146,13 @@ extension ContentViewModel: CallDelegate {
         
         placeCallButton?.title = "Ringing"
         
-        /*
-         When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
-         <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting to be
-         accepted on the callee's side. The application can use the `AVAudioPlayer` to play custom audio files
-         between the `[TVOCallDelegate callDidStartRinging:]` and the `[TVOCallDelegate callDidConnect:]` callbacks.
-        */
-        if playCustomRingback {
-            playRingback()
-        }
+        ringtoneManager.playRingback()
     }
     
     func callDidConnect(call: Call) {
         NSLog("callDidConnect:")
         
-        if playCustomRingback {
-            stopRingback()
-        }
+        ringtoneManager.stopRingback()
         
         if let callKitCompletionCallback = callKitCompletionCallback {
             callKitCompletionCallback(true)
@@ -260,7 +162,7 @@ extension ContentViewModel: CallDelegate {
         
         toggleUIState(isEnabled: true, showCallControl: true)
         spinner?.state = .stop
-        toggleAudioRoute(toSpeaker: true)
+        audioManager.toggleAudioRoute(toSpeaker: true)
     }
     
     func call(call: Call, isReconnectingWithError error: Error) {
@@ -324,9 +226,7 @@ extension ContentViewModel: CallDelegate {
         
         userInitiatedDisconnect = false
         
-        if playCustomRingback {
-            stopRingback()
-        }
+        ringtoneManager.stopRingback()
         
         spinner?.state = .stop
         toggleUIState(isEnabled: true, showCallControl: false)
@@ -361,67 +261,6 @@ extension ContentViewModel: CallDelegate {
             qualityWarningsUpdatePopup(clearedWarnings, isCleared: true)
         }
     }
-    
-    func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
-        var popupMessage: String = "Warnings detected: "
-        if isCleared {
-            popupMessage = "Warnings cleared: "
-        }
-        
-        let mappedWarnings: [String] = warnings.map { number in warningString(Call.QualityWarning(rawValue: number.uintValue)!)}
-        popupMessage += mappedWarnings.joined(separator: ", ")
-        
-        toaster?.isHidden = true
-        toaster?.text = popupMessage
-        UIView.animate(withDuration: 1.0, animations: {
-            self.toaster?.isHidden = false
-        }) { [weak self] finish in
-            guard let strongSelf = self else { return }
-            let deadlineTime = DispatchTime.now() + .seconds(5)
-            DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
-                UIView.animate(withDuration: 1.0, animations: {
-                    strongSelf.toaster?.isHidden = true
-                }) { (finished) in
-                    strongSelf.toaster?.isHidden = true
-                }
-            })
-        }
-    }
-    
-    func warningString(_ warning: Call.QualityWarning) -> String {
-        switch warning {
-        case .highRtt: return "high-rtt"
-        case .highJitter: return "high-jitter"
-        case .highPacketsLostFraction: return "high-packets-lost-fraction"
-        case .lowMos: return "low-mos"
-        case .constantAudioInputLevel: return "constant-audio-input-level"
-        default: return "Unknown warning"
-        }
-    }
-    
-    
-    // MARK: Ringtone
-    
-    func playRingback() {
-        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
-        
-        do {
-            ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
-            ringtonePlayer?.delegate = self
-            ringtonePlayer?.numberOfLoops = -1
-            
-            ringtonePlayer?.volume = 1.0
-            ringtonePlayer?.play()
-        } catch {
-            NSLog("Failed to initialize audio player")
-        }
-    }
-    
-    func stopRingback() {
-        guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
-        
-        ringtonePlayer.stop()
-    }
 }
 
 // MARK: - CXProviderDelegate
@@ -429,7 +268,7 @@ extension ContentViewModel: CallDelegate {
 extension ContentViewModel: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        audioDevice.isEnabled = false
+        audioManager.disableAudio()
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -438,12 +277,12 @@ extension ContentViewModel: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
-        audioDevice.isEnabled = true
+        audioManager.enableAudio()
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
-        audioDevice.isEnabled = false
+        audioManager.disableAudio()
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -769,20 +608,66 @@ extension ContentViewModel: NotificationDelegate {
     }
 }
 
-// MARK: - AVAudioPlayerDelegate
 
-extension ContentViewModel: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if flag {
-            NSLog("Audio player finished playing successfully");
+extension ContentViewModel: CallPresentable, CallKitPresentable, CallMakerPresentable {
+    func setCallButtonTitle(_ text: String) {
+        placeCallButton?.title = text
+    }
+    
+    func startActivity() {
+        spinner?.state = .start
+    }
+    
+    func stopActivity() {
+        spinner?.state = .stop
+    }
+    
+    func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
+        placeCallButton?.isEnabled = isEnabled
+        
+        if showCallControl {
+            callControls?.isHidden = false
+            muteSwitchOn = false
+            speackerSwitchOn = true
         } else {
-            NSLog("Audio player finished playing with some error");
+            callControls?.isHidden = true
+        }
+    }
+
+    func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
+        var popupMessage: String = "Warnings detected: "
+        if isCleared {
+            popupMessage = "Warnings cleared: "
+        }
+        
+        let mappedWarnings: [String] = warnings.map { number in warningString(Call.QualityWarning(rawValue: number.uintValue)!)}
+        popupMessage += mappedWarnings.joined(separator: ", ")
+        
+        toaster?.isHidden = true
+        toaster?.text = popupMessage
+        UIView.animate(withDuration: 1.0, animations: {
+            self.toaster?.isHidden = false
+        }) { [weak self] finish in
+            guard let strongSelf = self else { return }
+            let deadlineTime = DispatchTime.now() + .seconds(5)
+            DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
+                UIView.animate(withDuration: 1.0, animations: {
+                    strongSelf.toaster?.isHidden = true
+                }) { (finished) in
+                    strongSelf.toaster?.isHidden = true
+                }
+            })
         }
     }
     
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        if let error = error {
-            NSLog("Decode error occurred: \(error.localizedDescription)")
+    func warningString(_ warning: Call.QualityWarning) -> String {
+        switch warning {
+        case .highRtt: return "high-rtt"
+        case .highJitter: return "high-jitter"
+        case .highPacketsLostFraction: return "high-packets-lost-fraction"
+        case .lowMos: return "low-mos"
+        case .constantAudioInputLevel: return "constant-audio-input-level"
+        default: return "Unknown warning"
         }
     }
 }

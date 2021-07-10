@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		505EED4E659956EE324E3593 /* libPods-TwilioVoiceQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC15CA6B6858F75EFE47397D /* libPods-TwilioVoiceQuickstart.a */; };
+		7F0635FE2698185E00453F63 /* CallMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0635FD2698185E00453F63 /* CallMaker.swift */; };
+		7F0636002698254D00453F63 /* CallKitWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0635FF2698254D00453F63 /* CallKitWorker.swift */; };
+		7F0636042698283A00453F63 /* CallNotificationsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0636032698283A00453F63 /* CallNotificationsHandler.swift */; };
+		7F0636062698293700453F63 /* PushKitWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0636052698293700453F63 /* PushKitWorker.swift */; };
+		7F06360826982ACC00453F63 /* CallWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F06360726982ACC00453F63 /* CallWorker.swift */; };
+		7F06360A26983C9B00453F63 /* MicrophoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F06360926983C9B00453F63 /* MicrophoneManager.swift */; };
+		7F06360C2698550E00453F63 /* RingtoneWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F06360B2698550E00453F63 /* RingtoneWorker.swift */; };
+		7F06360E2698A55000453F63 /* AudioWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F06360D2698A55000453F63 /* AudioWorker.swift */; };
 		7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62B807268D8D7200674B57 /* AppDelegate.swift */; };
 		7F6ACFF7268EDF5700F02897 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6ACFF6268EDF5700F02897 /* Spinner.swift */; };
 		7F6ACFFD268F16D100F02897 /* PlaceCallButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6ACFFC268F16D100F02897 /* PlaceCallButton.swift */; };
@@ -45,6 +53,14 @@
 
 /* Begin PBXFileReference section */
 		5797924265B04D67CE40005A /* Pods-TwilioVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceQuickstart.release.xcconfig"; path = "Target Support Files/Pods-TwilioVoiceQuickstart/Pods-TwilioVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+		7F0635FD2698185E00453F63 /* CallMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMaker.swift; sourceTree = "<group>"; };
+		7F0635FF2698254D00453F63 /* CallKitWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallKitWorker.swift; sourceTree = "<group>"; };
+		7F0636032698283A00453F63 /* CallNotificationsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallNotificationsHandler.swift; sourceTree = "<group>"; };
+		7F0636052698293700453F63 /* PushKitWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushKitWorker.swift; sourceTree = "<group>"; };
+		7F06360726982ACC00453F63 /* CallWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallWorker.swift; sourceTree = "<group>"; };
+		7F06360926983C9B00453F63 /* MicrophoneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneManager.swift; sourceTree = "<group>"; };
+		7F06360B2698550E00453F63 /* RingtoneWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingtoneWorker.swift; sourceTree = "<group>"; };
+		7F06360D2698A55000453F63 /* AudioWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWorker.swift; sourceTree = "<group>"; };
 		7F62B807268D8D7200674B57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F6A843D26884B34005AC352 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7F6A843F26884C27005AC352 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -106,11 +122,27 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		7F0635FC2698182E00453F63 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				7F06360B2698550E00453F63 /* RingtoneWorker.swift */,
+				7F06360D2698A55000453F63 /* AudioWorker.swift */,
+				7F06360926983C9B00453F63 /* MicrophoneManager.swift */,
+				7F0635FD2698185E00453F63 /* CallMaker.swift */,
+				7F06360726982ACC00453F63 /* CallWorker.swift */,
+				7F0635FF2698254D00453F63 /* CallKitWorker.swift */,
+				7F0636032698283A00453F63 /* CallNotificationsHandler.swift */,
+				7F0636052698293700453F63 /* PushKitWorker.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
 		7F6ACFF8268EEB8600F02897 /* MainViewController */ = {
 			isa = PBXGroup;
 			children = (
 				7FBA335D2685DCDA003E33E8 /* ContentView.swift */,
 				7F6C3B1D268C92830095E14C /* ContentViewModel.swift */,
+				7F0635FC2698182E00453F63 /* Workers */,
 			);
 			path = MainViewController;
 			sourceTree = "<group>";
@@ -377,16 +409,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F0636062698293700453F63 /* PushKitWorker.swift in Sources */,
 				7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */,
 				7F6C3B20268CA37B0095E14C /* View+Extensions.swift in Sources */,
+				7F0636042698283A00453F63 /* CallNotificationsHandler.swift in Sources */,
 				7F8FA58A269199CF004A1537 /* KeyboardObserver.swift in Sources */,
 				7F6C3B1E268C92830095E14C /* ContentViewModel.swift in Sources */,
 				7F6AD001268F248700F02897 /* CallControls.swift in Sources */,
 				7F6ACFF7268EDF5700F02897 /* Spinner.swift in Sources */,
+				7F06360826982ACC00453F63 /* CallWorker.swift in Sources */,
 				7FBA335E2685DCDA003E33E8 /* ContentView.swift in Sources */,
+				7F0636002698254D00453F63 /* CallKitWorker.swift in Sources */,
+				7F06360A26983C9B00453F63 /* MicrophoneManager.swift in Sources */,
+				7F0635FE2698185E00453F63 /* CallMaker.swift in Sources */,
 				7F6ACFFD268F16D100F02897 /* PlaceCallButton.swift in Sources */,
 				7F6ACFFF268F1A1000F02897 /* QualityWarningToaster.swift in Sources */,
 				7FBA335C2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift in Sources */,
+				7F06360C2698550E00453F63 /* RingtoneWorker.swift in Sources */,
+				7F06360E2698A55000453F63 /* AudioWorker.swift in Sources */,
 				7FBA3385268646D0003E33E8 /* CircleImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
