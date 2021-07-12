@@ -9,9 +9,10 @@ import Foundation
 import TwilioVoice
 
 class AudioWorker {
-    private var audioDevice = DefaultAudioDevice()
+    private let audioDevice: DefaultAudioDevice!
 
-    func configureTwilioVoiceSDK() {
+    init(audioDevice: DefaultAudioDevice = DefaultAudioDevice()) {
+        self.audioDevice = audioDevice
         /*
          * The important thing to remember when providing a TVOAudioDevice is that the device must be set
          * before performing any other actions with the SDK (such as connecting a Call, or accepting an incoming Call).
@@ -26,16 +27,11 @@ class AudioWorker {
             DefaultAudioDevice.DefaultAVAudioSessionConfigurationBlock()
             
             do {
-                if toSpeaker {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                } else {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-                }
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(toSpeaker ? .speaker : .none)
             } catch {
                 NSLog(error.localizedDescription)
             }
         }
-        
         audioDevice.block()
     }
     

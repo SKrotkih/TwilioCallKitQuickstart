@@ -5,7 +5,6 @@
 //  Created by Sergey Krotkih on 09.07.2021.
 //
 
-import Foundation
 import AVFoundation
 
 class RingtoneWorker: NSObject {
@@ -16,10 +15,30 @@ class RingtoneWorker: NSObject {
      the <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting
      to be accepted on the callee's side. Configure this flag based on the TwiML application.
     */
-    private let playCustomRingback = false
-
-    private var ringtonePlayer: AVAudioPlayer? = nil
-
+    private var playCustomRingback: Bool
+    private var ringtonePlayer: AVAudioPlayer?
+    
+    init(customRingback: String? = nil,
+         numberOfLoops: Int = -1,
+         volume: Float = 1.0
+    ) {
+        self.playCustomRingback = false
+        super.init()
+        if let ringtone = customRingback,
+           let ringtonePath = Bundle.main.path(forResource: ringtone, ofType: nil) {
+            let ringtoneUrl = URL(fileURLWithPath: ringtonePath)
+            do {
+                ringtonePlayer = try AVAudioPlayer(contentsOf: ringtoneUrl)
+                ringtonePlayer?.delegate = self
+                ringtonePlayer?.numberOfLoops = numberOfLoops
+                ringtonePlayer?.volume = volume
+                self.playCustomRingback = true
+            } catch {
+                NSLog("Failed to initialize audio player")
+            }
+        }
+    }
+    
     /*
      When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
      <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting to be
@@ -28,24 +47,13 @@ class RingtoneWorker: NSObject {
     */
     func playRingback() {
         guard playCustomRingback  else { return }
-        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
-        
-        do {
-            ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
-            ringtonePlayer?.delegate = self
-            ringtonePlayer?.numberOfLoops = -1
-            
-            ringtonePlayer?.volume = 1.0
-            ringtonePlayer?.play()
-        } catch {
-            NSLog("Failed to initialize audio player")
-        }
+        guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
+        ringtonePlayer.play()
     }
     
     func stopRingback() {
         guard playCustomRingback  else { return }
         guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
-        
         ringtonePlayer.stop()
     }
 }

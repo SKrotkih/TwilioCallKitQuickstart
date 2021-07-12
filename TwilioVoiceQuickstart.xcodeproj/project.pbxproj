@@ -22,6 +22,11 @@
 		7F6AD001268F248700F02897 /* CallControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6AD000268F248700F02897 /* CallControls.swift */; };
 		7F6C3B1E268C92830095E14C /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1D268C92830095E14C /* ContentViewModel.swift */; };
 		7F6C3B20268CA37B0095E14C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */; };
+		7F793967269BFE0100D155D2 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F793966269BFE0100D155D2 /* Dependencies.swift */; };
+		7F79396D269C231D00D155D2 /* disconnect.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F793969269C231D00D155D2 /* disconnect.wav */; };
+		7F79396E269C231D00D155D2 /* incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F79396A269C231D00D155D2 /* incoming.wav */; };
+		7F79396F269C231D00D155D2 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F79396B269C231D00D155D2 /* ringtone.wav */; };
+		7F793970269C231D00D155D2 /* outgoing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F79396C269C231D00D155D2 /* outgoing.wav */; };
 		7F8FA58A269199CF004A1537 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8FA589269199CF004A1537 /* KeyboardObserver.swift */; };
 		7FBA335C2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */; };
 		7FBA335E2685DCDA003E33E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBA335D2685DCDA003E33E8 /* ContentView.swift */; };
@@ -69,6 +74,11 @@
 		7F6AD000268F248700F02897 /* CallControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallControls.swift; sourceTree = "<group>"; };
 		7F6C3B1D268C92830095E14C /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		7F793966269BFE0100D155D2 /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
+		7F793969269C231D00D155D2 /* disconnect.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = disconnect.wav; sourceTree = "<group>"; };
+		7F79396A269C231D00D155D2 /* incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incoming.wav; sourceTree = "<group>"; };
+		7F79396B269C231D00D155D2 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
+		7F79396C269C231D00D155D2 /* outgoing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = outgoing.wav; sourceTree = "<group>"; };
 		7F8FA589269199CF004A1537 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		7FBA33582685DCDA003E33E8 /* TwilioVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwilioVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioVoiceQuickstartApp.swift; sourceTree = "<group>"; };
@@ -139,6 +149,7 @@
 			children = (
 				7FBA335D2685DCDA003E33E8 /* ContentView.swift */,
 				7F6C3B1D268C92830095E14C /* ContentViewModel.swift */,
+				7F793966269BFE0100D155D2 /* Dependencies.swift */,
 				7F0635FC2698182E00453F63 /* Workers */,
 			);
 			path = MainViewController;
@@ -174,6 +185,17 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		7F793968269C231D00D155D2 /* ringtone */ = {
+			isa = PBXGroup;
+			children = (
+				7F793969269C231D00D155D2 /* disconnect.wav */,
+				7F79396A269C231D00D155D2 /* incoming.wav */,
+				7F79396B269C231D00D155D2 /* ringtone.wav */,
+				7F79396C269C231D00D155D2 /* outgoing.wav */,
+			);
+			path = ringtone;
+			sourceTree = "<group>";
+		};
 		7FBA334F2685DCDA003E33E8 = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +229,7 @@
 				7F6ACFFA268EEC1600F02897 /* Components */,
 				7F6ACFFB268EEC3200F02897 /* Extensions */,
 				7FBA335F2685DCDC003E33E8 /* Assets.xcassets */,
+				7F793968269C231D00D155D2 /* ringtone */,
 				7FBA33612685DCDC003E33E8 /* Preview Content */,
 			);
 			path = TwilioVoiceQuickstart;
@@ -355,8 +378,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F79396E269C231D00D155D2 /* incoming.wav in Resources */,
 				7FBA33632685DCDC003E33E8 /* Preview Assets.xcassets in Resources */,
+				7F793970269C231D00D155D2 /* outgoing.wav in Resources */,
 				7FBA33602685DCDC003E33E8 /* Assets.xcassets in Resources */,
+				7F79396F269C231D00D155D2 /* ringtone.wav in Resources */,
+				7F79396D269C231D00D155D2 /* disconnect.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +433,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F793967269BFE0100D155D2 /* Dependencies.swift in Sources */,
 				7F0636062698293700453F63 /* PushKitWorker.swift in Sources */,
 				7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */,
 				7F6C3B20268CA37B0095E14C /* View+Extensions.swift in Sources */,

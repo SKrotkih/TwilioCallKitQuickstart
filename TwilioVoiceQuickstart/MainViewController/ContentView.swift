@@ -7,20 +7,6 @@
 
 import SwiftUI
 
-protocol ContentPresentable: ObservableObject {
-    var spinner: Spinner? { set get }
-    var placeCallButton: PlaceCallButton? { set get }
-    var toaster: QualityWarningsToaster? { set get }
-    var callControls: CallControls? { set get }
-
-    var muteSwitchOn: Bool { set get }
-    var speackerSwitchOn: Bool { set get }
-    var outgoingValue: String { set get }
-
-    func viewDidAppear()
-    func mainButtonPressed()
-}
-
 struct ContentView: View {
     
     // TODO: Use protocol ContentPresentable for the viewModel
@@ -141,6 +127,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(ContentViewModel())
+            .environmentObject(ContentDependencies.configure())
     }
 }

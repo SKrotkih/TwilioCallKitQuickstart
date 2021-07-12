@@ -22,12 +22,18 @@ protocol PushKitEventDelegate: AnyObject {
     func credentialsInvalidated() -> Void
     func incomingPushReceived(payload: PKPushPayload) -> Void
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) -> Void
+    func incomingPushHandled()
+}
+
+protocol PushKitCompletionHandleable {
+    func incomingPushHandled()
 }
 
 class PushKitWorker: PushKitEventDelegate {
 
-    var incomingPushCompletionCallback: (() -> Void)?
+    private var incomingPushCompletionCallback: (() -> Void)?
     
+    // TODO: Add CallKitWorker and CallKitCallsInviteble dependency
     private let notificationsHandler = CallNotificationsHandler()
 
     func credentialsUpdated(credentials: PKPushCredentials) {
@@ -121,5 +127,3 @@ class PushKitWorker: PushKitEventDelegate {
         completion()
     }
 }
-
-

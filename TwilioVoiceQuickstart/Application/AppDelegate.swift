@@ -98,6 +98,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, O
             completion()
         }
     }
+    
+    func incomingPushHandled() {
+        guard #available(iOS 13, *) else {
+            pushKitEventDelegate.incomingPushHandled()
+        }
+    }
 }
-
-

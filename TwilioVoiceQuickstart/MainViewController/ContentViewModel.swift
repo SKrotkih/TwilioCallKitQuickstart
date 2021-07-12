@@ -26,6 +26,33 @@ struct Published<Value> {
     }
 }
 
+protocol CallPresentable: AnyObject {
+    func setCallButtonTitle(_ title: String)
+    func startActivity()
+    func stopActivity()
+    func toggleUIState(isEnabled: Bool, showCallControl: Bool)
+    func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool)
+}
+
+protocol CallKitPresentable: AnyObject {
+    func startActivity()
+    func toggleUIState(isEnabled: Bool, showCallControl: Bool)
+}
+
+protocol ContentPresentable: ObservableObject {
+    var spinner: Spinner? { set get }
+    var placeCallButton: PlaceCallButton? { set get }
+    var toaster: QualityWarningsToaster? { set get }
+    var callControls: CallControls? { set get }
+
+    var muteSwitchOn: Bool { set get }
+    var speackerSwitchOn: Bool { set get }
+    var outgoingValue: String { set get }
+
+    func viewDidAppear()
+    func mainButtonPressed()
+}
+
 class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     @Published var outgoingValue: String = ""
     
@@ -37,13 +64,10 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     var toaster: QualityWarningsToaster?
     var callControls: CallControls?
     
-    let ringtoneManager = RingtoneWorker()
-    let microphoneManager = MicrophoneManager()
-    let audioManager = AudioWorker()
-    let callDelegate = CallWorker()
-    let callKitWorker = CallKitWorker()
-    let callNotificationsHandler = CallNotificationsHandler()
-    
+    private let callKitWorker: CallKitWorker!
+    private let audioManager: AudioWorker!
+    private let microphoneManager: MicrophoneManager!
+
     // activeCall represents the last connected call
     var activeCall: Call? = nil
 
@@ -51,9 +75,13 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
 
     private var disposeBag = DisposeBag()
 
-    override init() {
-        callKitWorker.configure()
-        audioManager.configureTwilioVoiceSDK()
+    init(callKitWorker: CallKitWorker,
+         audioManager: AudioWorker,
+         microphoneManager: MicrophoneManager) {
+        self.callKitWorker = callKitWorker
+        self.audioManager = audioManager
+        self.microphoneManager = microphoneManager
+
         super.init()
 
         $muteSwitchOn

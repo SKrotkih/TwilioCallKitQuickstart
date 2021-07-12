@@ -9,31 +9,40 @@ import UIKit
 import TwilioVoice
 import CallKit
 
-protocol CallPresentable {
-    func setCallButtonTitle(_ title: String)
-    func startActivity()
-    func stopActivity()
-    func toggleUIState(isEnabled: Bool, showCallControl: Bool)
-    func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool)
-}
-
 class CallWorker: NSObject, CallDelegate {
 
     // MARK: - Public (TODO: inject from the viewmodel)
-    var callKitProvider: CXProvider?
-    var callKitCompletionCallback: ((Bool) -> Void)? = nil
-    var userInitiatedDisconnect: Bool = false
-    var callKitWorker: CallKitWorker!
+    private weak var presenterDelegate: CallPresentable!
+    private var callKitDelegate: CallKitProviderCallable!
+    private var callKitCallStorage: CallKitCallsStorageble!
+    private var callKitCompletionHandler: CallKitCompletionHandlable!
+
     var audioManager: AudioWorker!
-    var presenter: CallPresentable!
+
+    // var callKitCompletionCallback: ((Bool) -> Void)? = nil
+    var userInitiatedDisconnect: Bool = false
     
     // MARK: - Private
-    private let ringtoneManager = RingtoneWorker()
+    private let ringtoneManager: RingtoneWorker!
+    
+    init(ringtoneManager: RingtoneWorker) {
+        self.ringtoneManager = ringtoneManager
+    }
+    
+    func configure(presenter: CallPresentable,
+                   callKitDelegate: CallKitProviderCallable,
+                   callKitCallStorage: CallKitCallsStorageble,
+                   callKitCompletionHandler: CallKitCompletionHandlable) {
+        self.presenterDelegate = presenter
+        self.callKitDelegate = callKitDelegate
+        self.callKitCallStorage = callKitCallStorage
+        self.callKitCompletionHandler = callKitCompletionHandler
+    }
     
     func callDidStartRinging(call: Call) {
         NSLog("callDidStartRinging:")
         
-        presenter.setCallButtonTitle("Ringing")
+        presenterDelegate.setCallButtonTitle("Ringing")
         
         ringtoneManager.playRingback()
     }
@@ -43,42 +52,36 @@ class CallWorker: NSObject, CallDelegate {
         
         ringtoneManager.stopRingback()
 
-        if let callKitCompletionCallback = callKitCompletionCallback {
-            callKitCompletionCallback(true)
-        }
+        callKitCompletionHandler.callDidConnect()
+
+        presenterDelegate.setCallButtonTitle("Hang Up")
         
-        presenter.setCallButtonTitle("Hang Up")
-        
-        presenter.toggleUIState(isEnabled: true, showCallControl: true)
-        presenter.stopActivity()
+        presenterDelegate.toggleUIState(isEnabled: true, showCallControl: true)
+        presenterDelegate.stopActivity()
         audioManager.toggleAudioRoute(toSpeaker: true)
     }
     
     func call(call: Call, isReconnectingWithError error: Error) {
         NSLog("call:isReconnectingWithError:")
         
-        presenter.setCallButtonTitle("Reconnecting")
+        presenterDelegate.setCallButtonTitle("Reconnecting")
         
-        presenter.toggleUIState(isEnabled: false, showCallControl: false)
+        presenterDelegate.toggleUIState(isEnabled: false, showCallControl: false)
     }
     
     func callDidReconnect(call: Call) {
         NSLog("callDidReconnect:")
         
-        presenter.setCallButtonTitle("Hang Up")
-        presenter.toggleUIState(isEnabled: true, showCallControl: true)
+        presenterDelegate.setCallButtonTitle("Hang Up")
+        presenterDelegate.toggleUIState(isEnabled: true, showCallControl: true)
     }
     
     func callDidFailToConnect(call: Call, error: Error) {
         NSLog("Call failed to connect: \(error.localizedDescription)")
         
-        if let completion = callKitCompletionCallback {
-            completion(false)
-        }
-        
-        if let provider = callKitProvider {
-            provider.reportCall(with: call.uuid!, endedAt: Date(), reason: CXCallEndedReason.failed)
-        }
+        callKitCompletionHandler.callDidFailToConnect()
+
+        callKitDelegate.callFailed(call: call)
 
         callDisconnected(call: call)
     }
@@ -91,34 +94,25 @@ class CallWorker: NSObject, CallDelegate {
         }
         
         if !userInitiatedDisconnect {
-            var reason = CXCallEndedReason.remoteEnded
-            
-            if error != nil {
-                reason = .failed
-            }
-            
-            if let provider = callKitProvider {
-                provider.reportCall(with: call.uuid!, endedAt: Date(), reason: reason)
-            }
+            let reason: CXCallEndedReason = error != nil ? .failed : .remoteEnded
+            callKitDelegate.callDisconnected(call: call,
+                                             reason: reason)
         }
 
         callDisconnected(call: call)
     }
     
     func callDisconnected(call: Call) {
-        if call == callKitWorker.activeCall {
-            callKitWorker.activeCall = nil
-        }
         
-        callKitWorker.activeCalls.removeValue(forKey: call.uuid!.uuidString)
-        
+        callKitCallStorage.disconnectCall(call: call)
+
         userInitiatedDisconnect = false
         
         ringtoneManager.stopRingback()
         
-        presenter.stopActivity()
-        presenter.toggleUIState(isEnabled: true, showCallControl: false)
-        presenter.setCallButtonTitle("Call")
+        presenterDelegate.stopActivity()
+        presenterDelegate.toggleUIState(isEnabled: true, showCallControl: false)
+        presenterDelegate.setCallButtonTitle("Call")
     }
     
     func call(call: Call, didReceiveQualityWarnings currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
@@ -140,13 +134,13 @@ class CallWorker: NSObject, CallDelegate {
         var newWarnings: Set<NSNumber> = currentWarnings
         newWarnings.subtract(warningsIntersection)
         if newWarnings.count > 0 {
-            presenter.qualityWarningsUpdatePopup(newWarnings, isCleared: false)
+            presenterDelegate.qualityWarningsUpdatePopup(newWarnings, isCleared: false)
         }
         
         var clearedWarnings: Set<NSNumber> = previousWarnings
         clearedWarnings.subtract(warningsIntersection)
         if clearedWarnings.count > 0 {
-            presenter.qualityWarningsUpdatePopup(clearedWarnings, isCleared: true)
+            presenterDelegate.qualityWarningsUpdatePopup(clearedWarnings, isCleared: true)
         }
     }
 }

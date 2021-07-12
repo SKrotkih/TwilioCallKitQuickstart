@@ -5,39 +5,70 @@
 //  Created by Sergey Krotkih on 09.07.2021.
 //
 
-import Foundation
+import UIKit
 import CallKit
 import TwilioVoice
 
-protocol CallKitPresentable {
-    func startActivity()
-    func toggleUIState(isEnabled: Bool, showCallControl: Bool)
+protocol CallKitProviderCallable {
+    func callFailed(call: Call)
+    func callDisconnected(call: Call, reason: CXCallEndedReason)
+}
+
+protocol CallKitCallsStorageble {
+    func disconnectCall(call: Call)
+}
+
+protocol CallKitCompletionHandlable {
+    func callDidConnect()
+    func callDidFailToConnect()
+}
+
+protocol CallKitCallsInviteble {
+    func callInviteReceived(callInvite: CallInvite)
+    func callInviteCancelled(callInvite: CallInvite)
+    func getCallInvite(callSid: String) -> CallInvite?
 }
 
 class CallKitWorker: NSObject {
     // MARK: - Public
-    var callKitCompletionCallback: ((Bool) -> Void)? = nil
-    var incomingPushCompletionCallback: (() -> Void)?
     var outgoingValue: String = ""
-    var callDelegate: CallWorker!
-    var presenter: CallKitPresentable!
-    
-    var activeCallInvites: [String: CallInvite]! = [:]
-    var activeCalls: [String: Call]! = [:]
-
-    // activeCall represents the last connected call
-    var activeCall: Call? = nil
 
     // MARK: - Private
+    private let callKitCallController = CXCallController()
     private var callKitProvider: CXProvider?
     private var audioDevice = DefaultAudioDevice()
-    private let callKitCallController = CXCallController()
+    private weak var callDelegate: CallWorker!
+    private weak var presenterDelegate: CallKitPresentable!
+    private var callKitCompletionCallback: ((Bool) -> Void)?
 
-    func configure() {
+    private var activeCalls: [String: Call]! = [:]
+    private var activeCallInvites: [String: CallInvite]! = [:]
+
+    // activeCall represents the last connected call
+    private var activeCall: Call? = nil
+
+    init(callDelegate: CallWorker,
+         maximumCallGroups: Int = 1,
+    maximumCallsPerCallGroup: Int = 1
+    ) {
+        self.callDelegate = callDelegate
+
+        super.init()
+
+        self.configueProvider(maximumCallGroups: maximumCallGroups,
+                              maximumCallsPerCallGroup: maximumCallsPerCallGroup)
+    }
+    
+    func configure(presenter: CallKitPresentable) {
+        self.presenterDelegate = presenter
+    }
+    
+    private func configueProvider(maximumCallGroups: Int,
+                                  maximumCallsPerCallGroup: Int) {
         /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
         let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
-        configuration.maximumCallGroups = 1
-        configuration.maximumCallsPerCallGroup = 1
+        configuration.maximumCallGroups = maximumCallGroups
+        configuration.maximumCallsPerCallGroup = maximumCallsPerCallGroup
         callKitProvider = CXProvider(configuration: configuration)
         if let provider = callKitProvider {
             provider.setDelegate(self, queue: nil)
@@ -49,6 +80,63 @@ class CallKitWorker: NSObject {
         if let provider = callKitProvider {
             provider.invalidate()
         }
+    }
+}
+
+extension CallKitWorker: CallKitCallsStorageble {
+    func disconnectCall(call: Call) {
+        if call == activeCall {
+            activeCall = nil
+        }
+        activeCalls.removeValue(forKey: call.uuid!.uuidString)
+    }
+}
+    
+extension CallKitWorker: CallKitProviderCallable {
+    func callFailed(call: Call) {
+        if let provider = callKitProvider {
+            provider.reportCall(with: call.uuid!, endedAt: Date(), reason: CXCallEndedReason.failed)
+        }
+    }
+    
+    func callDisconnected(call: Call, reason: CXCallEndedReason) {
+        if let provider = callKitProvider {
+            provider.reportCall(with: call.uuid!, endedAt: Date(), reason: reason)
+        }
+    }
+    
+}
+
+extension CallKitWorker: CallKitCompletionHandlable {
+    func callDidConnect() {
+        if let callKitCompletionCallback = callKitCompletionCallback {
+            callKitCompletionCallback(true)
+        }
+    }
+
+    func callDidFailToConnect() {
+        if let completion = callKitCompletionCallback {
+            completion(false)
+        }
+    }
+}
+
+extension CallKitWorker: CallKitCallsInviteble {
+    
+    func getCallInvite(callSid: String) -> CallInvite? {
+        guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
+            NSLog("No pending call invite")
+            return nil
+        }
+        return activeCallInvites.values.first { invite in invite.callSid == callSid }
+    }
+    
+    func callInviteReceived(callInvite: CallInvite) {
+        activeCallInvites[callInvite.uuid.uuidString] = callInvite
+    }
+    
+    func callInviteCancelled(callInvite: CallInvite) {
+        activeCallInvites.removeValue(forKey: callInvite.uuid.uuidString)
     }
 }
 
@@ -81,8 +169,8 @@ extension CallKitWorker: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         NSLog("provider:performStartCallAction:")
         
-        presenter.toggleUIState(isEnabled: false, showCallControl: false)
-        presenter.startActivity()
+        presenterDelegate.toggleUIState(isEnabled: false, showCallControl: false)
+        presenterDelegate.startActivity()
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
@@ -249,18 +337,9 @@ extension CallKitWorker: CXProviderDelegate {
         callKitCompletionCallback = completionHandler
         
         activeCallInvites.removeValue(forKey: uuid.uuidString)
-        
-        guard #available(iOS 13, *) else {
-            incomingPushHandled()
-            return
+
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.incomingPushHandled()
         }
     }
-    
-    func incomingPushHandled() {
-        guard let completion = incomingPushCompletionCallback else { return }
-        
-        incomingPushCompletionCallback = nil
-        completion()
-    }
-    
 }

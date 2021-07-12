@@ -12,7 +12,9 @@ import CallKit
 class CallNotificationsHandler: NSObject, NotificationDelegate {
     
     // MARK: - Public
+    // TODO: Injection Dependency for two vars:
     var callKitWorker: CallKitWorker!
+    var callInviteStorage: CallKitCallsInviteble!
     
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
@@ -35,22 +37,15 @@ class CallNotificationsHandler: NSObject, NotificationDelegate {
 
         // Always report to CallKit
         callKitWorker.reportIncomingCall(from: from, uuid: callInvite.uuid)
-        callKitWorker.activeCallInvites[callInvite.uuid.uuidString] = callInvite
+        callInviteStorage.callInviteReceived(callInvite: callInvite)
     }
     
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
 
-        guard let activeCallInvites = callKitWorker.activeCallInvites, !activeCallInvites.isEmpty else {
-            NSLog("No pending call invite")
-            return
-        }
-        
-        let callInvite = activeCallInvites.values.first { invite in invite.callSid == cancelledCallInvite.callSid }
-        
-        if let callInvite = callInvite {
-            self.callKitWorker.performEndCallAction(uuid: callInvite.uuid)
-            callKitWorker.activeCallInvites.removeValue(forKey: callInvite.uuid.uuidString)
+        if let callInvite = callInviteStorage.getCallInvite(callSid: cancelledCallInvite.callSid) {
+            callKitWorker.performEndCallAction(uuid: callInvite.uuid)
+            callInviteStorage.callInviteCancelled(callInvite: callInvite)
         }
     }
 }
