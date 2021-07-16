@@ -8,23 +8,7 @@
 import Foundation
 import SwiftUI
 import TwilioVoice
-import RxSwift
-
-@propertyWrapper
-struct Published<Value> {
-    var projectedValue: Observable<Value> { subject }
-    var wrappedValue: Value { didSet { valueDidChange() } }
-
-    private let subject = PublishSubject<Value>()
-
-    init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
-
-    private func valueDidChange() {
-        subject.on(.next(wrappedValue))
-    }
-}
+import Combine
 
 protocol CallPresentable: AnyObject {
     func setCallButtonTitle(_ title: String)
@@ -73,7 +57,8 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
 
     var userInitiatedDisconnect: Bool = false
 
-    private var disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
+    
 
     init(callKitWorker: CallKitWorker,
          audioManager: AudioWorker,
@@ -84,17 +69,15 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
 
         super.init()
 
-        $muteSwitchOn
-                .subscribe(onNext: { [weak self] state in
-                    self?.muteSwitchToggled(to: state)
-                })
-                .disposed(by: disposeBag)
+        cancellable = $muteSwitchOn
+            .sink(receiveValue: { [weak self] state in
+                self?.muteSwitchToggled(to: state)
+            })
 
-        $speackerSwitchOn
-                .subscribe(onNext: { [weak self] state in
+        cancellable = $speackerSwitchOn
+            .sink(receiveValue: { [weak self] state in
                     self?.speakerSwitchToggled(to: state)
-                })
-                .disposed(by: disposeBag)
+             })
     }
     
     func viewDidAppear() {
