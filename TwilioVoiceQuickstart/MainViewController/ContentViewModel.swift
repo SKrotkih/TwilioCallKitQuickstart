@@ -39,7 +39,6 @@ protocol ContentPresentable: ObservableObject {
 
 class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     @Published var outgoingValue: String = ""
-    
     @Published var muteSwitchOn: Bool = false
     @Published var speackerSwitchOn: Bool = true
     
@@ -47,6 +46,8 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     var placeCallButton: PlaceCallButton?
     var toaster: QualityWarningsToaster?
     var callControls: CallControls?
+    
+    private var outgoingPhoneNumber: String?
     
     private let callKitWorker: CallKitWorker!
     private let audioManager: AudioWorker!
@@ -77,6 +78,12 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
             .sink(receiveValue: { [weak self] state in
                 self?.speakerSwitchToggled(to: state)
             }).store(in: &cancellable)
+        
+        $outgoingValue
+            .sink(receiveValue: { [weak self] value in
+            self?.outgoingPhoneNumber = value
+        }).store(in: &cancellable)
+
     }
     
     func viewDidAppear() {
