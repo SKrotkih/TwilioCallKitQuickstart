@@ -28,11 +28,11 @@ protocol ContentPresentable: ObservableObject {
     var placeCallButton: PlaceCallButton? { set get }
     var toaster: QualityWarningsToaster? { set get }
     var callControls: CallControls? { set get }
-
+    
     var muteSwitchOn: Bool { set get }
     var speackerSwitchOn: Bool { set get }
     var outgoingValue: String { set get }
-
+    
     func viewDidAppear()
     func mainButtonPressed()
 }
@@ -51,39 +51,38 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     private let callKitWorker: CallKitWorker!
     private let audioManager: AudioWorker!
     private let microphoneManager: MicrophoneManager!
-
+    
     // activeCall represents the last connected call
     var activeCall: Call? = nil
-
-    var userInitiatedDisconnect: Bool = false
-
-    private var cancellable: AnyCancellable?
     
-
+    var userInitiatedDisconnect: Bool = false
+    
+    private var cancellable = Set<AnyCancellable>()
+    
     init(callKitWorker: CallKitWorker,
          audioManager: AudioWorker,
          microphoneManager: MicrophoneManager) {
         self.callKitWorker = callKitWorker
         self.audioManager = audioManager
         self.microphoneManager = microphoneManager
-
+        
         super.init()
-
-        cancellable = $muteSwitchOn
+        
+        $muteSwitchOn
             .sink(receiveValue: { [weak self] state in
                 self?.muteSwitchToggled(to: state)
-            })
-
-        cancellable = $speackerSwitchOn
+            }).store(in: &cancellable)
+        
+        $speackerSwitchOn
             .sink(receiveValue: { [weak self] state in
-                    self?.speakerSwitchToggled(to: state)
-             })
+                self?.speakerSwitchToggled(to: state)
+            }).store(in: &cancellable)
     }
     
     func viewDidAppear() {
         toggleUIState(isEnabled: true, showCallControl: false)
     }
-
+    
     func mainButtonPressed() {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
@@ -95,18 +94,18 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
         
         microphoneManager.checkMicrophonePermissions(completion: {
             [weak self] idPermissionGranted in
-                let uuid = UUID()
-                let handle = "Voice Bot"
-                
-                if !idPermissionGranted {
-                    self?.callKitWorker.performStartCallAction(uuid: uuid, handle: handle)
-                }
-            }, cancelled: { [weak self] in
-                self?.toggleUIState(isEnabled: true, showCallControl: false)
-                self?.spinner?.state = .stop
-            })
+            let uuid = UUID()
+            let handle = "Voice Bot"
+            
+            if !idPermissionGranted {
+                self?.callKitWorker.performStartCallAction(uuid: uuid, handle: handle)
+            }
+        }, cancelled: { [weak self] in
+            self?.toggleUIState(isEnabled: true, showCallControl: false)
+            self?.spinner?.state = .stop
+        })
     }
-
+    
     func muteSwitchToggled(to isMuted: Bool) {
         // The sample app supports toggling mute from app UI only on the last connected call.
         guard let activeCall = activeCall else { return }
@@ -143,7 +142,7 @@ extension ContentViewModel: CallPresentable, CallKitPresentable {
             callControls?.isHidden = true
         }
     }
-
+    
     func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
         var popupMessage: String = "Warnings detected: "
         if isCleared {
