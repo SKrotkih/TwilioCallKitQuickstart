@@ -20,15 +20,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: UISwitch!
 
     // Injected Dependencies
-    var viewModel: CallsController!
-    var sharedData: SharedData!
+    var viewModel: ViewModel!
 
+    var spinner: Spinner!
     var microphoneManager: MicrophoneManageable!
     var ringtoneManager: RingtoneManageable!
-    var spinner: Spinner!
     var audioDevice: AudioDevice!
-
-    var incomingAlertController: UIAlertController?
 
     /*
      Custom ringback will be played when this flag is enabled.
@@ -36,7 +33,7 @@ class ViewController: UIViewController {
      the <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting
      to be accepted on the callee's side. Configure this flag based on the TwiML application.
     */
-    var playCustomRingback = false
+    private let playCustomRingback = false
 
     private var disposableBag = Set<AnyCancellable>()
     private var dependencies = Dependencies()
@@ -47,89 +44,63 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
-
         spinner = Spinner(isSpinning: false, iconView: iconView)
-        audioDevice = AudioDevice()
         dependencies.configure(for: self)
-        onChangeCallStateSubscription()
-        toggleUIState(isEnabled: true, showCallControl: false)
+        startListeningToChangeState()
+        viewModel.viewDidLoad()
         outgoingValue.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: .editingChanged)
         outgoingValue.delegate = self
     }
-
-    private func onChangeCallStateSubscription() {
-        store.$state
-            .sink { [weak self] state in
+    // Render
+    private func startListeningToChangeState() {
+        viewModel.event
+            .receive(on: RunLoop.main)
+            .sink { [weak self] state  in
                 guard let self else { return }
-                Task { @MainActor in
-                    switch await state.callKit {
-                    case .undefined, .begin, .reset, .timeout, .activateSession,
-                            .deactivateSession, .endTwilioCall, .heldCall:
-                        break
-                    case .startTwilioCall:
-                        self.toggleUIState(isEnabled: false, showCallControl: false)
-                        self.spinner.startSpin()
-                    case .answerCall:
-                        // CallKitProvider should handle this event
-                        break
-                    }
-                    switch await state.twilio {
-                    case .undefined:
-                        break
-                    case .callDidStartRinging:
-                        self.placeCallButton.setTitle("Ringing", for: .normal)
-                        // When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge)
-                        // is enabled in the
-                        // <Dial> TwiML verb, the caller will not hear the ringback while the call is
-                        // ringing and awaiting to be
-                        // accepted on the callee's side. The application can use the `AVAudioPlayer`
-                        // to play custom audio files
-                        // between the `[TVOCallDelegate callDidStartRinging:]` and the
-                        // `[TVOCallDelegate callDidConnect:]` callbacks.
-                        if self.playCustomRingback {
-                            do {
-                                try self.ringtoneManager.playRingback(ringtone: "ringtone.wav")
-                            } catch {
-                                if case let .message(text) = error as? RingtoneError {
-                                    print(text)
-                                }
+                switch state {
+                case .nothing:
+                    break
+                case .viewDidLoad:
+                    self.toggleUIState(isEnabled: true, showCallControl: false)
+                case .startCall:
+                    self.toggleUIState(isEnabled: false, showCallControl: false)
+                    self.spinner.startSpin()
+                case .startRinging:
+                    self.placeCallButton.setTitle("Ringing", for: .normal)
+                    if self.playCustomRingback {
+                        do {
+                            try self.ringtoneManager.playRingback(ringtone: "ringtone.wav")
+                        } catch {
+                            if case let .message(text) = error as? RingtoneError {
+                                print(text)
                             }
                         }
-                    case .callDidStopRinging:
-                        if self.playCustomRingback {
-                            self.ringtoneManager.stopRingback()
-                        }
-                    case .callDidConnect:
-                        self.placeCallButton.setTitle("Hang Up", for: .normal)
-                        self.toggleUIState(isEnabled: true, showCallControl: true)
-                        self.spinner.stopSpin()
-                        self.audioDevice.toggleAudioRoute(toSpeaker: true)
-                    case .isReconnectingWithError(let error):
-                        print(error.localizedDescription)
-                        self.placeCallButton.setTitle("Reconnecting", for: .normal)
-                        self.toggleUIState(isEnabled: false, showCallControl: false)
-                    case .callDidReconnect:
-                        self.placeCallButton.setTitle("Hang Up", for: .normal)
-                        self.toggleUIState(isEnabled: true, showCallControl: true)
-                    case .callDidFailToConnect:
-                        // CallKitProvider should handle this event
-                        break
-                    case .callDidDisconnect(let error):
-                        print(error?.localizedDescription ?? "")
-                        // CallKitProvider should handle this event
-                    case .callDisconnected:
-                        self.spinner.stopSpin()
-                        self.toggleUIState(isEnabled: true, showCallControl: false)
-                        self.placeCallButton.setTitle("Call", for: .normal)
-                        self.sharedData.userInitiatedDisconnect = false
-                    case .callDidReceiveQualityWarnings(let warnings, let isCleared):
-                        self.qualityWarningsUpdatePopup(warnings, isCleared: isCleared)
                     }
+                case .stopRinging:
+                    if self.playCustomRingback {
+                        self.ringtoneManager.stopRingback()
+                    }
+                case .connected:
+                    self.placeCallButton.setTitle("Hang Up", for: .normal)
+                    self.toggleUIState(isEnabled: true, showCallControl: true)
+                    self.spinner.stopSpin()
+                    self.audioDevice.toggleAudioRoute(toSpeaker: true)
+                case .reconnectWithError(let error):
+                    print(error.localizedDescription)
+                    self.placeCallButton.setTitle("Reconnecting", for: .normal)
+                    self.toggleUIState(isEnabled: false, showCallControl: false)
+                case .reconnect:
+                    self.placeCallButton.setTitle("Hang Up", for: .normal)
+                    self.toggleUIState(isEnabled: true, showCallControl: true)
+                case .disconnected:
+                    self.spinner.stopSpin()
+                    self.toggleUIState(isEnabled: true, showCallControl: false)
+                    self.placeCallButton.setTitle("Call", for: .normal)
+                    self.viewModel.callDisconnected()
+                case .qualityWarnings(warnings: let warnings, isCleared: let isCleared):
+                    self.qualityWarningsUpdatePopup(warnings, isCleared: isCleared)
                 }
-            }
-            .store(in: &disposableBag)
+        }.store(in: &disposableBag)
     }
 
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
@@ -148,7 +119,6 @@ class ViewController: UIViewController {
         viewModel.endCall { [weak self] callIsEnded in
             guard let self else { return }
             if callIsEnded {
-                self.sharedData.userInitiatedDisconnect = true
                 self.toggleUIState(isEnabled: false, showCallControl: false)
             }
         }
@@ -158,7 +128,7 @@ class ViewController: UIViewController {
                 guard let self else { return }
                 switch result {
                 case .permissionGranted, .continueWithoutMicrophone:
-                    self.viewModel.startCall(handle: "Voice Bot")
+                    self.viewModel.startCall()
                 case .userCancelledGrantPermissions:
                     self.toggleUIState(isEnabled: true, showCallControl: false)
                     self.spinner.stopSpin()
@@ -221,7 +191,7 @@ extension ViewController {
 
 extension ViewController: UITextFieldDelegate {
     @objc func textFieldDidChange(_ textField: UITextField) {
-        sharedData.outgoingValue = textField.text
+        viewModel.saveOutgoingValue(textField.text)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

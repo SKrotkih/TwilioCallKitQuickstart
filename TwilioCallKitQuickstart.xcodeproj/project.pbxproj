@@ -133,6 +133,7 @@
 				31952A9A2962BE1500678FC0 /* CallReduxStore.swift */,
 				31952A9B2962BE1500678FC0 /* CallReducer.swift */,
 				31922A142966F04600C1CFB1 /* Environment.swift */,
+				31A342F22965A80500B5D270 /* SharedData.swift */,
 			);
 			path = Redux;
 			sourceTree = "<group>";
@@ -238,7 +239,6 @@
 			children = (
 				24BA343A1D874AC800B0B4F7 /* Main.storyboard */,
 				24BA34381D874AC800B0B4F7 /* ViewController.swift */,
-				31A342F22965A80500B5D270 /* SharedData.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";

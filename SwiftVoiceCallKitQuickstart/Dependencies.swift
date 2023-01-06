@@ -8,9 +8,10 @@ import Foundation
 ///
 struct Dependencies {
     mutating func configure(for viewController: ViewController) {
-        viewController.viewModel = TwilioInteractor()
+        let viewModel = TwilioInteractor(sharedData: ReduxStore.shared.environment.sharedData)
+        viewController.viewModel = viewModel
         viewController.microphoneManager = MicrophoneManager()
         viewController.ringtoneManager = RingtoneManager()
-        viewController.sharedData = ReduxStore.shared.environment.sharedData
+        viewController.audioDevice = AudioDevice()
     }
 }

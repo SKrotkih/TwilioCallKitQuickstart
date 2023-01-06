@@ -9,14 +9,17 @@ Refactoring of the actual original project [SwiftVoiceQuickstart](https://github
 
 ## Introduction
 
-To start using this code you should to get an access token. Implement TwilioAccessTokenFetcher for that. 
+To start using this code you should get an access token. Implement TwilioAccessTokenFetcher for that.
+
+Study the original description here: [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) 
 
 ## Package Dependencies
 
-TwilioVoice 6.5.0
+Twilio Voice is now distributed via Swift Package Manager, so add the https://github.com/twilio/twilio-voice-ios repository as a Swift Package.
 
 ## Combine
- Were used [Combine](https://developer.apple.com/documentation/Combine) frameworks and newest [Concurrency Swift](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) approach.  
+
+Were used [Combine](https://developer.apple.com/documentation/Combine) framework and newest [Concurrency Swift](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) approach.  
 
 ## The Redux pattern
 
