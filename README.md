@@ -33,5 +33,5 @@ The app uses Redux pattern.
 
 ## Changes history:
 
-22-12-2022 - redesigned for the current Twilio code base 
-07-01-2023 - added TwilioSwiftUiQuickstart project with SwiftUI implementation  
+- 22-12-2022 - redesigned for the current Twilio code base 
+- 07-01-2023 - added TwilioSwiftUiQuickstart project with SwiftUI implementation  
