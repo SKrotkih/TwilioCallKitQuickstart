@@ -19,10 +19,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
 
+    var spinner: Spinner!
+
     // Injected Dependencies
     var viewModel: ViewModel!
-
-    var spinner: Spinner!
     var microphoneManager: MicrophoneManageable!
     var ringtoneManager: RingtoneManageable!
     var audioDevice: AudioDevice!
@@ -38,21 +38,19 @@ class ViewController: UIViewController {
     private var disposableBag = Set<AnyCancellable>()
     private var dependencies = Dependencies()
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         spinner = Spinner(isSpinning: false, iconView: iconView)
         dependencies.configure(for: self)
-        startListeningToChangeState()
+        startListeningToStateChanges()
         viewModel.viewDidLoad()
         outgoingValue.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: .editingChanged)
         outgoingValue.delegate = self
     }
-    // Render
-    private func startListeningToChangeState() {
+    //
+    // Update View according the phone call phase changes
+    //
+    private func startListeningToStateChanges() {
         viewModel.event
             .receive(on: RunLoop.main)
             .sink { [weak self] state  in
@@ -72,7 +70,7 @@ class ViewController: UIViewController {
                             try self.ringtoneManager.playRingback(ringtone: "ringtone.wav")
                         } catch {
                             if case let .message(text) = error as? RingtoneError {
-                                print(text)
+                                print(text) // should be shown with toaster?
                             }
                         }
                     }
@@ -83,20 +81,19 @@ class ViewController: UIViewController {
                 case .connected:
                     self.placeCallButton.setTitle("Hang Up", for: .normal)
                     self.toggleUIState(isEnabled: true, showCallControl: true)
-                    self.spinner.stopSpin()
                     self.audioDevice.toggleAudioRoute(toSpeaker: true)
-                case .reconnectWithError(let error):
-                    print(error.localizedDescription)
+                    self.spinner.stopSpin()
+                case .reconnectWithError:
                     self.placeCallButton.setTitle("Reconnecting", for: .normal)
                     self.toggleUIState(isEnabled: false, showCallControl: false)
                 case .reconnect:
                     self.placeCallButton.setTitle("Hang Up", for: .normal)
                     self.toggleUIState(isEnabled: true, showCallControl: true)
                 case .disconnected:
-                    self.spinner.stopSpin()
-                    self.toggleUIState(isEnabled: true, showCallControl: false)
                     self.placeCallButton.setTitle("Call", for: .normal)
+                    self.toggleUIState(isEnabled: true, showCallControl: false)
                     self.viewModel.callDisconnected()
+                    self.spinner.stopSpin()
                 case .qualityWarnings(warnings: let warnings, isCleared: let isCleared):
                     self.qualityWarningsUpdatePopup(warnings, isCleared: isCleared)
                 }
