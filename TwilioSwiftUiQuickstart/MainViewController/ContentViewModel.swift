@@ -4,8 +4,6 @@
 //
 //  Created by Serhii Krotkykh on 30.06.2021.
 //
-
-import Foundation
 import SwiftUI
 import TwilioVoice
 import Combine
@@ -33,15 +31,30 @@ protocol ContentPresentable: ObservableObject {
     var speackerSwitchOn: Bool { get set }
     var outgoingValue: String { get set }
 
+    var muteButtonTitle: String { get }
+    var spakerButtonTitle: String { get }
+    var textFieldPlaceholder: String { get }
+    var hintText: String { get }
+
     func viewDidAppear()
     func mainButtonPressed()
 }
 
-class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
+class ContentViewModel: NSObject, ObservableObject, ContentPresentable {
+    // static localized texts
+    @Published var muteButtonTitle = "Mute"
+    @Published var spakerButtonTitle = "Speaker"
+    @Published var textFieldPlaceholder = "Client name or phone number"
+    @Published var hintText = """
+    Dial a client name or phone number. Leaving the
+    field empty results in an automated response.
+"""
+
     @Published var outgoingValue: String = ""
     @Published var muteSwitchOn: Bool = false
     @Published var speackerSwitchOn: Bool = true
 
+    // injected view components refs
     var spinner: Spinner?
     var placeCallButton: PlaceCallButton?
     var toaster: QualityWarningsToaster?
@@ -54,7 +67,7 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     private let microphoneManager: MicrophoneManager!
 
     // activeCall represents the last connected call
-    var activeCall: Call? = nil
+    var activeCall: Call?
 
     var userInitiatedDisconnect: Bool = false
 
@@ -99,8 +112,7 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
             return
         }
 
-        microphoneManager.checkMicrophonePermissions(completion: {
-            [weak self] idPermissionGranted in
+        microphoneManager.checkMicrophonePermissions(completion: { [weak self] idPermissionGranted in
             let uuid = UUID()
             let handle = "Voice Bot"
 

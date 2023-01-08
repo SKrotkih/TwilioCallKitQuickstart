@@ -4,7 +4,6 @@
 //
 //  Created by Serhii Krotkykh on 25.06.2021.
 //
-
 import SwiftUI
 
 struct ContentView: View {
@@ -17,6 +16,7 @@ struct ContentView: View {
         }
     }
     @EnvironmentObject var appDelegate: AppDelegate
+    @ObservedObject private var keyboardObserver = KeyboardObserver.shared
 
     @State private var isSpinning = false
     @State private var callButtonTitle = "Call"
@@ -26,8 +26,6 @@ struct ContentView: View {
     @State private var muteSwitchOn = false
     @State private var speackerSwitchOn = true
     @State private var callControlViewisHidden = false
-
-    @ObservedObject private var keyboardObserver = KeyboardObserver.shared
 
     var body: some View {
         ZStack {
@@ -41,36 +39,37 @@ struct ContentView: View {
                     Spacer(minLength: 15.0)
                     Text(toasterTitle)
                         .font(Font.system(size: 14).weight(.light))
-                        .foregroundColor(.gray)
+                        .foregroundColor(.black)
                         .hidden(toasterHidden)
                         .padding(.top, 0.0)
-                    Spacer(minLength: 100.0)
+                    Spacer(minLength: 150.0)
                     Image("TwilioLogo")
                         .resizable(resizingMode: .stretch)
-                        .frame(width: 300.0, height: 300.0)
-                    Spacer(minLength: 50.0)
+                        .frame(width: 240.0, height: 240.0)
+                    Spacer(minLength: 30.0)
                 }
                 Group {
-                    TextField("Phone Number",
+                    TextField(viewModel.textFieldPlaceholder,
                               text: $viewModel.outgoingValue,
                               onEditingChanged: { _ in
                     }, onCommit: {
                         hideKeyboard()
                     })
-                    .overlay( RoundedRectangle(cornerRadius: 4) .stroke(.gray) )
-                    .font(Font.system(size: 20).weight(.light))
-                    .padding(.leading, 50.0)
-                    .padding(.trailing, 50.0)
-                    Spacer(minLength: 10.0)
-                    Text("Dial a client name or phone number. Leaving the field empty results in an automated response.")
+                    .frame(height: 30.0)
+                    .overlay(RoundedRectangle(cornerRadius: 4) .stroke(.gray))
+                    .font(Font.system(size: 16))
+                    .padding(.leading, 75.0)
+                    .padding(.trailing, 75.0)
+                    Spacer(minLength: 15.0)
+                    Text(viewModel.hintText)
                         .font(Font.system(size: 10).weight(.light))
                         .foregroundColor(Color(red: 0.47, green: 0.43, blue: 0.40, opacity: 1.00))
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
-                        .padding(.leading, 40.0)
-                        .padding(.trailing, 40.0)
+                        .padding(.leading, 60.0)
+                        .padding(.trailing, 60.0)
                 }
-                Spacer(minLength: 50.0)
+                Spacer(minLength: 20.0)
                 Group {
                     Button(
                         action: {
@@ -78,18 +77,17 @@ struct ContentView: View {
                         },
                         label: {
                             Text(callButtonTitle)
-                                .font(Font.system(size: 12).weight(.light))
+                                .font(Font.system(size: 14).weight(.light))
                                 .foregroundColor(.red)
                         }
                     )
                     .disabled(!isCallButtonEnabled)
                     .padding()
-                    Spacer()
                     if callControlViewisHidden {
                         Spacer()
                     } else {
                         VStack {
-                            Spacer()
+                            Spacer(minLength: 15.0)
                             HStack {
                                 VStack {
                                     Toggle("Mute", isOn: $muteSwitchOn)
@@ -99,7 +97,7 @@ struct ContentView: View {
                                         .onChange(of: muteSwitchOn, perform: { isMute in
                                             viewModel.muteSwitchOn = isMute
                                         })
-                                    Text("Mute")
+                                    Text(viewModel.muteButtonTitle)
                                         .frame(alignment: .center)
                                         .font(.system(size: 12))
                                 }
@@ -113,7 +111,7 @@ struct ContentView: View {
                                         .onChange(of: speackerSwitchOn, perform: { isSpeakerOn in
                                             viewModel.speackerSwitchOn = isSpeakerOn
                                         })
-                                    Text("Speaker")
+                                    Text(viewModel.spakerButtonTitle)
                                         .frame(alignment: .center)
                                         .font(.system(size: 12))
                                 }
@@ -122,6 +120,7 @@ struct ContentView: View {
                             Spacer()
                         }
                     }
+                    Spacer()
                 }
                 .padding(.bottom, keyboardObserver.height)
             }.onAppear {
