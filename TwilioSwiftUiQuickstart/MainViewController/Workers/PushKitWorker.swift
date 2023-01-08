@@ -2,7 +2,7 @@
 //  PushKitWorker.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 09.07.2021.
+//  Created by Serhii Krotkykh on 09.07.2021.
 //
 
 import UIKit
@@ -18,10 +18,10 @@ let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
 protocol PushKitEventDelegate: AnyObject {
-    func credentialsUpdated(credentials: PKPushCredentials) -> Void
-    func credentialsInvalidated() -> Void
-    func incomingPushReceived(payload: PKPushPayload) -> Void
-    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) -> Void
+    func credentialsUpdated(credentials: PKPushCredentials)
+    func credentialsInvalidated()
+    func incomingPushReceived(payload: PKPushPayload)
+    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void)
     func incomingPushHandled()
 }
 
@@ -30,15 +30,13 @@ protocol PushKitCompletionHandleable {
 }
 
 class PushKitWorker: PushKitEventDelegate {
-
     private var incomingPushCompletionCallback: (() -> Void)?
-    
+
     // TODO: Add CallKitWorker and CallKitCallsInviteble dependency
     private let notificationsHandler = CallNotificationsHandler()
 
     func credentialsUpdated(credentials: PKPushCredentials) {
-        guard
-            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token)
+        guard  (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token)
         else {
             return
         }
@@ -52,10 +50,10 @@ class PushKitWorker: PushKitEventDelegate {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
             } else {
                 NSLog("Successfully registered for VoIP push notifications.")
-                
+
                 // Save the device token after successfully registered.
                 UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
-                
+
                 /**
                  * The TTL of a registration is 1 year. The TTL for registration for this device/identity
                  * pair is reset to 1 year whenever a new registration occurs or a push notification is
@@ -65,7 +63,7 @@ class PushKitWorker: PushKitEventDelegate {
             }
         }
     }
-    
+
     /**
      * The TTL of a registration is 1 year. The TTL for registration for this device/identity pair is reset to
      * 1 year whenever a new registration occurs or a push notification is sent to this device/identity pair.
@@ -73,24 +71,23 @@ class PushKitWorker: PushKitEventDelegate {
      * will return true, else false.
      */
     func registrationRequired() -> Bool {
-        guard
-            let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate)
+        guard let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate) as? Date
         else { return true }
-        
+
         let date = Date()
         var components = DateComponents()
         components.setValue(kRegistrationTTLInDays/2, for: .day)
-        let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
+        let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated)!
 
         if expirationDate.compare(date) == ComparisonResult.orderedDescending {
             return false
         }
-        return true;
+        return true
     }
-    
+
     func credentialsInvalidated() {
         guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
-        
+
         TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while unregistering: \(error.localizedDescription)")
@@ -98,22 +95,24 @@ class PushKitWorker: PushKitEventDelegate {
                 NSLog("Successfully unregistered from VoIP push notifications.")
             }
         }
-        
+
         UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
-        
+
         // Remove the cached binding as credentials are invalidated
         UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
     }
-    
+
     func incomingPushReceived(payload: PKPushPayload) {
-        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
+        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:`
+        // when delegate queue is not passed
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: notificationsHandler, delegateQueue: nil)
     }
-    
+
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
-        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
+        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:`
+        // when delegate queue is not passed
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: notificationsHandler, delegateQueue: nil)
-        
+
         if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
             // Save for later when the notification is properly handled.
             incomingPushCompletionCallback = completion
@@ -122,7 +121,7 @@ class PushKitWorker: PushKitEventDelegate {
 
     func incomingPushHandled() {
         guard let completion = incomingPushCompletionCallback else { return }
-        
+
         incomingPushCompletionCallback = nil
         completion()
     }

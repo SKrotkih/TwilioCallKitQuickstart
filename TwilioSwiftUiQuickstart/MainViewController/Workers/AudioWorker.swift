@@ -2,7 +2,7 @@
 //  AudioWorker.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 09.07.2021.
+//  Created by Serhii Krotkykh on 09.07.2021.
 //
 
 import Foundation
@@ -22,10 +22,11 @@ class AudioWorker {
     }
 
     func toggleAudioRoute(toSpeaker: Bool) {
-        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
+        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is
+        // the built-in receiver. Use port override to switch the route.
         audioDevice.block = {
             DefaultAudioDevice.DefaultAVAudioSessionConfigurationBlock()
-            
+
             do {
                 try AVAudioSession.sharedInstance().overrideOutputAudioPort(toSpeaker ? .speaker : .none)
             } catch {
@@ -34,7 +35,7 @@ class AudioWorker {
         }
         audioDevice.block()
     }
-    
+
     func enableAudio() {
         audioDevice.isEnabled = true
     }

@@ -2,7 +2,7 @@
 //  ContentViewModel.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 30.06.2021.
+//  Created by Serhii Krotkykh on 30.06.2021.
 //
 
 import Foundation
@@ -24,15 +24,15 @@ protocol CallKitPresentable: AnyObject {
 }
 
 protocol ContentPresentable: ObservableObject {
-    var spinner: Spinner? { set get }
-    var placeCallButton: PlaceCallButton? { set get }
-    var toaster: QualityWarningsToaster? { set get }
-    var callControls: CallControls? { set get }
-    
-    var muteSwitchOn: Bool { set get }
-    var speackerSwitchOn: Bool { set get }
-    var outgoingValue: String { set get }
-    
+    var spinner: Spinner? { get set }
+    var placeCallButton: PlaceCallButton? { get set }
+    var toaster: QualityWarningsToaster? { get set }
+    var callControls: CallControls? { get set }
+
+    var muteSwitchOn: Bool { get set }
+    var speackerSwitchOn: Bool { get set }
+    var outgoingValue: String { get set }
+
     func viewDidAppear()
     func mainButtonPressed()
 }
@@ -41,69 +41,69 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
     @Published var outgoingValue: String = ""
     @Published var muteSwitchOn: Bool = false
     @Published var speackerSwitchOn: Bool = true
-    
+
     var spinner: Spinner?
     var placeCallButton: PlaceCallButton?
     var toaster: QualityWarningsToaster?
     var callControls: CallControls?
-    
+
     private var outgoingPhoneNumber: String?
-    
+
     private let callKitWorker: CallKitWorker!
     private let audioManager: AudioWorker!
     private let microphoneManager: MicrophoneManager!
-    
+
     // activeCall represents the last connected call
     var activeCall: Call? = nil
-    
+
     var userInitiatedDisconnect: Bool = false
-    
+
     private var cancellable = Set<AnyCancellable>()
-    
+
     init(callKitWorker: CallKitWorker,
          audioManager: AudioWorker,
          microphoneManager: MicrophoneManager) {
         self.callKitWorker = callKitWorker
         self.audioManager = audioManager
         self.microphoneManager = microphoneManager
-        
+
         super.init()
-        
+
         $muteSwitchOn
             .sink(receiveValue: { [weak self] state in
                 self?.muteSwitchToggled(to: state)
             }).store(in: &cancellable)
-        
+
         $speackerSwitchOn
             .sink(receiveValue: { [weak self] state in
                 self?.speakerSwitchToggled(to: state)
             }).store(in: &cancellable)
-        
+
         $outgoingValue
             .sink(receiveValue: { [weak self] value in
             self?.outgoingPhoneNumber = value
         }).store(in: &cancellable)
 
     }
-    
+
     func viewDidAppear() {
         toggleUIState(isEnabled: true, showCallControl: false)
     }
-    
+
     func mainButtonPressed() {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
             callKitWorker.performEndCallAction(uuid: activeCall!.uuid!)
             toggleUIState(isEnabled: false, showCallControl: false)
-            
+
             return
         }
-        
+
         microphoneManager.checkMicrophonePermissions(completion: {
             [weak self] idPermissionGranted in
             let uuid = UUID()
             let handle = "Voice Bot"
-            
+
             if !idPermissionGranted {
                 self?.callKitWorker.performStartCallAction(uuid: uuid, handle: handle)
             }
@@ -112,14 +112,14 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable  {
             self?.spinner?.state = .stop
         })
     }
-    
+
     func muteSwitchToggled(to isMuted: Bool) {
         // The sample app supports toggling mute from app UI only on the last connected call.
         guard let activeCall = activeCall else { return }
-        
+
         activeCall.isMuted = isMuted
     }
-    
+
     func speakerSwitchToggled(to speackerSwitchOn: Bool) {
         audioManager.toggleAudioRoute(toSpeaker: speackerSwitchOn)
     }
@@ -129,18 +129,18 @@ extension ContentViewModel: CallPresentable, CallKitPresentable {
     func setCallButtonTitle(_ text: String) {
         placeCallButton?.title = text
     }
-    
+
     func startActivity() {
         spinner?.state = .start
     }
-    
+
     func stopActivity() {
         spinner?.state = .stop
     }
-    
+
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
         placeCallButton?.isEnabled = isEnabled
-        
+
         if showCallControl {
             callControls?.isHidden = false
             muteSwitchOn = false
@@ -149,16 +149,16 @@ extension ContentViewModel: CallPresentable, CallKitPresentable {
             callControls?.isHidden = true
         }
     }
-    
+
     func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
         var popupMessage: String = "Warnings detected: "
         if isCleared {
             popupMessage = "Warnings cleared: "
         }
-        
+
         let mappedWarnings: [String] = warnings.map { number in warningString(Call.QualityWarning(rawValue: number.uintValue)!)}
         popupMessage += mappedWarnings.joined(separator: ", ")
-        
+
         toaster?.isHidden = true
         toaster?.text = popupMessage
         UIView.animate(withDuration: 1.0, animations: {
@@ -175,7 +175,7 @@ extension ContentViewModel: CallPresentable, CallKitPresentable {
             })
         }
     }
-    
+
     func warningString(_ warning: Call.QualityWarning) -> String {
         switch warning {
         case .highRtt: return "high-rtt"

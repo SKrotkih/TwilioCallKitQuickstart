@@ -2,7 +2,7 @@
 //  CallKitWorker.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 09.07.2021.
+//  Created by Serhii Krotkykh on 09.07.2021.
 //
 
 import UIKit
@@ -45,11 +45,11 @@ class CallKitWorker: NSObject {
     private var activeCallInvites: [String: CallInvite]! = [:]
 
     // activeCall represents the last connected call
-    private var activeCall: Call? = nil
+    private var activeCall: Call?
 
     init(callDelegate: CallWorker,
          maximumCallGroups: Int = 1,
-    maximumCallsPerCallGroup: Int = 1
+         maximumCallsPerCallGroup: Int = 1
     ) {
         self.callDelegate = callDelegate
 
@@ -58,14 +58,16 @@ class CallKitWorker: NSObject {
         self.configueProvider(maximumCallGroups: maximumCallGroups,
                               maximumCallsPerCallGroup: maximumCallsPerCallGroup)
     }
-    
+
     func configure(presenter: CallKitPresentable) {
         self.presenterDelegate = presenter
     }
-    
+
     private func configueProvider(maximumCallGroups: Int,
                                   maximumCallsPerCallGroup: Int) {
-        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
+        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)`
+         has been deprecated on iOS 14.
+         */
         let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
         configuration.maximumCallGroups = maximumCallGroups
         configuration.maximumCallsPerCallGroup = maximumCallsPerCallGroup
@@ -74,7 +76,7 @@ class CallKitWorker: NSObject {
             provider.setDelegate(self, queue: nil)
         }
     }
-    
+
     deinit {
         // CallKit has an odd API contract where the developer must call invalidate or the CXProvider is leaked.
         if let provider = callKitProvider {
@@ -91,20 +93,20 @@ extension CallKitWorker: CallKitCallsStorageble {
         activeCalls.removeValue(forKey: call.uuid!.uuidString)
     }
 }
-    
+
 extension CallKitWorker: CallKitProviderCallable {
     func callFailed(call: Call) {
         if let provider = callKitProvider {
             provider.reportCall(with: call.uuid!, endedAt: Date(), reason: CXCallEndedReason.failed)
         }
     }
-    
+
     func callDisconnected(call: Call, reason: CXCallEndedReason) {
         if let provider = callKitProvider {
             provider.reportCall(with: call.uuid!, endedAt: Date(), reason: reason)
         }
     }
-    
+
 }
 
 extension CallKitWorker: CallKitCompletionHandlable {
@@ -122,7 +124,7 @@ extension CallKitWorker: CallKitCompletionHandlable {
 }
 
 extension CallKitWorker: CallKitCallsInviteble {
-    
+
     func getCallInvite(callSid: String) -> CallInvite? {
         guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
             NSLog("No pending call invite")
@@ -130,11 +132,11 @@ extension CallKitWorker: CallKitCallsInviteble {
         }
         return activeCallInvites.values.first { invite in invite.callSid == callSid }
     }
-    
+
     func callInviteReceived(callInvite: CallInvite) {
         activeCallInvites[callInvite.uuid.uuidString] = callInvite
     }
-    
+
     func callInviteCancelled(callInvite: CallInvite) {
         activeCallInvites.removeValue(forKey: callInvite.uuid.uuidString)
     }
@@ -168,12 +170,12 @@ extension CallKitWorker: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         NSLog("provider:performStartCallAction:")
-        
+
         presenterDelegate.toggleUIState(isEnabled: false, showCallControl: false)
         presenterDelegate.startActivity()
-        
+
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
-        
+
         performVoiceCall(uuid: action.callUUID, client: "") { success in
             if success {
                 NSLog("performVoiceCall() successful")
@@ -182,13 +184,13 @@ extension CallKitWorker: CXProviderDelegate {
                 NSLog("performVoiceCall() failed")
             }
         }
-        
+
         action.fulfill()
     }
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         NSLog("provider:performAnswerCallAction:")
-        
+
         performAnswerVoiceCall(uuid: action.callUUID) { success in
             if success {
                 NSLog("performAnswerVoiceCall() successful")
@@ -196,13 +198,13 @@ extension CallKitWorker: CXProviderDelegate {
                 NSLog("performAnswerVoiceCall() failed")
             }
         }
-        
+
         action.fulfill()
     }
 
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         NSLog("provider:performEndCallAction:")
-        
+
         if let invite = activeCallInvites[action.callUUID.uuidString] {
             invite.reject()
             activeCallInvites.removeValue(forKey: action.callUUID.uuidString)
@@ -214,10 +216,10 @@ extension CallKitWorker: CXProviderDelegate {
 
         action.fulfill()
     }
-    
+
     func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
         NSLog("provider:performSetHeldAction:")
-        
+
         if let call = activeCalls[action.callUUID.uuidString] {
             call.isOnHold = action.isOnHold
             action.fulfill()
@@ -225,7 +227,7 @@ extension CallKitWorker: CXProviderDelegate {
             action.fail()
         }
     }
-    
+
     func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
         NSLog("provider:performSetMutedAction:")
 
@@ -237,14 +239,13 @@ extension CallKitWorker: CXProviderDelegate {
         }
     }
 
-    
     // MARK: Call Kit Actions
     func performStartCallAction(uuid: UUID, handle: String) {
         guard let provider = callKitProvider else {
             NSLog("CallKit provider not available")
             return
         }
-        
+
         let callHandle = CXHandle(type: .generic, value: handle)
         let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
         let transaction = CXTransaction(action: startCallAction)
@@ -258,7 +259,7 @@ extension CallKitWorker: CXProviderDelegate {
             NSLog("StartCallAction transaction request successful")
 
             let callUpdate = CXCallUpdate()
-            
+
             callUpdate.remoteHandle = callHandle
             callUpdate.supportsDTMF = true
             callUpdate.supportsHolding = true
@@ -278,7 +279,7 @@ extension CallKitWorker: CXProviderDelegate {
 
         let callHandle = CXHandle(type: .generic, value: from)
         let callUpdate = CXCallUpdate()
-        
+
         callUpdate.remoteHandle = callHandle
         callUpdate.supportsDTMF = true
         callUpdate.supportsHolding = true
@@ -308,34 +309,34 @@ extension CallKitWorker: CXProviderDelegate {
             }
         }
     }
-    
+
     func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Void) {
         let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
             builder.params = [twimlParamTo: self.outgoingValue]
             builder.uuid = uuid
         }
-        
+
         let call = TwilioVoiceSDK.connect(options: connectOptions, delegate: callDelegate)
         activeCall = call
         activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler
     }
-    
+
     func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Void) {
         guard let callInvite = activeCallInvites[uuid.uuidString] else {
             NSLog("No CallInvite matches the UUID")
             return
         }
-        
+
         let acceptOptions = AcceptOptions(callInvite: callInvite) { builder in
             builder.uuid = callInvite.uuid
         }
-        
+
         let call = callInvite.accept(options: acceptOptions, delegate: callDelegate)
         activeCall = call
         activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler
-        
+
         activeCallInvites.removeValue(forKey: uuid.uuidString)
 
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {

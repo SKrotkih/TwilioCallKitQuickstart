@@ -2,7 +2,7 @@
 //  RingtoneWorker.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 09.07.2021.
+//  Created by Serhii Krotkykh on 09.07.2021.
 //
 
 import AVFoundation
@@ -17,7 +17,7 @@ class RingtoneWorker: NSObject {
     */
     private var playCustomRingback: Bool
     private var ringtonePlayer: AVAudioPlayer?
-    
+
     init(customRingback: String? = nil,
          numberOfLoops: Int = -1,
          volume: Float = 1.0
@@ -38,7 +38,7 @@ class RingtoneWorker: NSObject {
             }
         }
     }
-    
+
     /*
      When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
      <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting to be
@@ -50,7 +50,7 @@ class RingtoneWorker: NSObject {
         guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
         ringtonePlayer.play()
     }
-    
+
     func stopRingback() {
         guard playCustomRingback  else { return }
         guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
@@ -61,12 +61,12 @@ class RingtoneWorker: NSObject {
 extension RingtoneWorker: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
-            NSLog("Audio player finished playing successfully");
+            NSLog("Audio player finished playing successfully")
         } else {
-            NSLog("Audio player finished playing with some error");
+            NSLog("Audio player finished playing with some error")
         }
     }
-    
+
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         if let error = error {
             NSLog("Decode error occurred: \(error.localizedDescription)")

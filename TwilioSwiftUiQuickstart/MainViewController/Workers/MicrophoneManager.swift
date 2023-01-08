@@ -2,7 +2,7 @@
 //  MicrophoneManager.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 09.07.2021.
+//  Created by Serhii Krotkykh on 09.07.2021.
 //
 
 import UIKit
@@ -20,10 +20,10 @@ class MicrophoneManager: NSObject {
             self?.showMicrophoneAccessRequest(completion: completion, cancelled: cancelled)
         }
     }
-    
+
     private func checkRecordPermission(_ completion: @escaping (_ permissionGranted: Bool) -> Void) {
         let permissionStatus = AVAudioSession.sharedInstance().recordPermission
-        
+
         switch permissionStatus {
         case .granted:
             // Record permission already granted.
@@ -39,8 +39,9 @@ class MicrophoneManager: NSObject {
             completion(false)
         }
     }
-    
-    private func showMicrophoneAccessRequest(completion: @escaping (_ permissionGranted: Bool) -> Void, cancelled: @escaping () -> Void) {
+
+    private func showMicrophoneAccessRequest(completion: @escaping (_ permissionGranted: Bool) -> Void,
+                                             cancelled: @escaping () -> Void) {
         let alertController = UIAlertController(title: "Voice Quick Start",
                                                 message: "Microphone permission not granted",
                                                 preferredStyle: .alert)

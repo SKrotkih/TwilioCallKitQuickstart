@@ -2,14 +2,12 @@
 //  ContentView.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 25.06.2021.
+//  Created by Serhii Krotkykh on 25.06.2021.
 //
 
 import SwiftUI
 
 struct ContentView: View {
-    
-    // TODO: Use protocol ContentPresentable for the viewModel
     @EnvironmentObject var viewModel: ContentViewModel {
         didSet {
             viewModel.spinner = Spinner(isSpinning: $isSpinning)
@@ -19,21 +17,18 @@ struct ContentView: View {
         }
     }
     @EnvironmentObject var appDelegate: AppDelegate
-    
+
     @State private var isSpinning = false
     @State private var callButtonTitle = "Call"
     @State private var isCallButtonEnabled = false
-    @State private var toasterTitle = ""
-    @State private var toasterHidden = true
+    @State private var toasterTitle = "Warnings Raised"
+    @State private var toasterHidden = false
     @State private var muteSwitchOn = false
     @State private var speackerSwitchOn = true
-    @State private var callControlViewisHidden = true
-    
+    @State private var callControlViewisHidden = false
+
     @ObservedObject private var keyboardObserver = KeyboardObserver.shared
-    
-    init() {
-    }
-    
+
     var body: some View {
         ZStack {
             ProgressView()
@@ -42,81 +37,93 @@ struct ContentView: View {
                 .animation(Animation.easeInOut(duration: 3))
                 .hidden(!isSpinning)
             VStack {
-                Spacer()
                 Group {
+                    Spacer(minLength: 15.0)
                     Text(toasterTitle)
-                        .font(Font.system(size: 12).weight(.light))
+                        .font(Font.system(size: 14).weight(.light))
                         .foregroundColor(.gray)
                         .hidden(toasterHidden)
                         .padding(.top, 0.0)
-                    Spacer()
+                    Spacer(minLength: 100.0)
                     Image("TwilioLogo")
                         .resizable(resizingMode: .stretch)
-                        .frame(width: 240.0, height: 240.0)
-                        .padding()
-                    Spacer()
+                        .frame(width: 300.0, height: 300.0)
+                    Spacer(minLength: 50.0)
+                }
+                Group {
                     TextField("Phone Number",
                               text: $viewModel.outgoingValue,
                               onEditingChanged: { _ in
                     }, onCommit: {
                         hideKeyboard()
-                    }
-                    )
-                        .font(Font.system(size: 12).weight(.light))
-                        .foregroundColor(.black)
-                        .frame(width: 240.0)
-                        .padding()
-                    Spacer()
+                    })
+                    .overlay( RoundedRectangle(cornerRadius: 4) .stroke(.gray) )
+                    .font(Font.system(size: 20).weight(.light))
+                    .padding(.leading, 50.0)
+                    .padding(.trailing, 50.0)
+                    Spacer(minLength: 10.0)
                     Text("Dial a client name or phone number. Leaving the field empty results in an automated response.")
                         .font(Font.system(size: 10).weight(.light))
-                        .foregroundColor(Color(red:0.47, green:0.43, blue:0.40, opacity:1.00))
+                        .foregroundColor(Color(red: 0.47, green: 0.43, blue: 0.40, opacity: 1.00))
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
-                        .frame(width: 240.0, height: 28.0)
-                        .padding()
+                        .padding(.leading, 40.0)
+                        .padding(.trailing, 40.0)
                 }
-                Spacer(minLength: 20.0)
+                Spacer(minLength: 50.0)
                 Group {
                     Button(
                         action: {
-                        viewModel.mainButtonPressed()
-                    },
+                            viewModel.mainButtonPressed()
+                        },
                         label: {
-                        Text(callButtonTitle)
-                            .font(Font.system(size: 12).weight(.light))
-                            .foregroundColor(.red)
-                    }
+                            Text(callButtonTitle)
+                                .font(Font.system(size: 12).weight(.light))
+                                .foregroundColor(.red)
+                        }
                     )
-                        .disabled(!isCallButtonEnabled)
-                        .padding()
+                    .disabled(!isCallButtonEnabled)
+                    .padding()
                     Spacer()
-                    HStack {
-                        Spacer(minLength: 25.0)
-                        VStack(alignment: .center) {
-                            Toggle(isOn: $muteSwitchOn) {
-                                Text("Mute")
-                                    .font(Font.system(size: 12).weight(.light))
-                                    .foregroundColor(.black)
-                            }.hidden(callControlViewisHidden)
-                                .onChange(of: muteSwitchOn) { _muteSwitchOn in
-                                    viewModel.muteSwitchOn = _muteSwitchOn
-                               }
-                        }
-                        Spacer(minLength: 25.0)
-                        VStack(alignment: .center) {
-                            Toggle(isOn: $speackerSwitchOn) {
-                                Text("Speacker")
-                                    .font(Font.system(size: 12).weight(.light))
-                                    .foregroundColor(.black)
-                            }.hidden(callControlViewisHidden)
-                                .onChange(of: speackerSwitchOn) { _speackerSwitchOn in
-                                    viewModel.speackerSwitchOn = _speackerSwitchOn
+                    if callControlViewisHidden {
+                        Spacer()
+                    } else {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                VStack {
+                                    Toggle("Mute", isOn: $muteSwitchOn)
+                                        .labelsHidden()
+                                        .toggleStyle(SwitchToggleStyle(tint: .green))
+                                        .padding(.bottom, 5.0)
+                                        .onChange(of: muteSwitchOn, perform: { isMute in
+                                            viewModel.muteSwitchOn = isMute
+                                        })
+                                    Text("Mute")
+                                        .frame(alignment: .center)
+                                        .font(.system(size: 12))
                                 }
+                                Spacer()
+                                    .frame(width: 45.0)
+                                VStack {
+                                    Toggle("Speaker", isOn: $speackerSwitchOn)
+                                        .labelsHidden()
+                                        .toggleStyle(SwitchToggleStyle(tint: .green))
+                                        .padding(.bottom, 5.0)
+                                        .onChange(of: speackerSwitchOn, perform: { isSpeakerOn in
+                                            viewModel.speackerSwitchOn = isSpeakerOn
+                                        })
+                                    Text("Speaker")
+                                        .frame(alignment: .center)
+                                        .font(.system(size: 12))
+                                }
+                            }
+                            .frame(width: 250)
+                            Spacer()
                         }
-                        Spacer(minLength: 25.0)
                     }
                 }
-                    .padding(.bottom, keyboardObserver.height)
+                .padding(.bottom, keyboardObserver.height)
             }.onAppear {
                 viewModel.viewDidAppear()
             }

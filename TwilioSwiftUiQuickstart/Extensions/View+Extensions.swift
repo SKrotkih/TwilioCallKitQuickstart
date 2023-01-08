@@ -2,7 +2,7 @@
 //  Extensions.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Sergey Krotkih on 30.06.2021.
+//  Created by Serhii Krotkykh on 30.06.2021.
 //
 
 import SwiftUI
