@@ -8,7 +8,6 @@
 //
 import UIKit
 import Combine
-import TwilioVoice
 import TwilioVoicePackage
 
 class ViewController: UIViewController {
@@ -21,7 +20,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: UISwitch!
     var spinner: Spinner!
 
-    var viewModel = ViewModel()
+    private let viewModel = ViewModel()
     private var disposableBag = Set<AnyCancellable>()
 
     override func viewDidLoad() {

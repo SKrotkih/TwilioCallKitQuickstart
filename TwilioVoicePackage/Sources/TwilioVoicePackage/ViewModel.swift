@@ -4,9 +4,18 @@
 //
 import UIKit
 import Combine
-import TwilioVoicePackage
 
-class ViewModel: ObservableObject {
+public class ViewModel: ObservableObject {
+    @Published public var enableMainButton = false
+    @Published public var mainButtonTitle = ""
+    @Published public var showCallControl = false
+    @Published public var onMute = false
+    @Published public var onSpeaker = true
+    @Published public var startLongTermProcess = false
+    @Published public var stopLongTermProcess = false
+    @Published public var warningText = ""
+
+    public init() { }
     
     var twilioVoice = TwilioInteractor(sharedData: ReduxStore.shared.environment.sharedData)
     private var disposableBag = Set<AnyCancellable>()
@@ -25,18 +34,11 @@ class ViewModel: ObservableObject {
     private var dependencies = Dependencies()
     private var viewController: UIViewController?
 
-    func viewDidLoad(viewController: UIViewController) {
-         dependencies.configure(for: self)
+    public func viewDidLoad(viewController: UIViewController) {
+        self.viewController = viewController
+        dependencies.configure(for: self)
+        startListeningToStateChanges()
     }
-    
-    @Published var enableMainButton = false
-    @Published var mainButtonTitle = ""
-    @Published var showCallControl = false
-    @Published var onMute = false
-    @Published var onSpeaker = true
-    @Published var startLongTermProcess = false
-    @Published var stopLongTermProcess = false
-    @Published var warningText = ""
 
     private func startListeningToStateChanges() {
         twilioVoice.event
@@ -98,7 +100,7 @@ class ViewModel: ObservableObject {
         }.store(in: &disposableBag)
     }
 
-    func mainButtonPressed() {
+    public func mainButtonPressed() {
         twilioVoice.endCall { [weak self] callIsEnded in
             guard let self else { return }
             if callIsEnded {
@@ -121,21 +123,21 @@ class ViewModel: ObservableObject {
             }.store(in: &disposableBag)
     }
     
-    func toggleMuteSwitch(to isOn: Bool) {
+    public func toggleMuteSwitch(to isOn: Bool) {
         twilioVoice.toggleMuteSwitch(to: isOn)
     }
     
-    func toggleSpeakerSwitch(to isOn: Bool) {
+    public func toggleSpeakerSwitch(to isOn: Bool) {
         audioDevice.toggleAudioRoute(toSpeaker: isOn)
     }
     
-    func saveOutgoingValue(_ value: String?) {
+    public func saveOutgoingValue(_ value: String?) {
         twilioVoice.saveOutgoingValue(value)
     }
 }
 
 extension ViewModel {
-    func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
+    public func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
         var popupMessage: String = "Warnings detected: "
         if isCleared {
             popupMessage = "Warnings cleared: "
