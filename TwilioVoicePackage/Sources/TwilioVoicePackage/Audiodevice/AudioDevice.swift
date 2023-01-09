@@ -1,16 +1,16 @@
 //
 //  AudioDevice.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import AVFoundation
 import TwilioVoice
 
 // MARK: - AVAudioSession
 
-public class AudioDeviceManager {
+class AudioDeviceManager {
     private var audioDevice = DefaultAudioDevice()
 
-    public init() {
+    init() {
         /*
          * The important thing to remember when providing a TVOAudioDevice is that the device must be set
          * before performing any other actions with the SDK (such as connecting a Call, or accepting an incoming Call).
@@ -19,7 +19,7 @@ public class AudioDeviceManager {
         TwilioVoiceSDK.audioDevice = audioDevice
     }
 
-    public func toggleAudioRoute(toSpeaker: Bool) {
+    func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route
         // is the built-in receiver. Use port override to switch the route.
         audioDevice.block = {

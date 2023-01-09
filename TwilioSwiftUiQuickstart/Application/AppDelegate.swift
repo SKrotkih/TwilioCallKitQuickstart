@@ -4,39 +4,15 @@
 //
 //  Copyright © 2016 Twilio, Inc. All rights reserved.
 //
-
 import UIKit
-import TwilioVoice
-import PushKit
 
-class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, ObservableObject {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let pushKitEventDelegate: PushKitEventDelegate = PushKitWorker()
-    var voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
-
-        /*
-         * Your app must initialize PKPushRegistry with PushKit push type VoIP at the launch time. As mentioned in the
-         * [PushKit guidelines](https://developer.apple.com/documentation/pushkit/supporting_pushkit_notifications_in_your_app),
-         * the system can't deliver push notifications to your app until you create a PKPushRegistry object for
-         * VoIP push type and set the delegate. If your app delays the initialization of
-         * PKPushRegistry, your app may receive outdated
-         * PushKit push notifications, and if your app decides not to report the received
-         * outdated push notifications to CallKit, iOS may
-         * terminate your app.
-         */
-        initializePushKit()
-
         return true
-    }
-
-    func initializePushKit() {
-        voipRegistry.delegate = self
-        voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -68,56 +44,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate, O
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate.
         // See also applicationDidEnterBackground:.
-    }
-
-    // MARK: PKPushRegistryDelegate
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
-        NSLog("pushRegistry:didUpdatePushCredentials:forType:")
-
-        pushKitEventDelegate.credentialsUpdated(credentials: credentials)
-    }
-
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
-        NSLog("pushRegistry:didInvalidatePushTokenForType:")
-
-        pushKitEventDelegate.credentialsInvalidated()
-    }
-
-    /**
-     * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
-     * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
-     */
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload,
-                      for type: PKPushType) {
-        NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
-
-        pushKitEventDelegate.incomingPushReceived(payload: payload)
-    }
-
-    /**
-     * This delegate method is available on iOS 11 and above. Call the completion handler once the
-     * notification payload is passed to the `TwilioVoiceSDK.handleNotification()` method.
-     */
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload,
-                      for type: PKPushType,
-                      completion: @escaping () -> Void) {
-        NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-
-        pushKitEventDelegate.incomingPushReceived(payload: payload, completion: completion)
-
-        if let version = Float(UIDevice.current.systemVersion), version >= 13.0 {
-            /**
-             * The Voice SDK processes the call notification and returns the call invite synchronously.
-             * Report the incoming call to
-             * CallKit and fulfill the completion before exiting this callback method.
-             */
-            completion()
-        }
-    }
-
-    func incomingPushHandled() {
-        guard #available(iOS 13, *) else {
-            pushKitEventDelegate.incomingPushHandled()
-        }
     }
 }

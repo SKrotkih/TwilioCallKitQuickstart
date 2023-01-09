@@ -1,16 +1,13 @@
 //
 //  PushNotificationsDelegate.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import UIKit
 import PushKit
 import CallKit
 import TwilioVoice
 
-// Fake access token! You should implement TwilioAccessTokenFetcher.
-let accessToken = "N3BF5Gqg90is9yBCZBIHnMg1pyPvV0J0ANZkz2rjZOU"
-
-public protocol PushKitEventDelegate: AnyObject {
+protocol PushKitEventDelegate: AnyObject {
     func credentialsUpdated(credentials: PKPushCredentials)
     func credentialsInvalidated()
     func incomingPushReceived(payload: PKPushPayload)
@@ -23,7 +20,7 @@ let kRegistrationTTLInDays = 365
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
-public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
+class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
 
     var activeCallInvites: [String: CallInvite]! = [:]
     var incomingPushCompletionCallback: (() -> Void)?
@@ -47,7 +44,7 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         }
     }
 
-    public func configureCallKitProvider() {
+    func configureCallKitProvider() {
        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)`
         has been deprecated on iOS 14. */
         let configuration = CXProviderConfiguration(localizedName: appName)
@@ -59,7 +56,7 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         }
     }
 
-    public func credentialsUpdated(credentials: PKPushCredentials) {
+    func credentialsUpdated(credentials: PKPushCredentials) {
         guard registrationRequired() ||
                 UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token else { return }
 
@@ -67,6 +64,7 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         /*
          * Perform registration if a new device token is detected.
          */
+        let accessToken = TwilioAccessTokenFetcher.fetchAccessToken()
         TwilioVoiceSDK.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
@@ -92,7 +90,7 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
      * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
      * will return true, else false.
      */
-    public func registrationRequired() -> Bool {
+    func registrationRequired() -> Bool {
         guard
             let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate) as? Date
         else { return true }
@@ -108,9 +106,9 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         return true
     }
 
-    public func credentialsInvalidated() {
+    func credentialsInvalidated() {
         guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
-
+        let accessToken = TwilioAccessTokenFetcher.fetchAccessToken()
         TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while unregistering: \(error.localizedDescription)")
@@ -125,13 +123,13 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
     }
 
-    public func incomingPushReceived(payload: PKPushPayload) {
+    func incomingPushReceived(payload: PKPushPayload) {
         // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:`
         // when delegate queue is not passed
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: notificationDelegate, delegateQueue: nil)
     }
 
-    public func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
+    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
         //        The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:`
         //        when delegate queue is not passed
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: notificationDelegate, delegateQueue: nil)
@@ -142,7 +140,7 @@ public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         }
     }
 
-    public func incomingPushHandled() {
+    func incomingPushHandled() {
         guard let completion = incomingPushCompletionCallback else { return }
 
         incomingPushCompletionCallback = nil

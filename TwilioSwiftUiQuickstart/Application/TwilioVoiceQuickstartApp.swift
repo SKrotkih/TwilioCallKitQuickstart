@@ -1,12 +1,12 @@
 //
 //  TwilioVoiceQuickstartApp.swift
 //
-//  TwilioVoiceQuickstart
+//  TwilioSwiftUiQuickstart
 //
 //  Created by Serhii Krotkykh on 25.06.2021.
 //
-
 import SwiftUI
+import TwilioVoicePackage
 
 @main
 struct TwilioVoiceQuickstartApp: App {
@@ -16,7 +16,7 @@ struct TwilioVoiceQuickstartApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(ContentDependencies.configure())
+                .environmentObject(ViewModel())
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

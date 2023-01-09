@@ -1,12 +1,12 @@
 //
 //  CallKitActions.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 import CallKit
 import TwilioVoice
 
-public protocol PhoneCallable {
+protocol PhoneCallable {
     func performVoiceCall(uuid: UUID, client: String?, to: String?, completionHandler: @escaping (Bool) -> Void)
     func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Void)
     func performStartCallAction(uuid: UUID, handle: String)
@@ -22,7 +22,7 @@ public protocol PhoneCallable {
     func isCallInActiveState(completionHandler: @escaping (Bool) -> Void)
 }
 
-public final class CallKitActions: NSObject, PhoneCallable {
+final class CallKitActions: NSObject, PhoneCallable {
     let callKitCallController = CXCallController()
     var callKitCompletionCallback: ((Bool) -> Void)?
     var callKitProvider: CXProvider?
@@ -33,11 +33,12 @@ public final class CallKitActions: NSObject, PhoneCallable {
     private let twilioCallDelegate: CallDelegate
     weak var pushKitEventDelegate: PushKitEventDelegate?
 
-    public init(twilioCallDelegate: CallDelegate) {
+    init(twilioCallDelegate: CallDelegate) {
         self.twilioCallDelegate = twilioCallDelegate
     }
 
-    public func performVoiceCall(uuid: UUID, client: String?, to: String?, completionHandler: @escaping (Bool) -> Void) {
+    func performVoiceCall(uuid: UUID, client: String?, to: String?, completionHandler: @escaping (Bool) -> Void) {
+        let accessToken = TwilioAccessTokenFetcher.fetchAccessToken()
         let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
             builder.params = [twimlParamTo: to ?? ""]
             builder.uuid = uuid
@@ -48,7 +49,7 @@ public final class CallKitActions: NSObject, PhoneCallable {
         callKitCompletionCallback = completionHandler
     }
 
-    public func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Void) {
+    func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Void) {
         guard let callInvite = activeCallInvites[uuid.uuidString] else {
             NSLog("No CallInvite matches the UUID")
             return
@@ -68,7 +69,7 @@ public final class CallKitActions: NSObject, PhoneCallable {
         pushKitEventDelegate?.incomingPushHandled()
     }
 
-    public func performStartCallAction(uuid: UUID, handle: String) {
+    func performStartCallAction(uuid: UUID, handle: String) {
         guard let provider = callKitProvider else {
             NSLog("CallKit provider not available")
             return
@@ -99,7 +100,7 @@ public final class CallKitActions: NSObject, PhoneCallable {
         }
     }
 
-    public func reportIncomingCall(from: String, uuid: UUID) {
+    func reportIncomingCall(from: String, uuid: UUID) {
         guard let provider = callKitProvider else {
             NSLog("CallKit provider not available")
             return
@@ -124,14 +125,14 @@ public final class CallKitActions: NSObject, PhoneCallable {
         }
     }
 
-    public func callDisconnected(call: Call) {
+    func callDisconnected(call: Call) {
         if call == activeCall {
             activeCall = nil
         }
         activeCalls.removeValue(forKey: call.uuid!.uuidString)
     }
 
-    public func callDidDisconnect(call: Call, error: Error?) {
+    func callDidDisconnect(call: Call, error: Error?) {
         var reason = CXCallEndedReason.remoteEnded
 
         if error != nil {
@@ -143,33 +144,33 @@ public final class CallKitActions: NSObject, PhoneCallable {
         }
     }
 
-    public func callDidFailToConnect(call: Call, error: Error) {
+    func callDidFailToConnect(call: Call, error: Error) {
         if let provider = callKitProvider {
             provider.reportCall(with: call.uuid!, endedAt: Date(), reason: CXCallEndedReason.failed)
         }
     }
 
-    public func useActiveCallInvite(_ callInvite: CallInvite) {
+    func useActiveCallInvite(_ callInvite: CallInvite) {
         activeCallInvites[callInvite.uuid.uuidString] = callInvite
     }
 
-    public func isCallInActiveState(completionHandler: (Bool) -> Void ) {
+    func isCallInActiveState(completionHandler: (Bool) -> Void ) {
         completionHandler(activeCall != nil)
     }
 
-    public func setUpMuteForActiveCall(_ isMuted: Bool) {
+    func setUpMuteForActiveCall(_ isMuted: Bool) {
         if let call = activeCall {
             call.isMuted = isMuted
         }
     }
 
-    public func performEndCallAction() {
+    func performEndCallAction() {
         if let call = activeCall, let uuid = call.uuid {
             performEndCallAction(uuid: uuid)
         }
     }
 
-    public func performEndCallAction(uuid: UUID) {
+    func performEndCallAction(uuid: UUID) {
 
         let endCallAction = CXEndCallAction(call: uuid)
         let transaction = CXTransaction(action: endCallAction)
@@ -183,7 +184,7 @@ public final class CallKitActions: NSObject, PhoneCallable {
         }
     }
 
-    public func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
+    func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
 
         guard activeCallInvites.isEmpty == false else {

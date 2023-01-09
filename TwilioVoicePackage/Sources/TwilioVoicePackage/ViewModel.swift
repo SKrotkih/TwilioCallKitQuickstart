@@ -1,13 +1,18 @@
 //
 //  ViewModel.swift
-//  TwilioUiKitQuickstart
+//  TwilioVoicePackage
 //
 import UIKit
 import Combine
-
+/**
+ Of the package entry point. Subscribe on event to update user interface
+ @param
+ @param
+ @return
+ */
 public class ViewModel: ObservableObject {
     @Published public var enableMainButton = false
-    @Published public var mainButtonTitle = ""
+    @Published public var mainButtonTitle = "Call"
     @Published public var showCallControl = false
     @Published public var onMute = false
     @Published public var onSpeaker = true
@@ -49,12 +54,14 @@ public class ViewModel: ObservableObject {
                 case .nothing:
                     break
                 case .viewDidLoad:
+                    self.mainButtonTitle = "Call"
                     self.enableMainButton = true
                     self.showCallControl = false
                 case .startCall:
                     self.enableMainButton = false
                     self.showCallControl = false
                     self.startLongTermProcess = true
+                    self.stopLongTermProcess = false
                 case .startRinging:
                     self.mainButtonTitle = "Ringing"
                     if self.playCustomRingback {
@@ -78,6 +85,7 @@ public class ViewModel: ObservableObject {
                     self.onSpeaker = true
                     self.audioDevice.toggleAudioRoute(toSpeaker: true)
                     self.stopLongTermProcess = true
+                    self.startLongTermProcess = false
                 case .reconnectWithError:
                     self.mainButtonTitle = "Reconnecting"
                     self.enableMainButton = true
@@ -94,6 +102,7 @@ public class ViewModel: ObservableObject {
                     self.showCallControl = false
                     self.twilioVoice.callDisconnected()
                     self.stopLongTermProcess = true
+                    self.startLongTermProcess = false
                 case .qualityWarnings(warnings: let warnings, isCleared: let isCleared):
                     self.qualityWarningsUpdatePopup(warnings, isCleared: isCleared)
                 }
@@ -119,6 +128,7 @@ public class ViewModel: ObservableObject {
                     self.enableMainButton = true
                     self.showCallControl = false
                     self.stopLongTermProcess = true
+                    self.startLongTermProcess = false
                 }
             }.store(in: &disposableBag)
     }

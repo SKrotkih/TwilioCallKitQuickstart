@@ -1,6 +1,6 @@
 //
 //  CallKitProviderDelegate.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 import TwilioVoice
@@ -14,7 +14,7 @@ let twimlParamTo = "to"
  @param
  @return
  */
-public class CallKitProviderDelegate: NSObject, CXProviderDelegate {
+class CallKitProviderDelegate: NSObject, CXProviderDelegate {
     private let sharedData: SharedData
 
     var activeCallInvites: [String: CallInvite]! = [:]
@@ -29,35 +29,35 @@ public class CallKitProviderDelegate: NSObject, CXProviderDelegate {
 
     var audioDevice = DefaultAudioDevice()
 
-    public func providerDidReset(_ provider: CXProvider) {
+    func providerDidReset(_ provider: CXProvider) {
         print("\(#function)")
         audioDevice.isEnabled = false
         store.stateDispatch(action: .callKit(.reset))
     }
 
-    public func providerDidBegin(_ provider: CXProvider) {
+    func providerDidBegin(_ provider: CXProvider) {
         print("\(#function)")
         store.stateDispatch(action: .callKit(.begin))
     }
 
-    public func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
+    func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         print("\(#function)")
         audioDevice.isEnabled = true
         store.stateDispatch(action: .callKit(.activateSession))
     }
 
-    public func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
+    func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         print("\(#function)")
         audioDevice.isEnabled = false
         store.stateDispatch(action: .callKit(.deactivateSession))
     }
 
-    public func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
+    func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
         print("\(#function)")
         store.stateDispatch(action: .callKit(.timeout))
     }
 
-    public func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
+    func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         print("\(#function)")
         store.stateDispatch(action: .callKit(.startTwilioCall))
 
@@ -75,7 +75,7 @@ public class CallKitProviderDelegate: NSObject, CXProviderDelegate {
         action.fulfill()
     }
 
-    public func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+    func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         print("\(#function)")
 
         store.stateDispatch(action: .performAnswerVoiceCall(action.callUUID) { success in
@@ -88,7 +88,7 @@ public class CallKitProviderDelegate: NSObject, CXProviderDelegate {
         action.fulfill()
     }
 
-    public func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+    func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         print("\(#function)")
 
         if let invite = activeCallInvites[action.callUUID.uuidString] {
@@ -103,7 +103,7 @@ public class CallKitProviderDelegate: NSObject, CXProviderDelegate {
         action.fulfill()
     }
 
-    public func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
+    func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
         print("\(#function)")
 
         if let call = activeCalls[action.callUUID.uuidString] {
@@ -114,7 +114,7 @@ public class CallKitProviderDelegate: NSObject, CXProviderDelegate {
         }
     }
 
-    public func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
+    func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
         print("\(#function)")
 
         if let call = activeCalls[action.callUUID.uuidString] {

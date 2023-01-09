@@ -1,6 +1,6 @@
 //
 //  CallState.swift
-//  Twilio Voice Quickstart - Swift
+//  TwilioVoicePackage
 //
 import Foundation
 

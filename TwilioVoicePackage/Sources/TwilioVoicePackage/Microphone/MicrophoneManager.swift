@@ -1,28 +1,28 @@
 //
 //  MicrophoneManager.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import UIKit
 import AVFoundation
 import Combine
 
-public enum MicrophoneUsing {
+enum MicrophoneUsing {
     case permissionGranted
     case continueWithoutMicrophone
     case userCancelledGrantPermissions
 }
 
-public protocol MicrophoneManageable {
+protocol MicrophoneManageable {
     func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never>
 }
 
-public class MicrophoneManager: MicrophoneManageable {
+class MicrophoneManager: MicrophoneManageable {
     private var viewController: UIViewController?
 
-    public init() { }
+    init() { }
     
     @MainActor
-    public func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never> {
+    func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never> {
         self.viewController = viewController
         return Future<MicrophoneUsing, Never> { promise in
             self.checkRecordPermission { [weak self] permissionGranted in

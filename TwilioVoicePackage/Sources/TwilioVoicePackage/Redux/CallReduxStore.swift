@@ -1,6 +1,6 @@
 //
 //  CallReduxStore.swift
-//  Twilio Voice Quickstart - Swift
+//  TwilioVoicePackage
 //
 import Combine
 
@@ -9,10 +9,10 @@ let store = ReduxStore.shared.store
 typealias CallReduxStore = Store<CallState, CallAction, NetworkService>
 typealias Reducer<State, Action, Environment> = (State, Action, Environment) async throws -> State
 
-public class ReduxStore {
-    public static let shared = ReduxStore()
+class ReduxStore {
+    static let shared = ReduxStore()
 
-    public let environment = Environment()
+    let environment = Environment()
 
     lazy var networkService: NetworkService = {
         NetworkService(with: environment.callKitActions)

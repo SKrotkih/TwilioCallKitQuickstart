@@ -1,31 +1,16 @@
 //
 //  ContentView.swift
-//  TwilioVoiceQuickstart
+//  TwilioSwiftUiQuickstart
 //
-//  Created by Serhii Krotkykh on 25.06.2021.
+//  Created by Serhii Krotkykh on 01.10.2023
 //
 import SwiftUI
+import TwilioVoicePackage
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: ContentViewModel {
-        didSet {
-            viewModel.spinner = Spinner(isSpinning: $isSpinning)
-            viewModel.placeCallButton = PlaceCallButton(title: $callButtonTitle, isEnabled: $isCallButtonEnabled)
-            viewModel.toaster = QualityWarningsToaster(text: $toasterTitle, isHidden: $toasterHidden)
-            viewModel.callControls = CallControls(isHidden: $callControlViewisHidden)
-        }
-    }
-    @EnvironmentObject var appDelegate: AppDelegate
+    @EnvironmentObject var viewModel: ViewModel
     @ObservedObject private var keyboardObserver = KeyboardObserver.shared
-
-    @State private var isSpinning = false
-    @State private var callButtonTitle = "Call"
-    @State private var isCallButtonEnabled = false
-    @State private var toasterTitle = "Warnings Raised"
-    @State private var toasterHidden = false
-    @State private var muteSwitchOn = false
-    @State private var speackerSwitchOn = true
-    @State private var callControlViewisHidden = false
+    @State private var outgoingValue = ""
 
     var body: some View {
         ZStack {
@@ -33,14 +18,14 @@ struct ContentView: View {
                 .frame(width: 50.0, height: 50.0)
                 .progressViewStyle(CircularProgressViewStyle())
                 .animation(Animation.easeInOut(duration: 3))
-                .hidden(!isSpinning)
+                .hidden(!viewModel.startLongTermProcess)
             VStack {
                 Group {
                     Spacer(minLength: 15.0)
-                    Text(toasterTitle)
+                    Text(viewModel.warningText)
+                        .hidden(viewModel.warningText.isEmpty)
                         .font(Font.system(size: 14).weight(.light))
                         .foregroundColor(.black)
-                        .hidden(toasterHidden)
                         .padding(.top, 0.0)
                     Spacer(minLength: 150.0)
                     Image("TwilioLogo")
@@ -49,11 +34,14 @@ struct ContentView: View {
                     Spacer(minLength: 30.0)
                 }
                 Group {
-                    TextField(viewModel.textFieldPlaceholder,
-                              text: $viewModel.outgoingValue,
+                    TextField("Client name or phone number",
+                              text: $outgoingValue,
                               onEditingChanged: { _ in
                     }, onCommit: {
                         hideKeyboard()
+                    })
+                    .onChange(of: outgoingValue, perform: { text in
+                        viewModel.saveOutgoingValue(text)
                     })
                     .frame(height: 30.0)
                     .overlay(RoundedRectangle(cornerRadius: 4) .stroke(.gray))
@@ -61,7 +49,7 @@ struct ContentView: View {
                     .padding(.leading, 75.0)
                     .padding(.trailing, 75.0)
                     Spacer(minLength: 15.0)
-                    Text(viewModel.hintText)
+                    Text("Dial a client name or phone number. Leaving the field empty results in an automated response.")
                         .font(Font.system(size: 10).weight(.light))
                         .foregroundColor(Color(red: 0.47, green: 0.43, blue: 0.40, opacity: 1.00))
                         .multilineTextAlignment(.center)
@@ -70,69 +58,84 @@ struct ContentView: View {
                         .padding(.trailing, 60.0)
                 }
                 Spacer(minLength: 20.0)
-                Group {
+                VStack {
                     Button(
                         action: {
                             viewModel.mainButtonPressed()
                         },
                         label: {
-                            Text(callButtonTitle)
+                            Text(viewModel.mainButtonTitle)
                                 .font(Font.system(size: 14).weight(.light))
                                 .foregroundColor(.red)
                         }
                     )
-                    .disabled(!isCallButtonEnabled)
+                    .disabled(!viewModel.enableMainButton)
                     .padding()
-                    if callControlViewisHidden {
-                        Spacer()
-                    } else {
-                        VStack {
-                            Spacer(minLength: 15.0)
-                            HStack {
-                                VStack {
-                                    Toggle("Mute", isOn: $muteSwitchOn)
-                                        .labelsHidden()
-                                        .toggleStyle(SwitchToggleStyle(tint: .green))
-                                        .padding(.bottom, 5.0)
-                                        .onChange(of: muteSwitchOn, perform: { isMute in
-                                            viewModel.muteSwitchOn = isMute
-                                        })
-                                    Text(viewModel.muteButtonTitle)
-                                        .frame(alignment: .center)
-                                        .font(.system(size: 12))
-                                }
-                                Spacer()
-                                    .frame(width: 45.0)
-                                VStack {
-                                    Toggle("Speaker", isOn: $speackerSwitchOn)
-                                        .labelsHidden()
-                                        .toggleStyle(SwitchToggleStyle(tint: .green))
-                                        .padding(.bottom, 5.0)
-                                        .onChange(of: speackerSwitchOn, perform: { isSpeakerOn in
-                                            viewModel.speackerSwitchOn = isSpeakerOn
-                                        })
-                                    Text(viewModel.spakerButtonTitle)
-                                        .frame(alignment: .center)
-                                        .font(.system(size: 12))
-                                }
+                    Group {
+                        Spacer(minLength: 15.0)
+                        HStack {
+                            VStack {
+                                Toggle("Mute", isOn: $viewModel.onMute)
+                                    .toggleStyle()
+                                    .onChange(of: viewModel.onMute, perform: { isMute in
+                                        viewModel.toggleMuteSwitch(to: isMute)
+                                    })
+                                Text("Mute")
+                                    .toggleTextStyle()
                             }
-                            .frame(width: 250)
                             Spacer()
+                                .frame(width: 45.0)
+                            VStack {
+                                Toggle("Speaker", isOn: $viewModel.onSpeaker)
+                                    .toggleStyle()
+                                    .onChange(of: viewModel.onSpeaker, perform: { isSpeakerOn in
+                                        viewModel.toggleSpeakerSwitch(to: isSpeakerOn)
+                                    })
+                                Text("Speaker")
+                                    .toggleTextStyle()
+                            }
                         }
-                    }
+                        .frame(width: 250)
+                    }.hidden(!viewModel.showCallControl)
                     Spacer()
                 }
                 .padding(.bottom, keyboardObserver.height)
             }.onAppear {
-                viewModel.viewDidAppear()
+                viewModel.viewDidLoad(viewController: UIViewController())
             }
         }
+    }
+}
+
+struct ToggleStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .labelsHidden()
+            .toggleStyle(SwitchToggleStyle(tint: .green))
+            .padding(.bottom, 5.0)
+    }
+}
+
+struct ToggleTextStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .frame(alignment: .center)
+            .font(.system(size: 12))
+    }
+}
+
+extension View {
+    func toggleStyle() -> some View {
+        modifier(ToggleStyle())
+    }
+    func toggleTextStyle() -> some View {
+        modifier(ToggleTextStyle())
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(ContentDependencies.configure())
+            .environmentObject(ViewModel())
     }
 }

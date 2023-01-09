@@ -1,6 +1,6 @@
 //
 //  Environment.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 
@@ -14,9 +14,9 @@ struct NetworkService {
 //
 // Initiate all Twilio and CallKit dependencies
 //
-public class Environment {
+class Environment {
     let callKitActions: CallKitActions
-    public let sharedData: SharedData
+    let sharedData: SharedData
 
     init() {
         sharedData = SharedData()

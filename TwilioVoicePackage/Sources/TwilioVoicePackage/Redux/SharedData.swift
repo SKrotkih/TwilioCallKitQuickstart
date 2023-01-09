@@ -1,6 +1,6 @@
 //
 //  SharedData.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 

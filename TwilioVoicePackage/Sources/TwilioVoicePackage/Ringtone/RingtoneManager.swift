@@ -1,23 +1,23 @@
 //
 //  RingtoneManager.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 import AVFoundation
 
-public protocol RingtoneManageable {
+protocol RingtoneManageable {
     func playRingback(ringtone: String) throws
     func stopRingback()
 }
 
-public enum RingtoneError: Error {
+enum RingtoneError: Error {
     case message(String)
 }
 
-public class RingtoneManager: NSObject, RingtoneManageable {
+class RingtoneManager: NSObject, RingtoneManageable {
     private var ringtonePlayer: AVAudioPlayer?
 
-    public func playRingback(ringtone: String) throws {
+    func playRingback(ringtone: String) throws {
         let resource = ringtone.components(separatedBy: ".")
         guard resource.count == 2,
               let url = Bundle.main.path(forResource: resource[0], ofType: resource[1]) else { return }
@@ -36,7 +36,7 @@ public class RingtoneManager: NSObject, RingtoneManageable {
         }
     }
 
-    public func stopRingback() {
+    func stopRingback() {
         guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
 
         ringtonePlayer.stop()
@@ -46,7 +46,7 @@ public class RingtoneManager: NSObject, RingtoneManageable {
 // MARK: - AVAudioPlayerDelegate protocol implementation
 
 extension RingtoneManager: AVAudioPlayerDelegate {
-    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
             NSLog("Audio player finished playing successfully")
         } else {
@@ -54,7 +54,7 @@ extension RingtoneManager: AVAudioPlayerDelegate {
         }
     }
 
-    public func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         if let error = error {
             NSLog("Decode error occurred: \(error.localizedDescription)")
         }

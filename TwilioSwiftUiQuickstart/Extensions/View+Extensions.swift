@@ -2,9 +2,6 @@
 //  Extensions.swift
 //  TwilioVoiceQuickstart
 //
-//  Created by Serhii Krotkykh on 30.06.2021.
-//
-
 import SwiftUI
 
 // Hide keyboard method for iOS 13 or iOS 14.

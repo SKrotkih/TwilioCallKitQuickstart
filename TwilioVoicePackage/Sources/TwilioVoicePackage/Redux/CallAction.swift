@@ -1,6 +1,6 @@
 //
 //  CallAction.swift
-//  Twilio Voice Quickstart - Swift
+//  TwilioVoicePackage
 //
 import UIKit
 import CallKit

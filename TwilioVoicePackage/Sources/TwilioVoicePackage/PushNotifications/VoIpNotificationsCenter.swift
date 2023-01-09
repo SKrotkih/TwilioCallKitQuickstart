@@ -1,6 +1,6 @@
 //
 //  VoIpNotificationsCenter.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 import PushKit

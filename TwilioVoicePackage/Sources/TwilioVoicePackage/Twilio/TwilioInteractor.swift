@@ -1,12 +1,12 @@
 //
 //  TwilioInteractor.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 import TwilioVoice
 import Combine
 
-public protocol CallsController {
+protocol CallsController {
     func startCall()
     func endCall(completion: @escaping (Bool) -> Void)
     func callDisconnected()
@@ -14,7 +14,7 @@ public protocol CallsController {
     func saveOutgoingValue(_ text: String?)
 }
 
-public enum CallEvents {
+enum CallEvents {
     case nothing
     case viewDidLoad
     case startCall
@@ -27,17 +27,17 @@ public enum CallEvents {
     case qualityWarnings(warnings: Set<NSNumber>, isCleared: Bool)
 }
 
-public protocol LifeCycleEventsHandler {
+protocol LifeCycleEventsHandler {
     init(sharedData: SharedData)
     var event: Published<CallEvents>.Publisher { get }
     func viewDidLoad()
 }
 
-public typealias TwilioVoice = CallsController & LifeCycleEventsHandler
+typealias TwilioVoice = CallsController & LifeCycleEventsHandler
 
-public class TwilioInteractor: ObservableObject, TwilioVoice {
+class TwilioInteractor: ObservableObject, TwilioVoice {
     @Published var state: CallEvents = .nothing
-    public var event: Published<CallEvents>.Publisher { $state }
+    var event: Published<CallEvents>.Publisher { $state }
 
     let sharedData: SharedData
     private var disposableBag = Set<AnyCancellable>()
@@ -47,7 +47,7 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      sharedData - structure we use to share data with Twilio framework
      @return
      */
-    public required init(sharedData: SharedData) {
+    required init(sharedData: SharedData) {
         NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
         self.sharedData = sharedData
     }
@@ -55,7 +55,7 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      @param
      @return
      */
-    public func viewDidLoad() {
+    func viewDidLoad() {
         state = .viewDidLoad
         store.$state
             .sink { [weak self] state in
@@ -110,7 +110,7 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      @param
      @return
      */
-    public func callQualityWarning(for rawValue: UInt) -> String {
+    func callQualityWarning(for rawValue: UInt) -> String {
         func warningString(_ warning: Call.QualityWarning) -> String {
             switch warning {
             case .highRtt: return "high-rtt"
@@ -127,7 +127,7 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      @param
      @return
      */
-    public func startCall() {
+    func startCall() {
         let uuid = UUID()
         let handle = "Voice Bot"
         self.sharedData.userInitiatedDisconnect = false
@@ -137,7 +137,7 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      @param
      @return
      */
-    public func endCall(completion: @escaping (Bool) -> Void) {
+    func endCall(completion: @escaping (Bool) -> Void) {
         store.stateDispatch(action: .isCallInActiveState { isCallInActiveState in
             if isCallInActiveState {
                 self.sharedData.userInitiatedDisconnect = true
@@ -152,14 +152,14 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      @param
      @return
      */
-    public func callDisconnected() {
+    func callDisconnected() {
         self.sharedData.userInitiatedDisconnect = false
     }
     /**
      @param
      @return
      */
-    public func toggleMuteSwitch(to mute: Bool) {
+    func toggleMuteSwitch(to mute: Bool) {
         // The sample app supports toggling mute from app UI only on the last connected call.
         store.stateDispatch(action: .setUpMuteForActiveCall(mute))
     }
@@ -167,7 +167,7 @@ public class TwilioInteractor: ObservableObject, TwilioVoice {
      @param
      @return
      */
-    public func saveOutgoingValue(_ text: String?) {
+    func saveOutgoingValue(_ text: String?) {
         sharedData.outgoingValue = text
     }
 }

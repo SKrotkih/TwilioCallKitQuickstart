@@ -1,6 +1,6 @@
 //
 //  Dependencies.swift
-//  TwilioCallKitQuickstart
+//  TwilioVoicePackage
 //
 import Foundation
 ///
