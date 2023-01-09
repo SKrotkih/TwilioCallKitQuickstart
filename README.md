@@ -13,7 +13,7 @@ Download or clone the repository
 Open TwilioQuickstart.xcworkspace file in root directory
 There are two projects:
 - TwilioUiKitQuickstart - xcode project where main view controller implemented with UIKit (storyboard)
-- TwilioSwiftUiQuickstart - xcode project where content view of main view controller implemented with SwiftUI 
+- TwilioSwiftUiQuickstart - xcode project where content view of main view controller implemented with SwiftUI (in process today)
 - TwilioVoicePackage - local swift package (SPM) with refactored Twilio Voice Quickstart project codebase. Used by previous (UIKit and SwiftUI) projects. 
 
 To start using this code you should get an access token. Implement TwilioAccessTokenFetcher for that.

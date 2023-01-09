@@ -64,10 +64,10 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable {
     private var outgoingPhoneNumber: String?
 
     private let callKitWorker: CallKitWorker!
-//    private let audioManager: AudioWorker!
-//    private let microphoneManager: MicrophoneManager!
+    private let audioManager: AudioWorker!
+    private let microphoneManager: MicrophoneManager!
 
-    var microphoneManager: MicrophoneManageable!
+//    var microphoneManager: MicrophoneManageable!
     var ringtoneManager: RingtoneManageable!
     var audioDevice: AudioDevice!
     
