@@ -10,7 +10,7 @@ import TwilioVoice
 // Fake access token! You should implement TwilioAccessTokenFetcher.
 let accessToken = "N3BF5Gqg90is9yBCZBIHnMg1pyPvV0J0ANZkz2rjZOU"
 
-protocol PushKitEventDelegate: AnyObject {
+public protocol PushKitEventDelegate: AnyObject {
     func credentialsUpdated(credentials: PKPushCredentials)
     func credentialsInvalidated()
     func incomingPushReceived(payload: PKPushPayload)
@@ -23,7 +23,7 @@ let kRegistrationTTLInDays = 365
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
-class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
+public class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
 
     var activeCallInvites: [String: CallInvite]! = [:]
     var incomingPushCompletionCallback: (() -> Void)?
@@ -47,7 +47,7 @@ class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         }
     }
 
-    func configureCallKitProvider() {
+    public func configureCallKitProvider() {
        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)`
         has been deprecated on iOS 14. */
         let configuration = CXProviderConfiguration(localizedName: appName)
@@ -59,7 +59,7 @@ class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         }
     }
 
-    func credentialsUpdated(credentials: PKPushCredentials) {
+    public func credentialsUpdated(credentials: PKPushCredentials) {
         guard registrationRequired() ||
                 UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token else { return }
 
@@ -92,7 +92,7 @@ class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
      * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
      * will return true, else false.
      */
-    func registrationRequired() -> Bool {
+    public func registrationRequired() -> Bool {
         guard
             let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate) as? Date
         else { return true }
@@ -108,7 +108,7 @@ class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         return true
     }
 
-    func credentialsInvalidated() {
+    public func credentialsInvalidated() {
         guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
 
         TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
@@ -125,13 +125,13 @@ class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
     }
 
-    func incomingPushReceived(payload: PKPushPayload) {
+    public func incomingPushReceived(payload: PKPushPayload) {
         // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:`
         // when delegate queue is not passed
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: notificationDelegate, delegateQueue: nil)
     }
 
-    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
+    public func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
         //        The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:`
         //        when delegate queue is not passed
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: notificationDelegate, delegateQueue: nil)
@@ -142,7 +142,7 @@ class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
         }
     }
 
-    func incomingPushHandled() {
+    public func incomingPushHandled() {
         guard let completion = incomingPushCompletionCallback else { return }
 
         incomingPushCompletionCallback = nil

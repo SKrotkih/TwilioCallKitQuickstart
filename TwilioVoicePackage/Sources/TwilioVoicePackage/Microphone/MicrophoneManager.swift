@@ -6,21 +6,23 @@ import UIKit
 import AVFoundation
 import Combine
 
-enum MicrophoneUsing {
+public enum MicrophoneUsing {
     case permissionGranted
     case continueWithoutMicrophone
     case userCancelledGrantPermissions
 }
 
-protocol MicrophoneManageable {
+public protocol MicrophoneManageable {
     func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never>
 }
 
-class MicrophoneManager: MicrophoneManageable {
+public class MicrophoneManager: MicrophoneManageable {
     private var viewController: UIViewController?
 
+    public init() { }
+    
     @MainActor
-    func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never> {
+    public func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never> {
         self.viewController = viewController
         return Future<MicrophoneUsing, Never> { promise in
             self.checkRecordPermission { [weak self] permissionGranted in

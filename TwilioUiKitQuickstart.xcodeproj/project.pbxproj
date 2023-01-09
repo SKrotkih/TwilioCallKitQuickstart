@@ -13,29 +13,10 @@
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
-		31913F1529603EF2000DA6DB /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 31913F1429603EF2000DA6DB /* TwilioVoice */; };
-		31922A152966F04600C1CFB1 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31922A142966F04600C1CFB1 /* Environment.swift */; };
-		31952A912962836E00678FC0 /* PushNotificationsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A902962836E00678FC0 /* PushNotificationsDelegate.swift */; };
-		31952A932962891500678FC0 /* CallKitProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A922962891500678FC0 /* CallKitProviderDelegate.swift */; };
 		31952A962962A8D500678FC0 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 31952A952962A8D500678FC0 /* ringtone.wav */; };
-		31952A9D2962BE1500678FC0 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A982962BE1500678FC0 /* CallError.swift */; };
-		31952A9E2962BE1500678FC0 /* CallState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A992962BE1500678FC0 /* CallState.swift */; };
-		31952A9F2962BE1500678FC0 /* CallReduxStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A9A2962BE1500678FC0 /* CallReduxStore.swift */; };
-		31952AA02962BE1500678FC0 /* CallReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A9B2962BE1500678FC0 /* CallReducer.swift */; };
-		31952AA12962BE1500678FC0 /* CallAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31952A9C2962BE1500678FC0 /* CallAction.swift */; };
-		31952AA22962F82500678FC0 /* CallKitActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13A1D7227481360080CD3A /* CallKitActions.swift */; };
-		31A342E629654BC500B5D270 /* MicrophoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342E529654BC500B5D270 /* MicrophoneManager.swift */; };
-		31A342E929656E8600B5D270 /* RingtoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342E829656E8600B5D270 /* RingtoneManager.swift */; };
 		31A342EC2965947B00B5D270 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342EB2965947B00B5D270 /* Spinner.swift */; };
-		31A342EF2965987F00B5D270 /* AudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342EE2965987F00B5D270 /* AudioDevice.swift */; };
-		31A342F129659D0C00B5D270 /* TwilioInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342F029659D0C00B5D270 /* TwilioInteractor.swift */; };
-		31A342F32965A80500B5D270 /* SharedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342F22965A80500B5D270 /* SharedData.swift */; };
-		7F13A1DC22749E1F0080CD3A /* VoIpNotificationsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13A1DB22749E1F0080CD3A /* VoIpNotificationsCenter.swift */; };
-		7F13D7B02273EE0500F7DFAD /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7AF2273EE0500F7DFAD /* Dependencies.swift */; };
-		7F13D7B222740A0B00F7DFAD /* VoIpNotificationsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7B122740A0B00F7DFAD /* VoIpNotificationsDelegate.swift */; };
-		7F13D7B6227414A300F7DFAD /* TwilioAccessTokenFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F13D7B5227414A300F7DFAD /* TwilioAccessTokenFetcher.swift */; };
-		7F141DE32276813C0070B64F /* TwilioNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F141DE22276813C0070B64F /* TwilioNotificationDelegate.swift */; };
-		7F22724B2276F09300EC02C0 /* TwilioCallsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F22724A2276F09300EC02C0 /* TwilioCallsDelegate.swift */; };
+		31ABA8FC296BF27900351813 /* TwilioVoicePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 31ABA8FB296BF27900351813 /* TwilioVoicePackage */; };
+		31ABA900296BF50700351813 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ABA8FF296BF50700351813 /* Dependencies.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,29 +29,11 @@
 		24BA34421D874AC800B0B4F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		24BA344A1D874D2B00B0B4F7 /* TwilioUiKitQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TwilioUiKitQuickstart.entitlements; sourceTree = "<group>"; };
-		31922A142966F04600C1CFB1 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
-		31952A902962836E00678FC0 /* PushNotificationsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsDelegate.swift; sourceTree = "<group>"; };
-		31952A922962891500678FC0 /* CallKitProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CallKitProviderDelegate.swift; path = ../PushNotifications/CallKitProviderDelegate.swift; sourceTree = "<group>"; };
+		310B77BE296C055900B3B96F /* TwilioVoicePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TwilioVoicePackage; sourceTree = "<group>"; };
 		31952A952962A8D500678FC0 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
-		31952A982962BE1500678FC0 /* CallError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
-		31952A992962BE1500678FC0 /* CallState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallState.swift; sourceTree = "<group>"; };
-		31952A9A2962BE1500678FC0 /* CallReduxStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallReduxStore.swift; sourceTree = "<group>"; };
-		31952A9B2962BE1500678FC0 /* CallReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallReducer.swift; sourceTree = "<group>"; };
-		31952A9C2962BE1500678FC0 /* CallAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallAction.swift; sourceTree = "<group>"; };
-		31A342E529654BC500B5D270 /* MicrophoneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneManager.swift; sourceTree = "<group>"; };
-		31A342E829656E8600B5D270 /* RingtoneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingtoneManager.swift; sourceTree = "<group>"; };
 		31A342EB2965947B00B5D270 /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
-		31A342EE2965987F00B5D270 /* AudioDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDevice.swift; sourceTree = "<group>"; };
-		31A342F029659D0C00B5D270 /* TwilioInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioInteractor.swift; sourceTree = "<group>"; };
-		31A342F22965A80500B5D270 /* SharedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedData.swift; sourceTree = "<group>"; };
+		31ABA8FF296BF50700351813 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		7F130C222275EEDF00963FE5 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		7F13A1D7227481360080CD3A /* CallKitActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallKitActions.swift; sourceTree = "<group>"; };
-		7F13A1DB22749E1F0080CD3A /* VoIpNotificationsCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoIpNotificationsCenter.swift; sourceTree = "<group>"; };
-		7F13D7AF2273EE0500F7DFAD /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
-		7F13D7B122740A0B00F7DFAD /* VoIpNotificationsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoIpNotificationsDelegate.swift; sourceTree = "<group>"; };
-		7F13D7B5227414A300F7DFAD /* TwilioAccessTokenFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioAccessTokenFetcher.swift; sourceTree = "<group>"; };
-		7F141DE22276813C0070B64F /* TwilioNotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioNotificationDelegate.swift; sourceTree = "<group>"; };
-		7F22724A2276F09300EC02C0 /* TwilioCallsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioCallsDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31913F1529603EF2000DA6DB /* TwilioVoice in Frameworks */,
+				31ABA8FC296BF27900351813 /* TwilioVoicePackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +51,7 @@
 		24BA342A1D874AC800B0B4F7 = {
 			isa = PBXGroup;
 			children = (
+				310B77BD296C055900B3B96F /* Packages */,
 				24BA34351D874AC800B0B4F7 /* TwilioUiKItQuickstart */,
 				24BA34341D874AC800B0B4F7 /* Products */,
 				45B8A87752EE385BD0514D8C /* Frameworks */,
@@ -107,16 +71,9 @@
 			children = (
 				24BA34421D874AC800B0B4F7 /* Info.plist */,
 				24BA344A1D874D2B00B0B4F7 /* TwilioUiKitQuickstart.entitlements */,
-				7F13D7AF2273EE0500F7DFAD /* Dependencies.swift */,
+				31ABA8FF296BF50700351813 /* Dependencies.swift */,
 				7F13A1E02274A0990080CD3A /* ViewController */,
 				31A342EA2965945A00B5D270 /* ViewComponents */,
-				31A342E729656E6600B5D270 /* Ringtone */,
-				31A342ED2965985D00B5D270 /* Audiodevice */,
-				31A342E4296542E900B5D270 /* Microphone */,
-				7F13A1DD2274A0670080CD3A /* PushNotifications */,
-				7F13A1DF2274A0870080CD3A /* CallKit */,
-				7F13A1DE2274A0780080CD3A /* Twilio */,
-				31952A972962BE1500678FC0 /* Redux */,
 				7F130C1F227571CA00963FE5 /* LaunchScreen */,
 				7F130C1D2275717700963FE5 /* SupportFiles */,
 				7F130C1E2275718900963FE5 /* Resources */,
@@ -124,34 +81,12 @@
 			path = TwilioUiKItQuickstart;
 			sourceTree = "<group>";
 		};
-		31952A972962BE1500678FC0 /* Redux */ = {
+		310B77BD296C055900B3B96F /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				31952A9C2962BE1500678FC0 /* CallAction.swift */,
-				31952A982962BE1500678FC0 /* CallError.swift */,
-				31952A992962BE1500678FC0 /* CallState.swift */,
-				31952A9A2962BE1500678FC0 /* CallReduxStore.swift */,
-				31952A9B2962BE1500678FC0 /* CallReducer.swift */,
-				31922A142966F04600C1CFB1 /* Environment.swift */,
-				31A342F22965A80500B5D270 /* SharedData.swift */,
+				310B77BE296C055900B3B96F /* TwilioVoicePackage */,
 			);
-			path = Redux;
-			sourceTree = "<group>";
-		};
-		31A342E4296542E900B5D270 /* Microphone */ = {
-			isa = PBXGroup;
-			children = (
-				31A342E529654BC500B5D270 /* MicrophoneManager.swift */,
-			);
-			path = Microphone;
-			sourceTree = "<group>";
-		};
-		31A342E729656E6600B5D270 /* Ringtone */ = {
-			isa = PBXGroup;
-			children = (
-				31A342E829656E8600B5D270 /* RingtoneManager.swift */,
-			);
-			path = Ringtone;
+			name = Packages;
 			sourceTree = "<group>";
 		};
 		31A342EA2965945A00B5D270 /* ViewComponents */ = {
@@ -160,14 +95,6 @@
 				31A342EB2965947B00B5D270 /* Spinner.swift */,
 			);
 			path = ViewComponents;
-			sourceTree = "<group>";
-		};
-		31A342ED2965985D00B5D270 /* Audiodevice */ = {
-			isa = PBXGroup;
-			children = (
-				31A342EE2965987F00B5D270 /* AudioDevice.swift */,
-			);
-			path = Audiodevice;
 			sourceTree = "<group>";
 		};
 		45B8A87752EE385BD0514D8C /* Frameworks */ = {
@@ -204,36 +131,6 @@
 			path = LaunchScreen;
 			sourceTree = "<group>";
 		};
-		7F13A1DD2274A0670080CD3A /* PushNotifications */ = {
-			isa = PBXGroup;
-			children = (
-				7F13A1DB22749E1F0080CD3A /* VoIpNotificationsCenter.swift */,
-				7F13D7B122740A0B00F7DFAD /* VoIpNotificationsDelegate.swift */,
-				31952A902962836E00678FC0 /* PushNotificationsDelegate.swift */,
-			);
-			path = PushNotifications;
-			sourceTree = "<group>";
-		};
-		7F13A1DE2274A0780080CD3A /* Twilio */ = {
-			isa = PBXGroup;
-			children = (
-				31A342F029659D0C00B5D270 /* TwilioInteractor.swift */,
-				7F141DE22276813C0070B64F /* TwilioNotificationDelegate.swift */,
-				7F22724A2276F09300EC02C0 /* TwilioCallsDelegate.swift */,
-				7F13D7B5227414A300F7DFAD /* TwilioAccessTokenFetcher.swift */,
-			);
-			path = Twilio;
-			sourceTree = "<group>";
-		};
-		7F13A1DF2274A0870080CD3A /* CallKit */ = {
-			isa = PBXGroup;
-			children = (
-				31952A922962891500678FC0 /* CallKitProviderDelegate.swift */,
-				7F13A1D7227481360080CD3A /* CallKitActions.swift */,
-			);
-			path = CallKit;
-			sourceTree = "<group>";
-		};
 		7F13A1E02274A0990080CD3A /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,10 +155,11 @@
 			buildRules = (
 			);
 			dependencies = (
+				310A046F296C092F0063AB88 /* PBXTargetDependency */,
 			);
 			name = TwilioUiKitQuickstart;
 			packageProductDependencies = (
-				31913F1429603EF2000DA6DB /* TwilioVoice */,
+				31ABA8FB296BF27900351813 /* TwilioVoicePackage */,
 			);
 			productName = SwiftVoiceCallKitQuickstart;
 			productReference = 24BA34331D874AC800B0B4F7 /* TwilioUiKitQuickstart.app */;
@@ -303,7 +201,6 @@
 			);
 			mainGroup = 24BA342A1D874AC800B0B4F7;
 			packageReferences = (
-				31913F1329603EF2000DA6DB /* XCRemoteSwiftPackageReference "twilio-voice-ios" */,
 			);
 			productRefGroup = 24BA34341D874AC800B0B4F7 /* Products */;
 			projectDirPath = "";
@@ -355,33 +252,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31952AA12962BE1500678FC0 /* CallAction.swift in Sources */,
-				7F22724B2276F09300EC02C0 /* TwilioCallsDelegate.swift in Sources */,
-				31952AA02962BE1500678FC0 /* CallReducer.swift in Sources */,
-				31952A912962836E00678FC0 /* PushNotificationsDelegate.swift in Sources */,
-				7F141DE32276813C0070B64F /* TwilioNotificationDelegate.swift in Sources */,
-				31A342E929656E8600B5D270 /* RingtoneManager.swift in Sources */,
+				31ABA900296BF50700351813 /* Dependencies.swift in Sources */,
 				24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */,
 				31A342EC2965947B00B5D270 /* Spinner.swift in Sources */,
-				31952A9F2962BE1500678FC0 /* CallReduxStore.swift in Sources */,
-				31952A9D2962BE1500678FC0 /* CallError.swift in Sources */,
-				31A342EF2965987F00B5D270 /* AudioDevice.swift in Sources */,
-				31952AA22962F82500678FC0 /* CallKitActions.swift in Sources */,
-				31A342F129659D0C00B5D270 /* TwilioInteractor.swift in Sources */,
-				31922A152966F04600C1CFB1 /* Environment.swift in Sources */,
-				31952A9E2962BE1500678FC0 /* CallState.swift in Sources */,
-				7F13D7B222740A0B00F7DFAD /* VoIpNotificationsDelegate.swift in Sources */,
-				31952A932962891500678FC0 /* CallKitProviderDelegate.swift in Sources */,
-				31A342E629654BC500B5D270 /* MicrophoneManager.swift in Sources */,
-				7F13D7B6227414A300F7DFAD /* TwilioAccessTokenFetcher.swift in Sources */,
-				31A342F32965A80500B5D270 /* SharedData.swift in Sources */,
-				7F13D7B02273EE0500F7DFAD /* Dependencies.swift in Sources */,
 				24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */,
-				7F13A1DC22749E1F0080CD3A /* VoIpNotificationsCenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		310A046F296C092F0063AB88 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 310A046E296C092F0063AB88 /* TwilioVoicePackage */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		24BA343A1D874AC800B0B4F7 /* Main.storyboard */ = {
@@ -598,22 +483,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		31913F1329603EF2000DA6DB /* XCRemoteSwiftPackageReference "twilio-voice-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		31913F1429603EF2000DA6DB /* TwilioVoice */ = {
+		310A046E296C092F0063AB88 /* TwilioVoicePackage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 31913F1329603EF2000DA6DB /* XCRemoteSwiftPackageReference "twilio-voice-ios" */;
-			productName = TwilioVoice;
+			productName = TwilioVoicePackage;
+		};
+		31ABA8FB296BF27900351813 /* TwilioVoicePackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TwilioVoicePackage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

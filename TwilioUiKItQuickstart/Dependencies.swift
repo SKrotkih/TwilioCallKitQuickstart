@@ -3,6 +3,7 @@
 //  TwilioCallKitQuickstart
 //
 import Foundation
+import TwilioVoicePackage
 ///
 /// Dependency Injection
 ///
@@ -12,6 +13,6 @@ struct Dependencies {
         viewController.viewModel = viewModel
         viewController.microphoneManager = MicrophoneManager()
         viewController.ringtoneManager = RingtoneManager()
-        viewController.audioDevice = AudioDevice()
+        viewController.audioDevice = AudioDeviceManager()
     }
 }

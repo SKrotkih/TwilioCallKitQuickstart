@@ -9,10 +9,10 @@ let store = ReduxStore.shared.store
 typealias CallReduxStore = Store<CallState, CallAction, NetworkService>
 typealias Reducer<State, Action, Environment> = (State, Action, Environment) async throws -> State
 
-class ReduxStore {
-    static let shared = ReduxStore()
+public class ReduxStore {
+    public static let shared = ReduxStore()
 
-    let environment = Environment()
+    public let environment = Environment()
 
     lazy var networkService: NetworkService = {
         NetworkService(with: environment.callKitActions)

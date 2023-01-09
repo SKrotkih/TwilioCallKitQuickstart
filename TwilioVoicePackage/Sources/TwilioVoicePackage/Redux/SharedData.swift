@@ -4,7 +4,7 @@
 //
 import Foundation
 
-class SharedData {
+public class SharedData {
     var outgoingValue: String?
     var userInitiatedDisconnect: Bool = false
 }

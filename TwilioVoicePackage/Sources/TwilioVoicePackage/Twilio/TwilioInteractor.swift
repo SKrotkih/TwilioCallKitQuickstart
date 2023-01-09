@@ -6,7 +6,7 @@ import Foundation
 import TwilioVoice
 import Combine
 
-protocol CallsController {
+public protocol CallsController {
     func startCall()
     func endCall(completion: @escaping (Bool) -> Void)
     func callDisconnected()
@@ -14,7 +14,7 @@ protocol CallsController {
     func saveOutgoingValue(_ text: String?)
 }
 
-enum CallEvents {
+public enum CallEvents {
     case nothing
     case viewDidLoad
     case startCall
@@ -27,17 +27,17 @@ enum CallEvents {
     case qualityWarnings(warnings: Set<NSNumber>, isCleared: Bool)
 }
 
-protocol LifeCycleEventsHandler {
+public protocol LifeCycleEventsHandler {
     init(sharedData: SharedData)
     var event: Published<CallEvents>.Publisher { get }
     func viewDidLoad()
 }
 
-typealias ViewModel = CallsController & LifeCycleEventsHandler
+public typealias ViewModel = CallsController & LifeCycleEventsHandler
 
-class TwilioInteractor: ObservableObject, ViewModel {
+public class TwilioInteractor: ObservableObject, ViewModel {
     @Published var state: CallEvents = .nothing
-    var event: Published<CallEvents>.Publisher { $state }
+    public var event: Published<CallEvents>.Publisher { $state }
 
     let sharedData: SharedData
     private var disposableBag = Set<AnyCancellable>()
@@ -47,7 +47,7 @@ class TwilioInteractor: ObservableObject, ViewModel {
      sharedData - structure we use to share data with Twilio framework
      @return
      */
-    required init(sharedData: SharedData) {
+    public required init(sharedData: SharedData) {
         NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
         self.sharedData = sharedData
     }
@@ -55,7 +55,7 @@ class TwilioInteractor: ObservableObject, ViewModel {
      @param
      @return
      */
-    func viewDidLoad() {
+    public func viewDidLoad() {
         state = .viewDidLoad
         store.$state
             .sink { [weak self] state in
@@ -110,7 +110,7 @@ class TwilioInteractor: ObservableObject, ViewModel {
      @param
      @return
      */
-    func startCall() {
+    public func startCall() {
         let uuid = UUID()
         let handle = "Voice Bot"
         self.sharedData.userInitiatedDisconnect = false
@@ -120,7 +120,7 @@ class TwilioInteractor: ObservableObject, ViewModel {
      @param
      @return
      */
-    func endCall(completion: @escaping (Bool) -> Void) {
+    public func endCall(completion: @escaping (Bool) -> Void) {
         store.stateDispatch(action: .isCallInActiveState { isCallInActiveState in
             if isCallInActiveState {
                 self.sharedData.userInitiatedDisconnect = true
@@ -135,14 +135,14 @@ class TwilioInteractor: ObservableObject, ViewModel {
      @param
      @return
      */
-    func callDisconnected() {
+    public func callDisconnected() {
         self.sharedData.userInitiatedDisconnect = false
     }
     /**
      @param
      @return
      */
-    func toggleMuteSwitch(to mute: Bool) {
+    public func toggleMuteSwitch(to mute: Bool) {
         // The sample app supports toggling mute from app UI only on the last connected call.
         store.stateDispatch(action: .setUpMuteForActiveCall(mute))
     }
@@ -150,7 +150,7 @@ class TwilioInteractor: ObservableObject, ViewModel {
      @param
      @return
      */
-    func saveOutgoingValue(_ text: String?) {
+    public func saveOutgoingValue(_ text: String?) {
         sharedData.outgoingValue = text
     }
 }

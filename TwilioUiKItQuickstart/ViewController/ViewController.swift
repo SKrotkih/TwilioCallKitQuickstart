@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import TwilioVoice
+import TwilioVoicePackage
 
 class ViewController: UIViewController {
     @IBOutlet weak var qualityWarningsToaster: UILabel!
@@ -25,7 +26,7 @@ class ViewController: UIViewController {
     var viewModel: ViewModel!
     var microphoneManager: MicrophoneManageable!
     var ringtoneManager: RingtoneManageable!
-    var audioDevice: AudioDevice!
+    var audioDevice: AudioDeviceManager!
 
     /*
      Custom ringback will be played when this flag is enabled.

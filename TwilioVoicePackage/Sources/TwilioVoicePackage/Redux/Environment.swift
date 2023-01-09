@@ -14,9 +14,9 @@ struct NetworkService {
 //
 // Initiate all Twilio and CallKit dependencies
 //
-class Environment {
+public class Environment {
     let callKitActions: CallKitActions
-    let sharedData: SharedData
+    public let sharedData: SharedData
 
     init() {
         sharedData = SharedData()
@@ -28,7 +28,7 @@ class Environment {
         )
         let voIpNotificationsDelegate = VoIpNotificationsDelegate(delegate: pushNotificationsDelegate)
         // TODO: Find out where it is used
-        let notificationsCenter = VoIpNotificationsCenter(notificationsDelegate: voIpNotificationsDelegate)
+        let _ = VoIpNotificationsCenter(notificationsDelegate: voIpNotificationsDelegate)
 
         let twilioCallDelegate = TwilioCallsDelegate(sharedData: sharedData)
         callKitActions = CallKitActions(twilioCallDelegate: twilioCallDelegate)

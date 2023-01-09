@@ -5,8 +5,9 @@
 //  Created by Serhii Krotkykh on 30.06.2021.
 //
 import SwiftUI
-import TwilioVoice
 import Combine
+import TwilioVoice
+import TwilioVoicePackage
 
 protocol CallPresentable: AnyObject {
     func setCallButtonTitle(_ title: String)
@@ -63,8 +64,13 @@ class ContentViewModel: NSObject, ObservableObject, ContentPresentable {
     private var outgoingPhoneNumber: String?
 
     private let callKitWorker: CallKitWorker!
-    private let audioManager: AudioWorker!
-    private let microphoneManager: MicrophoneManager!
+//    private let audioManager: AudioWorker!
+//    private let microphoneManager: MicrophoneManager!
+
+    var microphoneManager: MicrophoneManageable!
+    var ringtoneManager: RingtoneManageable!
+    var audioDevice: AudioDevice!
+    
 
     // activeCall represents the last connected call
     var activeCall: Call?
