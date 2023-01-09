@@ -33,9 +33,9 @@ public protocol LifeCycleEventsHandler {
     func viewDidLoad()
 }
 
-public typealias ViewModel = CallsController & LifeCycleEventsHandler
+public typealias TwilioVoice = CallsController & LifeCycleEventsHandler
 
-public class TwilioInteractor: ObservableObject, ViewModel {
+public class TwilioInteractor: ObservableObject, TwilioVoice {
     @Published var state: CallEvents = .nothing
     public var event: Published<CallEvents>.Publisher { $state }
 
@@ -105,6 +105,23 @@ public class TwilioInteractor: ObservableObject, ViewModel {
                 }
             }
             .store(in: &disposableBag)
+    }
+    /**
+     @param
+     @return
+     */
+    public func callQualityWarning(for rawValue: UInt) -> String {
+        func warningString(_ warning: Call.QualityWarning) -> String {
+            switch warning {
+            case .highRtt: return "high-rtt"
+            case .highJitter: return "high-jitter"
+            case .highPacketsLostFraction: return "high-packets-lost-fraction"
+            case .lowMos: return "low-mos"
+            case .constantAudioInputLevel: return "constant-audio-input-level"
+            default: return "Unknown warning"
+            }
+        }
+        return warningString(Call.QualityWarning(rawValue: rawValue)!)
     }
     /**
      @param

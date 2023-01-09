@@ -13,6 +13,7 @@
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
+		314EADD8296C3A230084E62C /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314EADD7296C3A230084E62C /* ViewModel.swift */; };
 		31952A962962A8D500678FC0 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 31952A952962A8D500678FC0 /* ringtone.wav */; };
 		31A342EC2965947B00B5D270 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342EB2965947B00B5D270 /* Spinner.swift */; };
 		31ABA8FC296BF27900351813 /* TwilioVoicePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 31ABA8FB296BF27900351813 /* TwilioVoicePackage */; };
@@ -30,6 +31,7 @@
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		24BA344A1D874D2B00B0B4F7 /* TwilioUiKitQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TwilioUiKitQuickstart.entitlements; sourceTree = "<group>"; };
 		310B77BE296C055900B3B96F /* TwilioVoicePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TwilioVoicePackage; sourceTree = "<group>"; };
+		314EADD7296C3A230084E62C /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		31952A952962A8D500678FC0 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		31A342EB2965947B00B5D270 /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		31ABA8FF296BF50700351813 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			children = (
 				24BA343A1D874AC800B0B4F7 /* Main.storyboard */,
 				24BA34381D874AC800B0B4F7 /* ViewController.swift */,
+				314EADD7296C3A230084E62C /* ViewModel.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				314EADD8296C3A230084E62C /* ViewModel.swift in Sources */,
 				31ABA900296BF50700351813 /* Dependencies.swift in Sources */,
 				24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */,
 				31A342EC2965947B00B5D270 /* Spinner.swift in Sources */,
