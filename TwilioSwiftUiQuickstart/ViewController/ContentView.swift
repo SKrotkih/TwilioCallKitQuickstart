@@ -61,7 +61,7 @@ struct ContentView: View {
                 VStack {
                     Button(
                         action: {
-                            viewModel.mainButtonPressed()
+                            viewModel.makeCallButtonPressed()
                         },
                         label: {
                             Text(viewModel.mainButtonTitle)

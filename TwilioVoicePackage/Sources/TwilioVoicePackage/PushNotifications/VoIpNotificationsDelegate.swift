@@ -5,11 +5,7 @@
 import Foundation
 import PushKit
 
-/**
- PKPushRegistryDelegate
- @param
- @return
- */
+/// Of the PKPushRegistryDelegate protocol implementation
 class VoIpNotificationsDelegate: NSObject, PKPushRegistryDelegate {
     private weak var pushKitEventDelegate: PushKitEventDelegate?
 

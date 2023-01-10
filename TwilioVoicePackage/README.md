@@ -18,12 +18,14 @@ First of all you should implement TwilioAccessTokenFetcher class in this package
 
 ## Use case
 
+```
 import TwilioVoicePackage
-
+...
 let viewModel = ViewModel()
+```
 
 and then update your UI with listening of the viewModel's publishers. See examples TwilioSwiftUiQuickstart and TwilioUiKitQuickstart 
 
 ## Changes history:
 
-- 01-10-2023 - created the package 
+- 01-10-2023 - the package was created 

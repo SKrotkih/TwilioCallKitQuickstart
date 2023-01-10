@@ -9,11 +9,7 @@ import Combine
 
 let twimlParamTo = "to"
 
-/**
- CallKit CXProviderDelegate
- @param
- @return
- */
+/// CallKit framework CXProviderDelegate implementation
 class CallKitProviderDelegate: NSObject, CXProviderDelegate {
     private let sharedData: SharedData
 

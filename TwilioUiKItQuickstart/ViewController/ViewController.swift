@@ -94,8 +94,8 @@ class ViewController: UIViewController {
             }.store(in: &disposableBag)
     }
 
-    @IBAction func mainButtonPressed(_ sender: Any) {
-        viewModel.mainButtonPressed()
+    @IBAction func makeCallButtonPressed(_ sender: Any) {
+        viewModel.makeCallButtonPressed()
     }
 
     @IBAction func muteSwitchToggled(_ sender: UISwitch) {

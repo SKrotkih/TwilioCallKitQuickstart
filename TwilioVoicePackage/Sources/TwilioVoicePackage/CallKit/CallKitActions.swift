@@ -22,6 +22,7 @@ protocol PhoneCallable {
     func isCallInActiveState(completionHandler: @escaping (Bool) -> Void)
 }
 
+/// Make call action and other ones with using CallKit framework
 final class CallKitActions: NSObject, PhoneCallable {
     let callKitCallController = CXCallController()
     var callKitCompletionCallback: ((Bool) -> Void)?

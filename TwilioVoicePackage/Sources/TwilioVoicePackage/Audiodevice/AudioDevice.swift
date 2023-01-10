@@ -5,8 +5,7 @@
 import AVFoundation
 import TwilioVoice
 
-// MARK: - AVAudioSession
-
+/// AVAudioSession
 class AudioDeviceManager {
     private var audioDevice = DefaultAudioDevice()
 

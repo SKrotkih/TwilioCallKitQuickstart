@@ -20,6 +20,7 @@ let kRegistrationTTLInDays = 365
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
+/// VoIP push notifications delegate 
 class PushNotificationsDelegate: NSObject, PushKitEventDelegate {
 
     var activeCallInvites: [String: CallInvite]! = [:]

@@ -2,14 +2,12 @@
 //  ViewModel.swift
 //  TwilioVoicePackage
 //
+//  Created by Serhii Krotkykh
+//
 import UIKit
 import Combine
-/**
- Of the package entry point. Subscribe on event to update user interface
- @param
- @param
- @return
- */
+
+/// The package entry point. Subscribe on its puvlished events to update user interface
 public class ViewModel: ObservableObject {
     @Published public var enableMainButton = false
     @Published public var mainButtonTitle = "Call"
@@ -38,7 +36,10 @@ public class ViewModel: ObservableObject {
     
     private var dependencies = Dependencies()
     private var viewController: UIViewController?
-
+    
+    /// Required method.
+    /// Call this method on view initiate stage
+    /// - Parameter viewController: UIViewController used for alerts
     public func viewDidLoad(viewController: UIViewController) {
         self.viewController = viewController
         dependencies.configure(for: self)
@@ -108,8 +109,9 @@ public class ViewModel: ObservableObject {
                 }
         }.store(in: &disposableBag)
     }
-
-    public func mainButtonPressed() {
+    
+    /// Handle make a Call button pressed event
+    public func makeCallButtonPressed() {
         twilioVoice.endCall { [weak self] callIsEnded in
             guard let self else { return }
             if callIsEnded {
@@ -133,20 +135,30 @@ public class ViewModel: ObservableObject {
             }.store(in: &disposableBag)
     }
     
+    /// Handle Mute button event
+    /// - Parameter isOn: Mute is turns on if true
     public func toggleMuteSwitch(to isOn: Bool) {
         twilioVoice.toggleMuteSwitch(to: isOn)
     }
     
+    /// Handle Speaker button event
+    /// - Parameter isOn: Speaker is turns on if true
     public func toggleSpeakerSwitch(to isOn: Bool) {
         audioDevice.toggleAudioRoute(toSpeaker: isOn)
     }
     
+    /// Save current value of the Outgoing text
+    /// - Parameter value: Phone number or client name
     public func saveOutgoingValue(_ value: String?) {
         twilioVoice.saveOutgoingValue(value)
     }
 }
 
 extension ViewModel {
+    /// Compute and publish Quality Warning message
+    /// - Parameters:
+    ///   - warnings:
+    ///   - isCleared:
     public func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
         var popupMessage: String = "Warnings detected: "
         if isCleared {

@@ -16,6 +16,8 @@ protocol MicrophoneManageable {
     func checkPermission(with viewController: UIViewController) -> AnyPublisher<MicrophoneUsing, Never>
 }
 
+/// Microphone manager: request permissions if needed
+/// ViewController should be sent by app
 class MicrophoneManager: MicrophoneManageable {
     private var viewController: UIViewController?
 
