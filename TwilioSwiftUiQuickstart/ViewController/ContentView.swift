@@ -101,7 +101,8 @@ struct ContentView: View {
                 }
                 .padding(.bottom, keyboardObserver.height)
             }.onAppear {
-                viewModel.viewDidLoad(viewController: UIViewController())
+                // or AppDelegate.shared.window?.rootViewController 
+                viewModel.viewDidLoad(viewController: UIHostingController(rootView: self))
             }
         }
     }

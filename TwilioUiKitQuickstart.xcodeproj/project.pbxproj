@@ -409,7 +409,7 @@
 				CODE_SIGN_ENTITLEMENTS = TwilioUiKitQuickstart/TwilioUiKitQuickstart.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = N5B5T39W8Y;
 				INFOPLIST_FILE = TwilioUiKitQuickstart/Info.plist;
@@ -438,7 +438,7 @@
 				CODE_SIGN_ENTITLEMENTS = TwilioUiKitQuickstart/TwilioUiKitQuickstart.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = N5B5T39W8Y;
 				INFOPLIST_FILE = TwilioUiKitQuickstart/Info.plist;
