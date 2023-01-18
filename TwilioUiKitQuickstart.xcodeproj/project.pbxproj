@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,7 +15,6 @@
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
 		31952A962962A8D500678FC0 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 31952A952962A8D500678FC0 /* ringtone.wav */; };
 		31A342EC2965947B00B5D270 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A342EB2965947B00B5D270 /* Spinner.swift */; };
-		31ABA8FC296BF27900351813 /* TwilioVoicePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 31ABA8FB296BF27900351813 /* TwilioVoicePackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31ABA8FC296BF27900351813 /* TwilioVoicePackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,7 +154,6 @@
 			);
 			name = TwilioUiKitQuickstart;
 			packageProductDependencies = (
-				31ABA8FB296BF27900351813 /* TwilioVoicePackage */,
 			);
 			productName = SwiftVoiceCallKitQuickstart;
 			productReference = 24BA34331D874AC800B0B4F7 /* TwilioUiKitQuickstart.app */;
@@ -394,8 +391,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -416,10 +412,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "UIKit Twilio";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.skdevappleid.twiliouikitquickstart;
@@ -445,10 +438,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "UIKit Twilio";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.skdevappleid.twiliouikitquickstart;
@@ -485,10 +475,6 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		310A046E296C092F0063AB88 /* TwilioVoicePackage */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TwilioVoicePackage;
-		};
-		31ABA8FB296BF27900351813 /* TwilioVoicePackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TwilioVoicePackage;
 		};

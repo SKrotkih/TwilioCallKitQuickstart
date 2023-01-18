@@ -6,7 +6,7 @@
 //  Created by Serhii Krotkykh on 25.06.2021.
 //
 import SwiftUI
-import TwilioVoicePackage
+import TwilioVoiceAdapter
 
 @main
 struct TwilioVoiceQuickstartApp: App {

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31ABA8FE296BF2B500351813 /* TwilioVoicePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 31ABA8FD296BF2B500351813 /* TwilioVoicePackage */; };
+		31745A0E29783F77006E7D13 /* TwilioVoiceAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = 31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */; };
 		7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62B807268D8D7200674B57 /* AppDelegate.swift */; };
 		7F6C3B20268CA37B0095E14C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */; };
 		7F79396F269C231D00D155D2 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F79396B269C231D00D155D2 /* ringtone.wav */; };
@@ -37,7 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		310B77C0296C059F00B3B96F /* TwilioVoicePackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TwilioVoicePackage; sourceTree = "<group>"; };
 		31A7E47D296B1B6E0016AB4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7F62B807268D8D7200674B57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
@@ -58,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31ABA8FE296BF2B500351813 /* TwilioVoicePackage in Frameworks */,
+				31745A0E29783F77006E7D13 /* TwilioVoiceAdapter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,14 +78,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		310B77BF296C059F00B3B96F /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				310B77C0296C059F00B3B96F /* TwilioVoicePackage */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		31962A43296CC6BF00D494E3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,7 +124,6 @@
 		7FBA334F2685DCDA003E33E8 = {
 			isa = PBXGroup;
 			children = (
-				310B77BF296C059F00B3B96F /* Packages */,
 				7FBA335A2685DCDA003E33E8 /* TwilioSwiftUiQuickstart */,
 				7FBA33592685DCDA003E33E8 /* Products */,
 				C74EF6803D98D0DCADE96EBC /* Frameworks */,
@@ -194,11 +184,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				310A0471296C093D0063AB88 /* PBXTargetDependency */,
+				31745A1029783FDB006E7D13 /* PBXTargetDependency */,
 			);
 			name = TwilioSwiftUiQuickstart;
 			packageProductDependencies = (
-				31ABA8FD296BF2B500351813 /* TwilioVoicePackage */,
+				31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */,
 			);
 			productName = TwilioVoiceQuickstart;
 			productReference = 7FBA33582685DCDA003E33E8 /* TwilioSwiftUiQuickstart.app */;
@@ -273,6 +263,7 @@
 			);
 			mainGroup = 7FBA334F2685DCDA003E33E8;
 			packageReferences = (
+				31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */,
 			);
 			productRefGroup = 7FBA33592685DCDA003E33E8 /* Products */;
 			projectDirPath = "";
@@ -364,9 +355,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		310A0471296C093D0063AB88 /* PBXTargetDependency */ = {
+		31745A1029783FDB006E7D13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 310A0470296C093D0063AB88 /* TwilioVoicePackage */;
+			productRef = 31745A0F29783FDB006E7D13 /* TwilioVoiceAdapter */;
 		};
 		7FBA336A2685DCDC003E33E8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -700,14 +691,27 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCSwiftPackageProductDependency section */
-		310A0470296C093D0063AB88 /* TwilioVoicePackage */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TwilioVoicePackage;
+/* Begin XCRemoteSwiftPackageReference section */
+		31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SKrotkih/twilio-voice-ios-adapter";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
 		};
-		31ABA8FD296BF2B500351813 /* TwilioVoicePackage */ = {
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = TwilioVoicePackage;
+			package = 31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */;
+			productName = TwilioVoiceAdapter;
+		};
+		31745A0F29783FDB006E7D13 /* TwilioVoiceAdapter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */;
+			productName = TwilioVoiceAdapter;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

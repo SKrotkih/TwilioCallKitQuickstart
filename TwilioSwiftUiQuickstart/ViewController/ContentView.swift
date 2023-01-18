@@ -5,13 +5,13 @@
 //  Created by Serhii Krotkykh on 01.10.2023
 //
 import SwiftUI
-import TwilioVoicePackage
+import TwilioVoiceAdapter
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
     @ObservedObject private var keyboardObserver = KeyboardObserver.shared
     @State private var outgoingValue = ""
-
+    
     var body: some View {
         ZStack {
             ProgressView()
@@ -32,8 +32,6 @@ struct ContentView: View {
                         .resizable(resizingMode: .stretch)
                         .frame(width: 240.0, height: 240.0)
                     Spacer(minLength: 30.0)
-                }
-                Group {
                     TextField("Client name or phone number",
                               text: $outgoingValue,
                               onEditingChanged: { _ in
@@ -46,19 +44,16 @@ struct ContentView: View {
                     .frame(height: 30.0)
                     .overlay(RoundedRectangle(cornerRadius: 4) .stroke(.gray))
                     .font(Font.system(size: 16))
-                    .padding(.leading, 75.0)
-                    .padding(.trailing, 75.0)
+                    .padding(.horizontal, 75.0)
                     Spacer(minLength: 15.0)
+                }
+                VStack {
                     Text("Dial a client name or phone number. Leaving the field empty results in an automated response.")
                         .font(Font.system(size: 10).weight(.light))
                         .foregroundColor(Color(red: 0.47, green: 0.43, blue: 0.40, opacity: 1.00))
                         .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .padding(.leading, 60.0)
-                        .padding(.trailing, 60.0)
-                }
-                Spacer(minLength: 20.0)
-                VStack {
+                        .lineLimit(3)
+                        .padding(.horizontal, 50.0)
                     Button(
                         action: {
                             viewModel.makeCallButtonPressed()
@@ -66,11 +61,14 @@ struct ContentView: View {
                         label: {
                             Text(viewModel.mainButtonTitle)
                                 .font(Font.system(size: 14).weight(.light))
+                                .fontWeight(.regular)
                                 .foregroundColor(.red)
+                                
                         }
                     )
                     .disabled(!viewModel.enableMainButton)
                     .padding()
+                    Spacer()
                     Group {
                         Spacer(minLength: 15.0)
                         HStack {
@@ -101,7 +99,7 @@ struct ContentView: View {
                 }
                 .padding(.bottom, keyboardObserver.height)
             }.onAppear {
-                // or AppDelegate.shared.window?.rootViewController 
+                // or AppDelegate.shared.window?.rootViewController
                 viewModel.viewDidLoad(viewController: UIHostingController(rootView: self))
             }
         }
