@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3161C23729797F9700B42598 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 3161C23629797F9700B42598 /* TwilioLogo.png */; };
 		31745A0E29783F77006E7D13 /* TwilioVoiceAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = 31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */; };
 		7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62B807268D8D7200674B57 /* AppDelegate.swift */; };
 		7F6C3B20268CA37B0095E14C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3161C23629797F9700B42598 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		31A7E47D296B1B6E0016AB4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7F62B807268D8D7200674B57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				7F79396B269C231D00D155D2 /* ringtone.wav */,
+				3161C23629797F9700B42598 /* TwilioLogo.png */,
 				7FBA335F2685DCDC003E33E8 /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -283,6 +286,7 @@
 			files = (
 				7FBA33632685DCDC003E33E8 /* Preview Assets.xcassets in Resources */,
 				7FBA33602685DCDC003E33E8 /* Assets.xcassets in Resources */,
+				3161C23729797F9700B42598 /* TwilioLogo.png in Resources */,
 				7F79396F269C231D00D155D2 /* ringtone.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

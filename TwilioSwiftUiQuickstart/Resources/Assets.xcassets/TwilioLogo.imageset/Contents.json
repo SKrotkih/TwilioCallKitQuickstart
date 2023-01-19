@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "TwilioLogo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "TwilioLogo.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

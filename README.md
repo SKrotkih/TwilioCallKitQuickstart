@@ -1,3 +1,5 @@
+<img alt="Twilio logo" align="right" src="/TwilioSwiftUiQuickstart/Resources/TwilioLogo.png">
+
 # Twilio Voice Quickstart for iOS
 
 Here you can find a refactored code from [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) project.
@@ -9,6 +11,7 @@ Here you can find a refactored code from [Twilio Voice Quickstart for iOS](https
 
 ## Introduction
 
+## Instalation
 Download or clone the repository
 Open *TwilioQuickstart.xcworkspace* in Xcode
 There are two projects:
