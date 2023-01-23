@@ -1,8 +1,8 @@
 <img alt="Twilio logo" align="right" src="/TwilioSwiftUiQuickstart/Resources/TwilioLogo.png">
 
-# Twilio Voice Quickstart for iOS
+# Twilio Voice Quickstart
 
-Here you can find a refactored code from [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) project.
+Twilio Voice Quickstart is a refactored codebase from the [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) project.
 
 ## Requirements
 
@@ -23,7 +23,7 @@ The package is used by TwilioUiKitQuickstart (UIKit). Other hand TwilioSwiftUiQu
 - [TwilioVoiceAdapter](https://github.com/SKrotkih/twilio-voice-ios-adapter) - remote SPM package. The same as local package TwilioVoicePackage codebase.  
 
 To start using this code you should get an access token. Implement *TwilioAccessTokenFetcher* in TwilioVoicePackage for that.
-Read [README.md](https://github.com/SKrotkih/TwilioCallKitQuickstart/tree/master/TwilioVoicePackage) from TwilioVoicePackage. 
+Read [TwilioVoicePackage/README.md](TwilioVoicePackage/README.md). 
 Study original description [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift).
 
 ## Combine, SwiftUI, Concurrency

@@ -8,7 +8,7 @@
 //
 import UIKit
 import Combine
-import TwilioVoicePackage
+import TwilioVoiceAdapter
 
 class ViewController: UIViewController {
     @IBOutlet weak var qualityWarningsToaster: UILabel!
@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: UISwitch!
     var spinner: Spinner!
 
-    private let viewModel = ViewModel()
+    private let viewModel = TwilioVoiceController()
     private var disposableBag = Set<AnyCancellable>()
 
     override func viewDidLoad() {
