@@ -8,7 +8,7 @@
 //
 import UIKit
 import Combine
-import TwilioVoiceAdapter
+import TwilioUIKitAdapter
 
 class ViewController: UIViewController {
     @IBOutlet weak var qualityWarningsToaster: UILabel!
@@ -20,63 +20,48 @@ class ViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: UISwitch!
     var spinner: Spinner!
 
-    private let viewModel = TwilioVoiceController()
+    private var viewModel: TwilioVoiceController!
     private var disposableBag = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel = buildTwilioVoiceController()
         spinner = Spinner(isSpinning: false, iconView: iconView)
         viewModel.viewDidLoad(viewController: self)
-        startListeningToStateChanges()
         outgoingValue.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: .editingChanged)
         outgoingValue.delegate = self
     }
-
-    private func startListeningToStateChanges() {
-        viewModel.$enableMainButton
-            .receive(on: RunLoop.main)
-            .sink { [weak self] enable in
-                self?.placeCallButton.isEnabled = enable
-            }.store(in: &disposableBag)
-        viewModel.$mainButtonTitle
-            .receive(on: RunLoop.main)
-            .sink { [weak self] title in
+    
+    private func buildTwilioVoiceController() -> TwilioVoiceController {
+        TwilioVoiceController {
+            EnableMainButton { [weak self] isEnabled in
+                self?.placeCallButton.isEnabled = isEnabled
+            }
+            MainButtonTitle { [weak self] title in
                 self?.placeCallButton.setTitle(title, for: .normal)
-            }.store(in: &disposableBag)
-        viewModel.$showCallControl
-            .receive(on: RunLoop.main)
-            .sink { [weak self] show in
-                self?.callControlView.isHidden = !show
-            }.store(in: &disposableBag)
-        viewModel.$onSpeaker
-            .receive(on: RunLoop.main)
-            .sink { [weak self] isOn in
-                self?.speakerSwitch.isOn = isOn
-            }.store(in: &disposableBag)
-        viewModel.$onMute
-            .receive(on: RunLoop.main)
-            .sink { [weak self] isOn in
+            }
+            ShowCallControl { [weak self] isShown in
+                self?.callControlView.isHidden = !isShown
+            }
+            OnMute { [weak self] isOn in
                 self?.muteSwitch.isOn = isOn
-            }.store(in: &disposableBag)
-        viewModel.$startLongTermProcess
-            .receive(on: RunLoop.main)
-            .sink { [weak self] startLongTermProcess in
-                if startLongTermProcess {
+            }
+            OnSpeaker { [weak self] isOn in
+                self?.speakerSwitch.isOn = isOn
+            }
+            StartLongTermProcess { [weak self] isStartLongTermProcess in
+                if isStartLongTermProcess {
                     self?.spinner.startSpin()
                 }
-            }.store(in: &disposableBag)
-        viewModel.$stopLongTermProcess
-            .receive(on: RunLoop.main)
-            .sink { [weak self] stopLongTermProcess in
-                if stopLongTermProcess {
+            }
+            StopLongTermProcess {[weak self] isStopLongTermProcess in
+                if isStopLongTermProcess {
                     self?.spinner.stopSpin()
                 }
-            }.store(in: &disposableBag)
-        viewModel.$warningText
-            .receive(on: RunLoop.main)
-            .sink { [weak self] text in
+            }
+            WarningText { [weak self] warningText in
                 self?.qualityWarningsToaster.alpha = 0.0
-                self?.qualityWarningsToaster.text = text
+                self?.qualityWarningsToaster.text = warningText
                 UIView.animate(withDuration: 1.0, animations: {
                     self?.qualityWarningsToaster.isHidden = false
                     self?.qualityWarningsToaster.alpha = 1.0
@@ -91,7 +76,8 @@ class ViewController: UIViewController {
                         })
                     })
                 })
-            }.store(in: &disposableBag)
+            }
+        }
     }
 
     @IBAction func makeCallButtonPressed(_ sender: Any) {
