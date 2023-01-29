@@ -8,7 +8,7 @@
 //
 import UIKit
 import Combine
-import TwilioUIKitAdapter
+import TwilioVoiceAdapter
 
 class ViewController: UIViewController {
     @IBOutlet weak var qualityWarningsToaster: UILabel!
