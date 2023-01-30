@@ -15,8 +15,7 @@ struct TwilioVoiceQuickstartApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(TwilioVoiceController())
+            ContentView(viewModel: TwilioVoiceController())
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

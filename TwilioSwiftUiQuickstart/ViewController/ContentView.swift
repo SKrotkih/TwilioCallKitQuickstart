@@ -7,8 +7,8 @@
 import SwiftUI
 import TwilioVoiceAdapter
 
-struct ContentView: View {
-    @EnvironmentObject var viewModel: TwilioVoiceController
+struct ContentView<ViewModel: TwilioVoiceControllable>: View {
+    @ObservedObject var viewModel: ViewModel
     @ObservedObject private var keyboardObserver = KeyboardObserver.shared
     @State private var outgoingValue = ""
     
@@ -133,8 +133,9 @@ extension View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+    let vm: any TwilioVoiceControllable = TwilioVoiceController()
     static var previews: some View {
-        ContentView()
-            .environmentObject(TwilioVoiceController())
+        // TODO: TwilioVoiceController mock implementation needed
+        ContentView(viewModel: TwilioVoiceController())
     }
 }
