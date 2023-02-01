@@ -34,12 +34,13 @@ class ViewController: UIViewController {
     
     private func buildTwilioVoiceController() -> TwilioVoiceController {
         TwilioVoiceController {
-            EnableMainButton { [weak self] isEnabled in
-                self?.placeCallButton.isEnabled = isEnabled
-            }
-            MainButtonTitle { [weak self] title in
-                self?.placeCallButton.setTitle(title, for: .normal)
-            }
+            CallButton()
+                .onEnabled { [weak self] isEnabled in
+                    self?.placeCallButton.isEnabled = isEnabled
+                }
+                .onTitle { [weak self] title in
+                    self?.placeCallButton.setTitle(title, for: .normal)
+                }
             ShowCallControl { [weak self] isShown in
                 self?.callControlView.isHidden = !isShown
             }
@@ -49,16 +50,13 @@ class ViewController: UIViewController {
             OnSpeaker { [weak self] isOn in
                 self?.speakerSwitch.isOn = isOn
             }
-            StartLongTermProcess { [weak self] isStartLongTermProcess in
-                if isStartLongTermProcess {
+            LongTermProcess()
+                .onStart { [weak self] in
                     self?.spinner.startSpin()
                 }
-            }
-            StopLongTermProcess {[weak self] isStopLongTermProcess in
-                if isStopLongTermProcess {
+                .onEnd { [weak self] in
                     self?.spinner.stopSpin()
                 }
-            }
             WarningText { [weak self] warningText in
                 self?.qualityWarningsToaster.alpha = 0.0
                 self?.qualityWarningsToaster.text = warningText
