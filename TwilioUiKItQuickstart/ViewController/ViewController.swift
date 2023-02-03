@@ -41,15 +41,27 @@ class ViewController: UIViewController {
                 .onTitle { [weak self] title in
                     self?.placeCallButton.setTitle(title, for: .normal)
                 }
-            ShowCallControl { [weak self] isShown in
-                self?.callControlView.isHidden = !isShown
-            }
-            OnMute { [weak self] isOn in
-                self?.muteSwitch.isOn = isOn
-            }
-            OnSpeaker { [weak self] isOn in
-                self?.speakerSwitch.isOn = isOn
-            }
+            CallControl()
+                .onShow { [weak self] in
+                    self?.callControlView.isHidden = false
+                }
+                .onHide { [weak self] in
+                    self?.callControlView.isHidden = true
+                }
+            MuteControl()
+                .onMute { [weak self] in
+                    self?.muteSwitch.isOn = true
+                }
+                .offMute { [weak self] in
+                    self?.muteSwitch.isOn = false
+                }
+            SpeackerControl()
+                .onSpeacker { [weak self] in
+                    self?.speakerSwitch.isOn = true
+                }
+                .offSpeacker { [weak self] in
+                    self?.speakerSwitch.isOn = false
+                }
             LongTermProcess()
                 .onStart { [weak self] in
                     self?.spinner.startSpin()
@@ -57,24 +69,25 @@ class ViewController: UIViewController {
                 .onEnd { [weak self] in
                     self?.spinner.stopSpin()
                 }
-            WarningText { [weak self] warningText in
-                self?.qualityWarningsToaster.alpha = 0.0
-                self?.qualityWarningsToaster.text = warningText
-                UIView.animate(withDuration: 1.0, animations: {
-                    self?.qualityWarningsToaster.isHidden = false
-                    self?.qualityWarningsToaster.alpha = 1.0
-                }, completion: { [weak self] _ in
-                    guard let self else { return }
-                    let deadlineTime = DispatchTime.now() + .seconds(5)
-                    DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
-                        UIView.animate(withDuration: 1.0, animations: {
-                            self.qualityWarningsToaster.alpha = 0.0
-                        }, completion: { _ in
-                            self.qualityWarningsToaster.isHidden = true
+            CallResult()
+                .onWarning { [weak self] warningText in
+                    self?.qualityWarningsToaster.alpha = 0.0
+                    self?.qualityWarningsToaster.text = warningText
+                    UIView.animate(withDuration: 1.0, animations: {
+                        self?.qualityWarningsToaster.isHidden = false
+                        self?.qualityWarningsToaster.alpha = 1.0
+                    }, completion: { [weak self] _ in
+                        guard let self else { return }
+                        let deadlineTime = DispatchTime.now() + .seconds(5)
+                        DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
+                            UIView.animate(withDuration: 1.0, animations: {
+                                self.qualityWarningsToaster.alpha = 0.0
+                            }, completion: { _ in
+                                self.qualityWarningsToaster.isHidden = true
+                            })
                         })
                     })
-                })
-            }
+                }
         }
     }
 
