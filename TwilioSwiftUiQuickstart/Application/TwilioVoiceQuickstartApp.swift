@@ -13,9 +13,11 @@ struct TwilioVoiceQuickstartApp: App {
     @Environment(\.scenePhase) var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
+    @StateObject var viewModel = TwilioVoiceController()
+
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: TwilioVoiceController())
+            ContentView(viewModel: viewModel)
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

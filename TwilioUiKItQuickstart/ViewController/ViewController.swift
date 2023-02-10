@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         viewModel = buildTwilioVoiceController()
         spinner = Spinner(isSpinning: false, iconView: iconView)
         viewModel.viewDidLoad(viewController: self)
-        outgoingValue.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: .editingChanged)
+        outgoingValue.addTarget(self, action: #selector(Self.textFieldDidChange(_:)), for: .editingChanged)
         outgoingValue.delegate = self
     }
     

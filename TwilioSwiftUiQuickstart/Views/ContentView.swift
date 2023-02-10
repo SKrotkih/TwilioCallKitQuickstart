@@ -133,7 +133,6 @@ extension View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    let vm: any TwilioVoiceControllable = TwilioVoiceController()
     static var previews: some View {
         // TODO: TwilioVoiceController mock implementation needed
         ContentView(viewModel: TwilioVoiceController())
