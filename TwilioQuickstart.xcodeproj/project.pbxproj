@@ -3,16 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3161C23729797F9700B42598 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 3161C23629797F9700B42598 /* TwilioLogo.png */; };
-		31745A0E29783F77006E7D13 /* TwilioVoiceAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = 31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */; };
 		7F62B808268D8D7200674B57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62B807268D8D7200674B57 /* AppDelegate.swift */; };
 		7F6C3B20268CA37B0095E14C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */; };
 		7F79396F269C231D00D155D2 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F79396B269C231D00D155D2 /* ringtone.wav */; };
 		7F8FA58A269199CF004A1537 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8FA589269199CF004A1537 /* KeyboardObserver.swift */; };
+		7FB3C47A30875C7A00CA1259 /* TwilioVoiceAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = 7FB3C47930875C7A00CA1259 /* TwilioVoiceAdapter */; };
 		7FBA335C2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */; };
 		7FBA335E2685DCDA003E33E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBA335D2685DCDA003E33E8 /* ContentView.swift */; };
 		7FBA33602685DCDC003E33E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FBA335F2685DCDC003E33E8 /* Assets.xcassets */; };
@@ -44,13 +44,14 @@
 		7F6C3B1F268CA37B0095E14C /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		7F79396B269C231D00D155D2 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		7F8FA589269199CF004A1537 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
-		7FBA33582685DCDA003E33E8 /* TwilioSwiftUiQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwilioSwiftUiQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FB3C47B3087773000CA1259 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7FBA33582685DCDA003E33E8 /* TwilioQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwilioQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FBA335B2685DCDA003E33E8 /* TwilioVoiceQuickstartApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioVoiceQuickstartApp.swift; sourceTree = "<group>"; };
 		7FBA335D2685DCDA003E33E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7FBA335F2685DCDC003E33E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FBA33622685DCDC003E33E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		7FBA33682685DCDC003E33E8 /* TwilioSwiftUiQuickstartTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwilioSwiftUiQuickstartTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7FBA33722685DCDC003E33E8 /* TwilioSwiftUiQuickstartUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwilioSwiftUiQuickstartUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FBA33682685DCDC003E33E8 /* TwilioQuickstartTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwilioQuickstartTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FBA33722685DCDC003E33E8 /* TwilioQuickstartUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwilioQuickstartUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FBA3384268646D0003E33E8 /* CircleImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31745A0E29783F77006E7D13 /* TwilioVoiceAdapter in Frameworks */,
+				7FB3C47A30875C7A00CA1259 /* TwilioVoiceAdapter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +128,7 @@
 		7FBA334F2685DCDA003E33E8 = {
 			isa = PBXGroup;
 			children = (
-				7FBA335A2685DCDA003E33E8 /* TwilioSwiftUiQuickstart */,
+				7FBA335A2685DCDA003E33E8 /* TwilioQuickstart */,
 				7FBA33592685DCDA003E33E8 /* Products */,
 				C74EF6803D98D0DCADE96EBC /* Frameworks */,
 			);
@@ -136,16 +137,17 @@
 		7FBA33592685DCDA003E33E8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7FBA33582685DCDA003E33E8 /* TwilioSwiftUiQuickstart.app */,
-				7FBA33682685DCDC003E33E8 /* TwilioSwiftUiQuickstartTests.xctest */,
-				7FBA33722685DCDC003E33E8 /* TwilioSwiftUiQuickstartUITests.xctest */,
+				7FBA33582685DCDA003E33E8 /* TwilioQuickstart.app */,
+				7FBA33682685DCDC003E33E8 /* TwilioQuickstartTests.xctest */,
+				7FBA33722685DCDC003E33E8 /* TwilioQuickstartUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7FBA335A2685DCDA003E33E8 /* TwilioSwiftUiQuickstart */ = {
+		7FBA335A2685DCDA003E33E8 /* TwilioQuickstart */ = {
 			isa = PBXGroup;
 			children = (
+				7FB3C47B3087773000CA1259 /* README.md */,
 				31A7E47D296B1B6E0016AB4C /* Info.plist */,
 				7F6ACFF9268EEBEA00F02897 /* Application */,
 				7F6ACFF8268EEB8600F02897 /* Views */,
@@ -154,7 +156,7 @@
 				31962A43296CC6BF00D494E3 /* Resources */,
 				7FBA33612685DCDC003E33E8 /* Preview Content */,
 			);
-			path = TwilioSwiftUiQuickstart;
+			path = TwilioQuickstart;
 			sourceTree = "<group>";
 		};
 		7FBA33612685DCDC003E33E8 /* Preview Content */ = {
@@ -175,9 +177,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7FBA33572685DCDA003E33E8 /* TwilioSwiftUiQuickstart */ = {
+		7FBA33572685DCDA003E33E8 /* TwilioQuickstart */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7FBA337A2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioSwiftUiQuickstart" */;
+			buildConfigurationList = 7FBA337A2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioQuickstart" */;
 			buildPhases = (
 				7FBA33542685DCDA003E33E8 /* Sources */,
 				7FBA33552685DCDA003E33E8 /* Frameworks */,
@@ -187,19 +189,18 @@
 			buildRules = (
 			);
 			dependencies = (
-				31745A1029783FDB006E7D13 /* PBXTargetDependency */,
 			);
-			name = TwilioSwiftUiQuickstart;
+			name = TwilioQuickstart;
 			packageProductDependencies = (
-				31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */,
+				7FB3C47930875C7A00CA1259 /* TwilioVoiceAdapter */,
 			);
 			productName = TwilioVoiceQuickstart;
-			productReference = 7FBA33582685DCDA003E33E8 /* TwilioSwiftUiQuickstart.app */;
+			productReference = 7FBA33582685DCDA003E33E8 /* TwilioQuickstart.app */;
 			productType = "com.apple.product-type.application";
 		};
-		7FBA33672685DCDC003E33E8 /* TwilioSwiftUiQuickstartTests */ = {
+		7FBA33672685DCDC003E33E8 /* TwilioQuickstartTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7FBA337D2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioSwiftUiQuickstartTests" */;
+			buildConfigurationList = 7FBA337D2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioQuickstartTests" */;
 			buildPhases = (
 				7FBA33642685DCDC003E33E8 /* Sources */,
 				7FBA33652685DCDC003E33E8 /* Frameworks */,
@@ -210,14 +211,14 @@
 			dependencies = (
 				7FBA336A2685DCDC003E33E8 /* PBXTargetDependency */,
 			);
-			name = TwilioSwiftUiQuickstartTests;
+			name = TwilioQuickstartTests;
 			productName = TwilioVoiceQuickstartTests;
-			productReference = 7FBA33682685DCDC003E33E8 /* TwilioSwiftUiQuickstartTests.xctest */;
+			productReference = 7FBA33682685DCDC003E33E8 /* TwilioQuickstartTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		7FBA33712685DCDC003E33E8 /* TwilioSwiftUiQuickstartUITests */ = {
+		7FBA33712685DCDC003E33E8 /* TwilioQuickstartUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7FBA33802685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioSwiftUiQuickstartUITests" */;
+			buildConfigurationList = 7FBA33802685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioQuickstartUITests" */;
 			buildPhases = (
 				7FBA336E2685DCDC003E33E8 /* Sources */,
 				7FBA336F2685DCDC003E33E8 /* Frameworks */,
@@ -228,9 +229,9 @@
 			dependencies = (
 				7FBA33742685DCDC003E33E8 /* PBXTargetDependency */,
 			);
-			name = TwilioSwiftUiQuickstartUITests;
+			name = TwilioQuickstartUITests;
 			productName = TwilioVoiceQuickstartUITests;
-			productReference = 7FBA33722685DCDC003E33E8 /* TwilioSwiftUiQuickstartUITests.xctest */;
+			productReference = 7FBA33722685DCDC003E33E8 /* TwilioQuickstartUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -256,7 +257,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7FBA33532685DCDA003E33E8 /* Build configuration list for PBXProject "TwilioSwiftUiQuickstart" */;
+			buildConfigurationList = 7FBA33532685DCDA003E33E8 /* Build configuration list for PBXProject "TwilioQuickstart" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -266,15 +267,15 @@
 			);
 			mainGroup = 7FBA334F2685DCDA003E33E8;
 			packageReferences = (
-				31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */,
+				7FB3C47830875C7A00CA1259 /* XCLocalSwiftPackageReference "../twilio-voice-ios-adapter" */,
 			);
 			productRefGroup = 7FBA33592685DCDA003E33E8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7FBA33572685DCDA003E33E8 /* TwilioSwiftUiQuickstart */,
-				7FBA33672685DCDC003E33E8 /* TwilioSwiftUiQuickstartTests */,
-				7FBA33712685DCDC003E33E8 /* TwilioSwiftUiQuickstartUITests */,
+				7FBA33572685DCDA003E33E8 /* TwilioQuickstart */,
+				7FBA33672685DCDC003E33E8 /* TwilioQuickstartTests */,
+				7FBA33712685DCDC003E33E8 /* TwilioQuickstartUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -359,18 +360,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		31745A1029783FDB006E7D13 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 31745A0F29783FDB006E7D13 /* TwilioVoiceAdapter */;
-		};
 		7FBA336A2685DCDC003E33E8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7FBA33572685DCDA003E33E8 /* TwilioSwiftUiQuickstart */;
+			target = 7FBA33572685DCDA003E33E8 /* TwilioQuickstart */;
 			targetProxy = 7FBA33692685DCDC003E33E8 /* PBXContainerItemProxy */;
 		};
 		7FBA33742685DCDC003E33E8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7FBA33572685DCDA003E33E8 /* TwilioSwiftUiQuickstart */;
+			target = 7FBA33572685DCDA003E33E8 /* TwilioQuickstart */;
 			targetProxy = 7FBA33732685DCDC003E33E8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -497,27 +494,29 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TwilioQuickstart/TwilioQuickstart.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
-				DEVELOPMENT_ASSET_PATHS = "\"TwilioSwiftUiQuickstart/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TwilioQuickstart/Preview Content\"";
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TwilioSwiftUiQuickstart/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "SwiftUI Twilio";
+				INFOPLIST_FILE = TwilioQuickstart/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Twilio Quikstart";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "$(PRODUCT_NAME) would like to access your microphone";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.skdevappleid.twilioswiftuiquickstart;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skdevappleid.twilioquickstart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -530,27 +529,29 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TwilioQuickstart/TwilioQuickstart.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
-				DEVELOPMENT_ASSET_PATHS = "\"TwilioSwiftUiQuickstart/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TwilioQuickstart/Preview Content\"";
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TwilioSwiftUiQuickstart/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "SwiftUI Twilio";
+				INFOPLIST_FILE = TwilioQuickstart/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Twilio Quikstart";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "$(PRODUCT_NAME) would like to access your microphone";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.skdevappleid.twilioswiftuiquickstart;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skdevappleid.twilioquickstart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -567,7 +568,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -579,7 +580,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TwilioSwiftUiQuickstart.app/TwilioSwiftUiQuickstart";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TwilioQuickstart.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TwilioQuickstart";
 			};
 			name = Debug;
 		};
@@ -592,7 +593,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -604,7 +605,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TwilioSwiftUiQuickstart.app/TwilioSwiftUiQuickstart";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TwilioQuickstart.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TwilioQuickstart";
 			};
 			name = Release;
 		};
@@ -616,6 +617,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -639,6 +641,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N5B5T39W8Y;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -657,7 +660,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7FBA33532685DCDA003E33E8 /* Build configuration list for PBXProject "TwilioSwiftUiQuickstart" */ = {
+		7FBA33532685DCDA003E33E8 /* Build configuration list for PBXProject "TwilioQuickstart" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7FBA33782685DCDC003E33E8 /* Debug */,
@@ -666,7 +669,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7FBA337A2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioSwiftUiQuickstart" */ = {
+		7FBA337A2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioQuickstart" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7FBA337B2685DCDC003E33E8 /* Debug */,
@@ -675,7 +678,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7FBA337D2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioSwiftUiQuickstartTests" */ = {
+		7FBA337D2685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioQuickstartTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7FBA337E2685DCDC003E33E8 /* Debug */,
@@ -684,7 +687,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7FBA33802685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioSwiftUiQuickstartUITests" */ = {
+		7FBA33802685DCDC003E33E8 /* Build configuration list for PBXNativeTarget "TwilioQuickstartUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7FBA33812685DCDC003E33E8 /* Debug */,
@@ -695,26 +698,16 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SKrotkih/twilio-voice-ios-adapter";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		7FB3C47830875C7A00CA1259 /* XCLocalSwiftPackageReference "../twilio-voice-ios-adapter" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../twilio-voice-ios-adapter";
 		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		31745A0D29783F77006E7D13 /* TwilioVoiceAdapter */ = {
+		7FB3C47930875C7A00CA1259 /* TwilioVoiceAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */;
-			productName = TwilioVoiceAdapter;
-		};
-		31745A0F29783FDB006E7D13 /* TwilioVoiceAdapter */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 31745A0C29783F77006E7D13 /* XCRemoteSwiftPackageReference "twilio-voice-ios-adapter" */;
 			productName = TwilioVoiceAdapter;
 		};
 /* End XCSwiftPackageProductDependency section */

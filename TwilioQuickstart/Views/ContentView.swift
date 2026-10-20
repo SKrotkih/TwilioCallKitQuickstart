@@ -1,8 +1,6 @@
 //
 //  ContentView.swift
-//  TwilioSwiftUiQuickstart
-//
-//  Created by Serhii Krotkykh on 01.10.2023
+//  TwilioQuickstart
 //
 import SwiftUI
 import TwilioVoiceAdapter

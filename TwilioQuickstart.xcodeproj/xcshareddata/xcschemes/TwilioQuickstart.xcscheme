@@ -15,9 +15,23 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7FBA33572685DCDA003E33E8"
-               BuildableName = "TwilioSwiftUiQuickstart.app"
-               BlueprintName = "TwilioSwiftUiQuickstart"
-               ReferencedContainer = "container:TwilioSwiftUiQuickstart.xcodeproj">
+               BuildableName = "TwilioQuickstart.app"
+               BlueprintName = "TwilioQuickstart"
+               ReferencedContainer = "container:TwilioQuickstart.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7FBA33672685DCDC003E33E8"
+               BuildableName = "TwilioQuickstartTests.xctest"
+               BlueprintName = "TwilioQuickstartTests"
+               ReferencedContainer = "container:TwilioQuickstart.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,20 +46,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7FBA33672685DCDC003E33E8"
-               BuildableName = "TwilioSwiftUiQuickstartTests.xctest"
-               BlueprintName = "TwilioSwiftUiQuickstartTests"
-               ReferencedContainer = "container:TwilioSwiftUiQuickstart.xcodeproj">
+               BlueprintIdentifier = "7FBA33712685DCDC003E33E8"
+               BuildableName = "TwilioQuickstartUITests.xctest"
+               BlueprintName = "TwilioQuickstartUITests"
+               ReferencedContainer = "container:TwilioQuickstart.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7FBA33712685DCDC003E33E8"
-               BuildableName = "TwilioSwiftUiQuickstartUITests.xctest"
-               BlueprintName = "TwilioSwiftUiQuickstartUITests"
-               ReferencedContainer = "container:TwilioSwiftUiQuickstart.xcodeproj">
+               BlueprintIdentifier = "7FBA33672685DCDC003E33E8"
+               BuildableName = "TwilioQuickstartTests.xctest"
+               BlueprintName = "TwilioQuickstartTests"
+               ReferencedContainer = "container:TwilioQuickstart.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -65,9 +79,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7FBA33572685DCDA003E33E8"
-            BuildableName = "TwilioSwiftUiQuickstart.app"
-            BlueprintName = "TwilioSwiftUiQuickstart"
-            ReferencedContainer = "container:TwilioSwiftUiQuickstart.xcodeproj">
+            BuildableName = "TwilioQuickstart.app"
+            BlueprintName = "TwilioQuickstart"
+            ReferencedContainer = "container:TwilioQuickstart.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -77,16 +91,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7FBA33572685DCDA003E33E8"
-            BuildableName = "TwilioSwiftUiQuickstart.app"
-            BlueprintName = "TwilioSwiftUiQuickstart"
-            ReferencedContainer = "container:TwilioSwiftUiQuickstart.xcodeproj">
+            BuildableName = "TwilioQuickstart.app"
+            BlueprintName = "TwilioQuickstart"
+            ReferencedContainer = "container:TwilioQuickstart.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

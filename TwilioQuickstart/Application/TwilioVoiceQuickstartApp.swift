@@ -1,9 +1,7 @@
 //
 //  TwilioVoiceQuickstartApp.swift
 //
-//  TwilioSwiftUiQuickstart
-//
-//  Created by Serhii Krotkykh on 25.06.2021.
+//  TwilioQuickstart
 //
 import SwiftUI
 import TwilioVoiceAdapter
