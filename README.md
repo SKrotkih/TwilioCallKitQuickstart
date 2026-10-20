@@ -1,39 +1,66 @@
-<img alt="Twilio logo" align="right" src="/TwilioSwiftUiQuickstart/Resources/TwilioLogo.png">
+<img alt="Twilio logo" align="right" src="/TwilioQuickstart/Resources/TwilioLogo.png">
 
 # Twilio Voice Quickstart
 
-Twilio Voice Quickstart is a refactored codebase from the [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) project.
+Twilio Voice Quickstart is a SwiftUI iOS app for making and receiving voice calls with Twilio and CallKit. It is a refactored version of the [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift) project.
+
+The app contains only the UI. All Twilio Voice, CallKit and PushKit logic lives in the SPM package [twilio-voice-ios-adapter](https://github.com/SKrotkih/twilio-voice-ios-adapter).
 
 ## Requirements
 
-- Xcode 13+
+- Xcode 16+
+- iOS 18.6+
 - Swift 5
+- A Twilio access token server
 
-## Introduction
+## Installation
 
-## Instalation
-Download or clone the repository.
-Open *TwilioQuickstart.xcworkspace* in Xcode.
-There are two projects:
-- **TwilioUiKitQuickstart** - main view controller implemented with UIKit (storyboard)
-- **TwilioSwiftUiQuickstart** - same functionality as previous one but content view of main view controller implemented with SwiftUI.
+1. Clone this repository and [twilio-voice-ios-adapter](https://github.com/SKrotkih/twilio-voice-ios-adapter) side by side, because the project references the adapter as a local package at `../twilio-voice-ios-adapter`:
 
-Both projects use [twilio-voice-ios-adapter](https://github.com/SKrotkih/twilio-voice-ios-adapter) - SPM package with refactored Twilio Voice Quickstart for iOS project. 
+   ```
+   git clone https://github.com/SKrotkih/TwilioCallKitQuickstart.git
+   git clone https://github.com/SKrotkih/twilio-voice-ios-adapter.git
+   ```
 
-To start using this code you need a Twilio access token server. Set its parameters (`baseURLString`, `accessTokenEndpoint`, `identity`) in `TwilioAccessTokenConfiguration.tokenServer` in *TwilioQuickstart/Application/TwilioVoiceQuickstartApp.swift*.
-Read [TwilioVoicePackage/README.md](TwilioVoicePackage/README.md). 
-Study original description [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift).
+2. Open *TwilioQuickstart.xcodeproj* in Xcode. Swift Package Manager resolves the Twilio Voice SDK through the adapter.
+3. Set your development team and bundle identifier. Push credentials (VoIP certificate) in the Twilio Console must match that bundle identifier.
 
-## Combine, SwiftUI, Concurrency
+## Access token
 
-In the project developemnt were used [SwiftUI](https://developer.apple.com/documentation/SwiftUI), [Combine](https://developer.apple.com/documentation/Combine) and [Concurrency Swift](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html).  
+The app passes its token server parameters to the adapter as a `TwilioAccessTokenConfiguration`. Replace the placeholder values in *TwilioQuickstart/Application/TwilioVoiceQuickstartApp.swift*:
 
-## The Redux pattern
+```swift
+extension TwilioAccessTokenConfiguration {
+    static let tokenServer = TwilioAccessTokenConfiguration(
+        baseURLString: "https://accesstoken.com",
+        accessTokenEndpoint: "/accessToken",
+        identity: "alice"
+    )
+}
+```
 
-The app uses **Redux** pattern.
+```swift
+@StateObject var viewModel = TwilioVoiceController(accessTokenConfiguration: .tokenServer)
+```
 
-## Changes history:
+How to set up the token server, the required capabilities (microphone, Background Modes, Push Notifications) and how the call flow works are described in the [twilio-voice-ios-adapter README](https://github.com/SKrotkih/twilio-voice-ios-adapter#readme).
 
-- 12-22-2022 - redesigned for the current Twilio code base 
-- 01-07-2023 - added TwilioSwiftUiQuickstart project with SwiftUI implementation  
+## Project structure
+
+| Folder | Contents |
+|---|---|
+| `Application/` | App entry point and the access token configuration |
+| `Views/` | `ContentView`, the call screen |
+| `Extensions/` | Keyboard and view helpers |
+| `Resources/` | Assets, logo and ringtone |
+
+## Change history
+
+- 12-22-2022 - redesigned for the current Twilio code base
+- 01-07-2023 - added TwilioSwiftUiQuickstart project with SwiftUI implementation
 - 01-09-2023 - created SPM package twilio-voice-ios-adapter
+- 10-20-2026 - renamed TwilioSwiftUiQuickstart to TwilioQuickstart, removed the UIKit example and the empty test targets, token server parameters are now passed to the adapter via `TwilioAccessTokenConfiguration`, iOS 18.6+
+
+## License
+
+See [LICENSE](LICENSE).
