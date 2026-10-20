@@ -9,6 +9,7 @@ struct ContentView<ViewModel: TwilioVoiceControllable>: View {
     @ObservedObject var viewModel: ViewModel
     @ObservedObject private var keyboardObserver = KeyboardObserver.shared
     @State private var outgoingValue = ""
+    @FocusState private var isInputFocused: Bool
     
     var body: some View {
         ZStack {
@@ -30,12 +31,11 @@ struct ContentView<ViewModel: TwilioVoiceControllable>: View {
                         .resizable(resizingMode: .stretch)
                         .frame(width: 240.0, height: 240.0)
                     Spacer(minLength: 30.0)
-                    TextField("Client name or phone number",
-                              text: $outgoingValue,
-                              onEditingChanged: { _ in
-                    }, onCommit: {
-                        hideKeyboard()
-                    })
+                    TextField("Client name or phone number", text: $outgoingValue)
+                    .focused($isInputFocused)
+                    .onSubmit {
+                        isInputFocused = false
+                    }
                     .onChange(of: outgoingValue, perform: { text in
                         viewModel.saveOutgoingValue(text)
                     })
@@ -58,8 +58,7 @@ struct ContentView<ViewModel: TwilioVoiceControllable>: View {
                         },
                         label: {
                             Text(viewModel.mainButtonTitle)
-                                .font(Font.system(size: 14).weight(.light))
-                                .fontWeight(.regular)
+                                .font(Font.system(size: 14).weight(.regular))
                                 .foregroundColor(.red)
                                 
                         }
@@ -97,7 +96,6 @@ struct ContentView<ViewModel: TwilioVoiceControllable>: View {
                 }
                 .padding(.bottom, keyboardObserver.height)
             }.onAppear {
-                // or AppDelegate.shared.window?.rootViewController
                 viewModel.viewDidLoad(viewController: UIHostingController(rootView: self))
             }
         }

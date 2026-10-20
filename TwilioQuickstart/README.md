@@ -6,33 +6,32 @@ Twilio Voice Quickstart is a refactored codebase from the [Twilio Voice Quicksta
 
 ## Requirements
 
-- Xcode 13+
+- Xcode 16+ (iOS 18.6 or later)
 - Swift 5
 
-## Introduction
-
-## Instalation
+## Installation
 Download or clone the repository.
-Open *TwilioQuickstart.xcworkspace* in Xcode.
+Open *TwilioQuickstart.xcodeproj* in Xcode.
 
-Project use [twilio-voice-ios-adapter](https://github.com/SKrotkih/twilio-voice-ios-adapter) - SPM package with refactored Twilio Voice Quickstart for iOS project. 
+The project uses [twilio-voice-ios-adapter](https://github.com/SKrotkih/twilio-voice-ios-adapter) - an SPM package with the refactored Twilio Voice Quickstart for iOS project.
 
-To start using this code you should get an access token. Implement *TwilioAccessTokenFetcher* in TwilioVoicePackage for that.
+To start using this code you should get an access token. Implement *TwilioAccessTokenFetcher* in twilio-voice-ios-adapter for that.
 
-Read [TwilioVoicePackage/README.md](TwilioVoicePackage/README.md). 
+Read the [twilio-voice-ios-adapter README](https://github.com/SKrotkih/twilio-voice-ios-adapter#readme).
 
-Study original description [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift).
+Study the original description of [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift).
 
 ## Combine, SwiftUI, Concurrency
 
-In the project developemnt were used [SwiftUI](https://developer.apple.com/documentation/SwiftUI), [Combine](https://developer.apple.com/documentation/Combine) and [Concurrency Swift](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html).  
+The project uses [SwiftUI](https://developer.apple.com/documentation/SwiftUI), [Combine](https://developer.apple.com/documentation/Combine) and [Concurrency Swift](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html).  
 
 ## The Redux pattern
 
-The app uses **Redux** pattern.
+The app uses the **Redux** pattern.
 
-## Changes history:
+## Change history
 
 - 12-22-2022 - redesigned for the current Twilio code base 
 - 01-07-2023 - added TwilioSwiftUiQuickstart project with SwiftUI implementation  
 - 01-09-2023 - created SPM package twilio-voice-ios-adapter
+- 10-20-2026 - renamed TwilioSwiftUiQuickstart to TwilioQuickstart

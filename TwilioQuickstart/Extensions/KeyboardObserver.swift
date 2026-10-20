@@ -1,6 +1,6 @@
 //
 //  KeyboardObserver.swift
-//  QBChat-ModelView
+//  TwilioQuickstart
 //
 //  Created by Paul Kraft on 30.10.19.
 //  Copyright © 2019 QuickBird Studios. All rights reserved.
