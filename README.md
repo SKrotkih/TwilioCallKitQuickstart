@@ -20,7 +20,7 @@ There are two projects:
 
 Both projects use [twilio-voice-ios-adapter](https://github.com/SKrotkih/twilio-voice-ios-adapter) - SPM package with refactored Twilio Voice Quickstart for iOS project. 
 
-To start using this code you should get an access token. Implement *TwilioAccessTokenFetcher* in TwilioVoicePackage for that.
+To start using this code you need a Twilio access token server. Set its parameters (`baseURLString`, `accessTokenEndpoint`, `identity`) in `TwilioAccessTokenConfiguration.tokenServer` in *TwilioQuickstart/Application/TwilioVoiceQuickstartApp.swift*.
 Read [TwilioVoicePackage/README.md](TwilioVoicePackage/README.md). 
 Study original description [Twilio Voice Quickstart for iOS](https://github.com/twilio/voice-quickstart-swift).
 

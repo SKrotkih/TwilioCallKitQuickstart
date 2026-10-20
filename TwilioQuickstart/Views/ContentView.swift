@@ -131,6 +131,6 @@ extension View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         // TODO: TwilioVoiceController mock implementation needed
-        ContentView(viewModel: TwilioVoiceController())
+        ContentView(viewModel: TwilioVoiceController(accessTokenConfiguration: .tokenServer))
     }
 }
